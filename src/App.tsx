@@ -1,7 +1,8 @@
 import * as React from 'react';
 import './App.css';
 
-import logo from './logo.svg';
+import Hello from './containers/Hello';
+import logo from './assets/logo.svg';
 
 class App extends React.Component {
   public render() {
@@ -11,6 +12,7 @@ class App extends React.Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
+        <Hello name="TypeScript" enthusiasmLevel={10} />
         <p className="App-intro">
           To get started, edit <code>src/App.tsx</code> and save to reload.
         </p>

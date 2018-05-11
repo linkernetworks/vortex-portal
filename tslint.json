@@ -3,16 +3,13 @@
   "rules": {
     "prettier": [true, { "singleQuote": true }],
     "interface-name": [true, "never-prefix"],
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
     "array-type": [true, "generic"],
     "no-console": false
   },
-  "rulesDirectory": [
-    "tslint-plugin-prettier"
-  ],
+  "rulesDirectory": ["tslint-plugin-prettier"],
   "linterOptions": {
-    "exclude": [
-      "config/**/*.js",
-      "node_modules/**/*.ts"
-    ]
+    "exclude": ["config/**/*.js", "node_modules/**/*.ts"]
   }
 }
