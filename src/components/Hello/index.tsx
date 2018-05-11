@@ -1,4 +1,7 @@
 import * as React from 'react';
+import * as styles from './styles.module.scss';
+
+console.log(styles);
 
 export interface Props {
   name: string;
@@ -20,7 +23,7 @@ class Hello extends React.Component<Props, object> {
     }
 
     return (
-      <div className="hello">
+      <div className={styles.hello}>
         <div className="greeting">
           Hello {name + this.getExclamationMarks(enthusiasmLevel)}
         </div>
