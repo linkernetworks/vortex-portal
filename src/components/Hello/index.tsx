@@ -1,16 +1,13 @@
 import * as React from 'react';
 import * as styles from './styles.module.scss';
-
-console.log(styles);
-
 export interface Props {
   name: string;
-  enthusiasmLevel?: number;
-  onIncrement?: () => void;
-  onDecrement?: () => void;
+  enthusiasmLevel: number;
+  onIncrement?: () => any;
+  onDecrement?: () => any;
 }
 
-class Hello extends React.Component<Props, object> {
+class Hello extends React.Component<Props, {}> {
   public getExclamationMarks(numChars: number) {
     return Array(numChars + 1).join('!');
   }

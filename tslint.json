@@ -5,6 +5,7 @@
     "interface-name": [true, "never-prefix"],
     "ordered-imports": false,
     "object-literal-sort-keys": false,
+    "interface-over-type-literal": false,
     "array-type": [true, "generic"],
     "no-console": false
   },
