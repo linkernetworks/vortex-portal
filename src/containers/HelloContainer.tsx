@@ -1,7 +1,7 @@
 import { connect, Dispatch } from 'react-redux';
-import { default as Hello, Props } from '../components/Hello';
-import { enthusiasmActions } from '../store/ducks/enthusiasm';
-import { RootState, RootAction } from '../store/ducks';
+import { default as Hello, Props } from '@/components/Hello';
+import { enthusiasmActions } from '@/store/ducks/enthusiasm';
+import { RootState, RootAction } from '@/store/ducks';
 
 const mapStateToProps = (state: RootState) => {
   return {
