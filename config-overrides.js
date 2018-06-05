@@ -4,7 +4,7 @@ const rewireCssModules = require('react-app-rewire-css-modules');
 const rewireLess = require('react-app-rewire-less');
 
 module.exports = function override(config, env) {
-
+  // Load Antd on demand
   const tsLoader = getLoader(
     config.module.rules,
     rule =>
@@ -23,7 +23,7 @@ module.exports = function override(config, env) {
     })
   };
 
-  // Customize Ant.Design Theme
+  // Customize Antd Theme
   config = rewireLess.withLoaderOptions({
     modifyVars: { "@primary-color": "#1DA57A" },
   })(config, env);
