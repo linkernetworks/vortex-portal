@@ -15,3 +15,48 @@
 @function shade($color, $percentage) {
   @return mix(black, $color, $percentage);
 }
+
+@function max($v1, $v2) {
+	@return if($v1 > $v2, $v1, $v2);
+}
+@function min($v1, $v2) {
+	@return if($v1 < $v2, $v1, $v2);
+}
+
+@function hsv_to_hsl($h, $s: 0, $v: 0) {
+	@if type_of($h) == 'list' {
+		$v: nth($h, 3);
+		$s: nth($h, 2);
+		$h: nth($h, 1);
+	}
+
+	@if unit($h) == 'deg' {
+		$h: 3.1415 * 2 * ($h / 360deg);
+	}
+	@if unit($s) == '%' {
+		$s: 0 + ($s / 100%);
+	}
+	@if unit($v) == '%' {
+		$v: 0 + ($v / 100%);
+	}
+
+	$ss: $s * $v;
+	$ll: (2 - $s) * $v;
+
+	@if $ll <= 1 {
+		$ss: $ss / $ll;
+	} @else if ($ll == 2) {
+		$ss: 0;
+	} @else {
+		$ss: $ss / (2 - $ll);
+	}
+
+	$ll: $ll / 2;
+
+	@return 360deg * $h / (3.1415 * 2), percentage(max(0, min(1, $ss))), percentage(max(0, min(1, $ll)));
+}
+
+@function hsv($h, $s: 0, $v: 0) {
+	$hsl: hsv_to_hsl($h, $s, $v);
+	@return hsl(nth($hsl, 1), nth($hsl, 2), nth($hsl, 3));
+}
