@@ -25,7 +25,7 @@ module.exports = function override(config, env) {
 
   // Customize Antd Theme
   config = rewireLess.withLoaderOptions({
-    modifyVars: { "@primary-color": "#1DA57A" },
+    // modifyVars: { "@primary-color": "#1DA57A" },
   })(config, env);
 
   // CSS Modules

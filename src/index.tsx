@@ -3,8 +3,8 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 
-import App from './components/App';
-import './sass/index.scss';
+import App from './routes/App';
+import './styles/index.scss';
 
 import configureStore, { history } from './store/configureStore';
 import registerServiceWorker from './registerServiceWorker';

@@ -1,0 +1,52 @@
+@import '../../styles/variables';
+
+.sider {
+  min-height: 100vh;
+  box-shadow: $shadow-1-right;
+  position: relative;
+  z-index: 10;
+  &.light {
+    background-color: white;
+    .logo {
+      background: white;
+      h1 {
+        color: #002140;
+      }
+    }
+  }
+}
+
+.logo {
+  $height: $layout-header-height / 2;
+
+  height: $layout-header-height;
+  position: relative;
+  line-height: $layout-header-height;
+  padding-left: ($menu-collapsed-width - $height) / 2;
+  padding-right: ($menu-collapsed-width - $height) / 2;
+  transition: all 0.3s;
+  background: $layout-trigger-background;
+  overflow: hidden;
+
+  img {
+    display: inline-block;
+    vertical-align: middle;
+    max-height: $height;
+    max-width: 100%;
+  }
+
+  h1 {
+    color: white;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 20px;
+    margin: 0 0 0 12px;
+    font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font-weight: 600;
+  }
+}
+
+.icon {
+  width: $font-size-base;
+  margin-right: 10px;
+}
