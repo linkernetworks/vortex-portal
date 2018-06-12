@@ -1588,8 +1588,8 @@ class-utils@^0.3.5:
     static-extend "^0.1.1"
 
 classnames@2.x, classnames@^2.2.0, classnames@^2.2.1, classnames@^2.2.3, classnames@^2.2.5, classnames@~2.2.0:
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 
 clean-css@4.1.x:
   version "4.1.11"
@@ -1844,7 +1844,11 @@ core-js@^1.0.0:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
 
-core-js@^2.4.0, core-js@^2.5.0:
+core-js@^2.4.0:
+  version "2.5.7"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
+
+core-js@^2.5.0:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.6.tgz#0fe6d45bf3cac3ac364a9d72de7576f4eb221b9d"
 
@@ -3740,7 +3744,7 @@ intersperse@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/intersperse/-/intersperse-1.0.0.tgz#f2561fb1cfef9f5277cc3347a22886b4351a5181"
 
-invariant@^2.0.0, invariant@^2.2.1, invariant@^2.2.2:
+invariant@^2.0.0, invariant@^2.2.1, invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   dependencies:
@@ -6101,7 +6105,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@15.x, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0:
+prop-types@15.x, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
   dependencies:
@@ -6244,7 +6248,7 @@ raw-body@2.3.2:
     iconv-lite "0.4.19"
     unpipe "1.0.0"
 
-rc-align@2.x:
+rc-align@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/rc-align/-/rc-align-2.4.0.tgz#61d8371c3a984048e682378734cc7efd6a19baa3"
   dependencies:
@@ -6303,8 +6307,8 @@ rc-collapse@~1.9.0:
     rc-animate "2.x"
 
 rc-dialog@~7.1.0:
-  version "7.1.6"
-  resolved "https://registry.yarnpkg.com/rc-dialog/-/rc-dialog-7.1.6.tgz#79f429ea5d4bd134797c7e3d213fcc811949724d"
+  version "7.1.7"
+  resolved "https://registry.yarnpkg.com/rc-dialog/-/rc-dialog-7.1.7.tgz#75d65203be91af8e02f582166a7cf7d713b69e59"
   dependencies:
     babel-runtime "6.x"
     rc-animate "2.x"
@@ -6420,8 +6424,8 @@ rc-rate@~2.4.0:
     rc-util "^4.3.0"
 
 rc-select@~8.0.7:
-  version "8.0.9"
-  resolved "https://registry.yarnpkg.com/rc-select/-/rc-select-8.0.9.tgz#cd80cdc52f0d1566cbf0a0d0e6fab05cee8c16d8"
+  version "8.0.11"
+  resolved "https://registry.yarnpkg.com/rc-select/-/rc-select-8.0.11.tgz#9450a8ac5b46eb47a10f3c31f0996f64d3d68fb6"
   dependencies:
     babel-runtime "^6.23.0"
     classnames "2.x"
@@ -6544,12 +6548,12 @@ rc-tree@~1.8.0:
     warning "^3.0.0"
 
 rc-trigger@^2.2.0, rc-trigger@^2.2.2, rc-trigger@^2.3.0:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/rc-trigger/-/rc-trigger-2.4.2.tgz#8274249b3af51ff2c9c8a0c403d68e17bc775d7e"
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/rc-trigger/-/rc-trigger-2.5.1.tgz#a64e06d9bff05d23e7d18c558048ce75a51d6ac9"
   dependencies:
     babel-runtime "6.x"
     prop-types "15.x"
-    rc-align "2.x"
+    rc-align "^2.4.0"
     rc-animate "2.x"
     rc-util "^4.4.0"
 
@@ -6690,6 +6694,18 @@ react-router@^4.2.0:
     path-to-regexp "^1.7.0"
     prop-types "^15.5.4"
     warning "^3.0.0"
+
+react-router@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-4.3.1.tgz#aada4aef14c809cb2e686b05cee4742234506c4e"
+  dependencies:
+    history "^4.7.2"
+    hoist-non-react-statics "^2.5.0"
+    invariant "^2.2.4"
+    loose-envify "^1.3.1"
+    path-to-regexp "^1.7.0"
+    prop-types "^15.6.1"
+    warning "^4.0.1"
 
 react-scripts-ts@^2.16.0:
   version "2.16.0"
@@ -8422,7 +8438,7 @@ warning@^3.0.0:
   dependencies:
     loose-envify "^1.0.0"
 
-warning@~4.0.1:
+warning@^4.0.1, warning@~4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/warning/-/warning-4.0.1.tgz#66ce376b7fbfe8a887c22bdf0e7349d73d397745"
   dependencies:

@@ -16,6 +16,11 @@
   @return mix(black, $color, $percentage);
 }
 
+/// Shim less fade function
+@function fade($color, $percentage) {
+  @return rgba($color, $percentage / 100%);
+}
+
 @function max($v1, $v2) {
 	@return if($v1 > $v2, $v1, $v2);
 }
