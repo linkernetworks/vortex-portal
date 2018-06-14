@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, RouteProps, RouteComponentProps } from 'react-router';
+import { Route, RouteProps } from 'react-router';
 // import MainLayout from '@/layouts/MainLayout';
 
 // const appRoutes: Route = [

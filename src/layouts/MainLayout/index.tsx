@@ -8,8 +8,9 @@ import logo from '@/assets/logo.svg';
 const { Content, Header, Footer } = Layout;
 
 import { UserType } from '@/models/User';
+import { getMenuData } from '@/routes/menu';
 
-class MainLayout extends React.Component<RouteComponentProps<{}>, any> {
+class MainLayout extends React.PureComponent<RouteComponentProps<{}>, any> {
   protected handleLangsClick = () => {
     return;
   };
@@ -20,6 +21,7 @@ class MainLayout extends React.Component<RouteComponentProps<{}>, any> {
 
   public render() {
     const { handleLangsClick, handleMenuClick } = this;
+    const { location } = this.props;
     const currentUser = {
       name: 'Lucien',
       type: UserType.Admin
@@ -28,7 +30,12 @@ class MainLayout extends React.Component<RouteComponentProps<{}>, any> {
     return (
       <div className="App">
         <Layout>
-          <SiderMenu logo={logo} name={'Vortex'} />
+          <SiderMenu
+            logo={logo}
+            name={'Vortex'}
+            menuData={getMenuData()}
+            location={location}
+          />
           <Layout>
             <Header style={{ padding: 0 }}>
               <NavHeader
@@ -46,7 +53,7 @@ class MainLayout extends React.Component<RouteComponentProps<{}>, any> {
                 {this.props.children}
               </div>
             </Content>
-            <Footer>Made by ❤️</Footer>
+            <Footer style={{ textAlign: 'center' }}>Made by ❤️</Footer>
           </Layout>
         </Layout>
       </div>

@@ -3,7 +3,7 @@
 .header {
   position: relative;
   height: $layout-header-height;
-  padding: 0 12px 0 0;
+  padding: 0 $padding-sm 0 0;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 }
@@ -18,7 +18,7 @@
     transition: all 0.3s;
     height: 100%;
     > i {
-      font-size: 16px;
+      font-size: $font-size-lg;
       vertical-align: middle;
       color: $text-color;
     }
@@ -31,7 +31,7 @@
     .avatar {
       margin: 20px 8px 20px 0;
       color: $primary-color;
-      background: rgba(255, 255, 255, 0.85);
+      background: $text-color-dark;
       vertical-align: middle;
     }
   }

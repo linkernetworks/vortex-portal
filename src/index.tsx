@@ -16,6 +16,7 @@ import { RouteWithLayout } from './routes/index';
 import MainLayout from '@/layouts/MainLayout';
 import Node from '@/routes/Compute/Node';
 import Overview from '@/routes/Compute/Overview';
+import Service from '@/routes/Service';
 
 const store = configureStore();
 
@@ -34,6 +35,11 @@ ReactDOM.render(
           layout={MainLayout}
           component={Node}
           path="/compute/node"
+        />
+        <RouteWithLayout
+          layout={MainLayout}
+          component={Service}
+          path="/service"
         />
       </Switch>
     </ConnectedRouter>

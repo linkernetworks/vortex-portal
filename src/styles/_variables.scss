@@ -4,6 +4,9 @@ $blue-6: #1890ff;
 $green-6: #52c41a;
 $red-6: #f5222d;
 $gold-6: #faad14;
+$purple-6: #722ed1;
+$yellow-6: #fadb14;
+
 
 // -------- Colors -----------
 $primary-color          : $blue-6;
@@ -133,3 +136,19 @@ $menu-dark-arrow-color: #fff;
 $menu-dark-submenu-bg: #000c17;
 $menu-dark-highlight-color: #fff;
 $menu-dark-item-active-bg: $primary-color;
+
+// Rate
+// ---
+$rate-star-color: $yellow-6;
+$rate-star-bg: $border-color-split;
+
+// Card
+// ---
+$card-head-color: $heading-color;
+$card-head-background: $component-background;
+$card-head-padding: 16px;
+$card-inner-head-padding: 12px;
+$card-padding-base: 24px;
+$card-padding-wider: 32px;
+$card-actions-background: $background-color-light;
+$card-shadow: 0 2px 8px rgba(0, 0, 0, .09);
