@@ -2,47 +2,25 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
+import { LocaleProvider } from 'antd';
+import { addLocaleData, IntlProvider } from 'react-intl';
 
-// import App from './routes/App';
+import enUS from 'antd/lib/locale-provider/en_US';
+import zhTW from 'antd/lib/locale-provider/zh_TW';
+
 import './styles/index.scss';
 
+import { default as appRoutes } from './routes';
 import configureStore, { history } from './store/configureStore';
 import registerServiceWorker from './registerServiceWorker';
 
-import { Switch, Redirect } from 'react-router';
-
-import { RouteWithLayout } from './routes/index';
-
-import MainLayout from '@/layouts/MainLayout';
-import Node from '@/routes/Compute/Node';
-import Overview from '@/routes/Compute/Overview';
-import Service from '@/routes/Service';
-
 const store = configureStore();
-
+console.log(store);
 ReactDOM.render(
   <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <Switch>
-        <Redirect exact={true} from="/" to="/compute/overview" />
-        <Redirect exact={true} from="/compute" to="/compute/overview" />
-        <RouteWithLayout
-          layout={MainLayout}
-          component={Overview}
-          path="/compute/overview"
-        />
-        <RouteWithLayout
-          layout={MainLayout}
-          component={Node}
-          path="/compute/node"
-        />
-        <RouteWithLayout
-          layout={MainLayout}
-          component={Service}
-          path="/service"
-        />
-      </Switch>
-    </ConnectedRouter>
+    <LocaleProvider locale={zhTW}>
+      <ConnectedRouter history={history}>{appRoutes}</ConnectedRouter>
+    </LocaleProvider>
   </Provider>,
   document.getElementById('root') as HTMLElement
 );

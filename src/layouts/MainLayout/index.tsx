@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Layout, Breadcrumb } from 'antd';
+import { Layout } from 'antd';
+import { withRouter, RouteComponentProps } from 'react-router';
 import SiderMenu from '@/components/SiderMenu';
 import NavHeader from '@/components/NavHeader';
-import { withRouter, RouteComponentProps } from 'react-router';
 import logo from '@/assets/logo.svg';
 
 const { Content, Header, Footer } = Layout;
@@ -45,10 +45,6 @@ class MainLayout extends React.PureComponent<RouteComponentProps<{}>, any> {
               />
             </Header>
             <Content style={{ margin: '24px 24px 0', height: '100%' }}>
-              <Breadcrumb style={{ margin: '16px 0' }}>
-                <Breadcrumb.Item>User</Breadcrumb.Item>
-                <Breadcrumb.Item>Bill</Breadcrumb.Item>
-              </Breadcrumb>
               <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
                 {this.props.children}
               </div>
