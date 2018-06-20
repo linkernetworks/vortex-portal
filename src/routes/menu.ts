@@ -38,11 +38,11 @@ export const menuData: Array<MenuItem> = [
     icon: 'share-alt',
     children: [
       {
-        name: 'OVS',
+        name: 'ovs',
         path: 'ovs'
       },
       {
-        name: 'DPDK',
+        name: 'dpdk',
         path: 'dpdk'
       }
     ]
@@ -53,9 +53,9 @@ export const menuData: Array<MenuItem> = [
     path: 'service'
   },
   {
-    name: 'users',
+    name: 'user',
     icon: 'team',
-    path: 'users',
+    path: 'user',
     authority: UserType.Admin
   }
 ];

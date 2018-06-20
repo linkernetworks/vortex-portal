@@ -1,18 +1,28 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import { Layout } from 'antd';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { Location } from 'history';
+
+import { intlActions } from '@/store/ducks/intl';
+import { RootState, RootAction } from '@/store/ducks';
 import SiderMenu from '@/components/SiderMenu';
 import NavHeader from '@/components/NavHeader';
+import { UserType } from '@/models/User';
+import { getMenuData } from '@/routes/menu';
+
 import logo from '@/assets/logo.svg';
 
 const { Content, Header, Footer } = Layout;
 
-import { UserType } from '@/models/User';
-import { getMenuData } from '@/routes/menu';
+interface MainLayoutProps {
+  location: Location;
+  changeLanguage: (locale: string) => void;
+}
 
-class MainLayout extends React.PureComponent<RouteComponentProps<{}>, any> {
-  protected handleLangsClick = () => {
-    return;
+class MainLayout extends React.PureComponent<MainLayoutProps, any> {
+  protected handleLangsClick = (locale: string) => {
+    this.props.changeLanguage(locale);
   };
 
   protected handleMenuClick = () => {
@@ -57,4 +67,20 @@ class MainLayout extends React.PureComponent<RouteComponentProps<{}>, any> {
   }
 }
 
-export default withRouter(MainLayout);
+const mapStateToProps = (state: RootState) => {
+  return {
+    location: state.router.location
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
+  changeLanguage: (locale: string) =>
+    dispatch(intlActions.updateLocale({ locale }))
+});
+
+// const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => bindActionCreators({
+//   changeLanguage: (locale: string) =>
+//     dispatch(intlActions.updateLocale({ locale }))
+// }, dispatch);
+
+export default connect<any>(mapStateToProps, mapDispatchToProps)(MainLayout);

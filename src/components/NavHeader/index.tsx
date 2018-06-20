@@ -1,30 +1,39 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Avatar, Icon, Dropdown, Menu, Tooltip } from 'antd';
 import * as styles from './styles.module.scss';
 
 import { User } from '@/models';
 
-interface NavHeaderProps {
+export interface NavHeaderProps {
   currentUser: User;
   onMenuClick: () => void;
-  onLangsClick: () => void;
+  onLangsClick: (locale: string) => void;
 }
 
 class NavHeader extends React.Component<NavHeaderProps> {
+  public handleLangsClick = ({ key }: { key: string }) => {
+    this.props.onLangsClick(key);
+  };
+
   public render() {
-    const { onMenuClick, onLangsClick, currentUser } = this.props;
+    const { onMenuClick, currentUser } = this.props;
+    const { handleLangsClick } = this;
 
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
         <Menu.Item disabled={true}>
-          <Icon type="user" /> Profile
+          <Icon type="user" />
+          <FormattedMessage id="nav.profile" />
         </Menu.Item>
         <Menu.Item disabled={true}>
-          <Icon type="setting" /> Setting
+          <Icon type="setting" />
+          <FormattedMessage id="nav.setting" />
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="logout">
-          <Icon type="logout" /> Logout
+          <Icon type="logout" />
+          <FormattedMessage id="nav.logout" />
         </Menu.Item>
       </Menu>
     );
@@ -32,16 +41,16 @@ class NavHeader extends React.Component<NavHeaderProps> {
       <Menu
         className={styles.menu}
         selectedKeys={['en']}
-        onClick={onLangsClick}
+        onClick={handleLangsClick}
       >
-        <Menu.Item key="en"> English</Menu.Item>
-        <Menu.Item key="zh-tw"> 繁體中文</Menu.Item>
+        <Menu.Item key="en-US"> English</Menu.Item>
+        <Menu.Item key="zh-Hant"> 繁體中文</Menu.Item>
       </Menu>
     );
     return (
       <div className={styles.header}>
         <div className={styles.actions}>
-          <Tooltip title="Image Hub">
+          <Tooltip title={<FormattedMessage id="nav.imagehub" />}>
             <a className={styles.action} target="_blank" href="#">
               <Icon type="appstore-o" />
             </a>

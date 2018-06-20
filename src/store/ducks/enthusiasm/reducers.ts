@@ -29,6 +29,7 @@ export function enthusiasm(
         ...state,
         enthusiasmLevel: Math.max(1, state.enthusiasmLevel - 1)
       };
+    default:
+      return state;
   }
-  return state;
 }

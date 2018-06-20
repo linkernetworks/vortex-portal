@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 import { Location } from 'history';
@@ -141,7 +142,9 @@ class SiderMenu extends React.PureComponent<SiderMenuProps, SiderMenuState> {
               item.icon ? (
                 <span>
                   {getIcon(item.icon)}
-                  <span>{item.name}</span>
+                  <span>
+                    <FormattedMessage id={`side.${item.name}`} />
+                  </span>
                 </span>
               ) : (
                 item.name
@@ -157,7 +160,9 @@ class SiderMenu extends React.PureComponent<SiderMenuProps, SiderMenuState> {
           <Menu.Item key={item.path}>
             <Link to={item.path}>
               {icon}
-              <span>{name}</span>
+              <span>
+                <FormattedMessage id={`side.${name}`} />
+              </span>
             </Link>
           </Menu.Item>
         );
