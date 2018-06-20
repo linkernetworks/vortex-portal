@@ -17,7 +17,7 @@ const { Content, Header, Footer } = Layout;
 
 interface MainLayoutProps {
   location: Location;
-  changeLanguage: (locale: string) => void;
+  changeLanguage: (locale: string) => any;
 }
 
 class MainLayout extends React.PureComponent<MainLayoutProps, any> {
@@ -70,7 +70,7 @@ class MainLayout extends React.PureComponent<MainLayoutProps, any> {
 const mapStateToProps = (state: RootState) => {
   return {
     location: state.router.location
-  };
+  } as { location: Location };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
@@ -78,9 +78,4 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
     dispatch(intlActions.updateLocale({ locale }))
 });
 
-// const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => bindActionCreators({
-//   changeLanguage: (locale: string) =>
-//     dispatch(intlActions.updateLocale({ locale }))
-// }, dispatch);
-
-export default connect<any>(mapStateToProps, mapDispatchToProps)(MainLayout);
+export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);
