@@ -53,6 +53,10 @@ export const menuData: Array<MenuItem> = [
     path: 'service'
   },
   {
+    name: 'storage',
+    path: 'storage'
+  },
+  {
     name: 'user',
     icon: 'team',
     path: 'user',

@@ -9,5 +9,6 @@ export default {
   'side.service': 'Service',
   'side.user': 'Users',
   'side.compute': 'Compute',
-  'side.overview': 'Overview'
+  'side.overview': 'Overview',
+  'side.storage': 'Storage'
 };

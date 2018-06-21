@@ -5,14 +5,8 @@ import MainLayout from '@/layouts/MainLayout';
 import Node from '@/routes/Compute/Node';
 import Overview from '@/routes/Compute/Overview';
 import Service from '@/routes/Service';
+import Storage from '@/routes/Storage';
 import NotFound from '@/routes/Exception/404';
-
-// const appRoutes: Route = [
-//   {
-//     path:
-//     component:
-//   }
-// ];
 
 interface RouteWithLayoutProps extends RouteProps {
   layout: React.ComponentClass;
@@ -47,6 +41,7 @@ const appRoutes = (
       path="/compute/node"
     />
     <RouteWithLayout layout={MainLayout} component={Service} path="/service" />
+    <RouteWithLayout layout={MainLayout} component={Storage} path="/storage" />
     <Route component={NotFound} />
   </Switch>
 );
