@@ -8052,11 +8052,11 @@ trim-right@^1.0.1:
   dependencies:
     glob "^6.0.4"
 
-ts-import-plugin@^1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/ts-import-plugin/-/ts-import-plugin-1.5.2.tgz#ec2a135a9e1d75f08d7ed01b239ad41b977418db"
+ts-import-plugin@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/ts-import-plugin/-/ts-import-plugin-1.5.3.tgz#adde0a107b64a46fa13d3f334dc2ea63e76b0815"
   dependencies:
-    tslib "^1.9.0"
+    tslib "^1.9.2"
 
 ts-jest@22.0.1:
   version "22.0.1"
@@ -8102,7 +8102,7 @@ tslib@1.9.0, tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.0.tgz#e37a86fda8cbbaf23a057f473c9f4dc64e5fc2e8"
 
-tslib@^1.9.0:
+tslib@^1.9.2:
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.2.tgz#8be0cc9a1f6dc7727c38deb16c2ebd1a2892988e"
 

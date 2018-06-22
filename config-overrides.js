@@ -1,3 +1,5 @@
+/* tslint:disable */
+
 const { getLoader } = require("react-app-rewired");
 const tsImportPluginFactory = require('ts-import-plugin')
 const rewireCssModules = require('react-app-rewire-css-modules');
@@ -31,20 +33,24 @@ module.exports = function override(config, env) {
   );
 
   tsLoader.options = {
+    transpileOnly: true,
     getCustomTransformers: () => ({
       before: [tsImportPluginFactory({
         libraryDirectory: 'es',
         libraryName: 'antd',
-        style: true,
+        style: 'css',
       })]
-    })
+    }),
+    compilerOptions: {
+      module: 'es2015'
+    }
   };
 
   tsRule.exclude = /node_modules/
 
   // Customize Antd Theme
   config = rewireLess.withLoaderOptions({
-    // modifyVars: { "@primary-color": "#1DA57A" },
+    modifyVars: { "@primary-color": "#1DA57A" },
   })(config, env);
 
   // CSS Modules
