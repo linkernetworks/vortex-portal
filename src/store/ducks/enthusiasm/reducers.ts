@@ -1,4 +1,4 @@
-import { ActionsUnion, getType } from 'typesafe-actions';
+import { ActionType, getType } from 'typesafe-actions';
 import Enthusiasm from './actions';
 
 export type EnthusiasmStateType = Readonly<{
@@ -6,7 +6,7 @@ export type EnthusiasmStateType = Readonly<{
   enthusiasmLevel: number;
 }>;
 
-export type EnthusiasmActionType = ActionsUnion<typeof Enthusiasm>;
+export type EnthusiasmActionType = ActionType<typeof Enthusiasm>;
 
 const inititalState: EnthusiasmStateType = {
   languageName: 'typescript',

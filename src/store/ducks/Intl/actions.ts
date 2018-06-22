@@ -5,6 +5,14 @@ const updateLocale = createStandardAction(types.UPDATE_LOCALE)<{
   locale: string;
 }>();
 
+const updateLocaleOptions = createStandardAction(types.UPDATE_LOCALE_OPTIONS)<{
+  options: Array<{
+    code: string;
+    displayName: string;
+  }>;
+}>();
+
 export default {
-  updateLocale
+  updateLocale,
+  updateLocaleOptions
 };

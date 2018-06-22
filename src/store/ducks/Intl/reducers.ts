@@ -1,14 +1,12 @@
-import { ActionsUnion, getType } from 'typesafe-actions';
+import { ActionType, StateType, getType } from 'typesafe-actions';
 import Intl from './actions';
 
-export type IntlStateType = Readonly<{
-  locale: string;
-}>;
+export type IntlStateType = StateType<typeof intlReducer>;
+export type IntlActionType = ActionType<typeof Intl>;
 
-export type IntlActionType = ActionsUnion<typeof Intl>;
-
-const initialState: IntlStateType = {
-  locale: 'en-US'
+const initialState = {
+  locale: 'en-US',
+  options: []
 };
 
 export function intlReducer(state = initialState, action: IntlActionType) {
@@ -17,8 +15,12 @@ export function intlReducer(state = initialState, action: IntlActionType) {
   }
 
   switch (action.type) {
-    case getType(Intl.updateLocale):
-      return { ...state, locale: action.payload.locale };
+    case getType(Intl.updateLocale): {
+      console.log(action.payload.locale);
+      return { ...state, ...action.payload };
+    }
+    case getType(Intl.updateLocaleOptions):
+      return { ...state, ...action.payload };
     default:
       return state;
   }

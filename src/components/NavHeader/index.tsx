@@ -7,6 +7,7 @@ import { User } from '@/models';
 
 export interface NavHeaderProps {
   currentUser: User;
+  locale: string;
   onMenuClick: () => void;
   onLangsClick: (locale: string) => void;
 }
@@ -17,7 +18,7 @@ class NavHeader extends React.Component<NavHeaderProps> {
   };
 
   public render() {
-    const { onMenuClick, currentUser } = this.props;
+    const { onMenuClick, currentUser, locale } = this.props;
     const { handleLangsClick } = this;
 
     const menu = (
@@ -40,7 +41,7 @@ class NavHeader extends React.Component<NavHeaderProps> {
     const langs = (
       <Menu
         className={styles.menu}
-        selectedKeys={['en']}
+        selectedKeys={[locale]}
         onClick={handleLangsClick}
       >
         <Menu.Item key="en-US"> English</Menu.Item>

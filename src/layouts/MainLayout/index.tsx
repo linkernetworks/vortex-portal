@@ -11,27 +11,25 @@ import NavHeader from '@/components/NavHeader';
 import { UserType } from '@/models/User';
 import { getMenuData } from '@/routes/menu';
 
+import * as styles from './styles.module.scss';
 import logo from '@/assets/logo.svg';
 
 const { Content, Header, Footer } = Layout;
 
 interface MainLayoutProps {
+  locale: string;
   location: Location;
-  changeLanguage: (locale: string) => any;
+  changeLanguage: (newLocale: string) => any;
 }
 
 class MainLayout extends React.PureComponent<MainLayoutProps, any> {
-  protected handleLangsClick = (locale: string) => {
-    this.props.changeLanguage(locale);
-  };
-
   protected handleMenuClick = () => {
     return;
   };
 
   public render() {
-    const { handleLangsClick, handleMenuClick } = this;
-    const { location } = this.props;
+    const { handleMenuClick } = this;
+    const { locale, location, changeLanguage } = this.props;
     const currentUser = {
       name: 'Lucien',
       type: UserType.Admin
@@ -47,19 +45,18 @@ class MainLayout extends React.PureComponent<MainLayoutProps, any> {
             location={location}
           />
           <Layout>
-            <Header style={{ padding: 0 }}>
+            <Header className={styles.header}>
               <NavHeader
                 onMenuClick={handleMenuClick}
-                onLangsClick={handleLangsClick}
+                onLangsClick={changeLanguage}
                 currentUser={currentUser}
+                locale={locale}
               />
             </Header>
-            <Content style={{ margin: '24px 24px 0', height: '100%' }}>
-              <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                {this.props.children}
-              </div>
+            <Content className={styles.content}>
+              <div className={styles.card}>{this.props.children}</div>
             </Content>
-            <Footer style={{ textAlign: 'center' }}>Made by ❤️</Footer>
+            <Footer className={styles.footer}>Made by ❤️</Footer>
           </Layout>
         </Layout>
       </div>
@@ -69,13 +66,14 @@ class MainLayout extends React.PureComponent<MainLayoutProps, any> {
 
 const mapStateToProps = (state: RootState) => {
   return {
+    locale: state.intl.locale,
     location: state.router.location
-  } as { location: Location };
+  };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  changeLanguage: (locale: string) =>
-    dispatch(intlActions.updateLocale({ locale }))
+  changeLanguage: (newLocale: string) =>
+    dispatch(intlActions.updateLocale({ locale: newLocale }))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);
