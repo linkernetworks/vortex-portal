@@ -1,15 +1,10 @@
 import { createStandardAction } from 'typesafe-actions';
-import types from './types';
+import { Locale, IntlOption } from './models';
 
-const updateLocale = createStandardAction(types.UPDATE_LOCALE)<{
-  locale: string;
-}>();
+const updateLocale = createStandardAction('UPDATE_LOCALE')<Locale>();
 
-const updateLocaleOptions = createStandardAction(types.UPDATE_LOCALE_OPTIONS)<{
-  options: Array<{
-    code: string;
-    displayName: string;
-  }>;
+const updateLocaleOptions = createStandardAction('UPDATE_LOCALE_OPTIONS')<{
+  options: Array<IntlOption>;
 }>();
 
 export default {

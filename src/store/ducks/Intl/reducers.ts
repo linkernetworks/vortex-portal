@@ -15,10 +15,8 @@ export function intlReducer(state = initialState, action: IntlActionType) {
   }
 
   switch (action.type) {
-    case getType(Intl.updateLocale): {
-      console.log(action.payload.locale);
+    case getType(Intl.updateLocale):
       return { ...state, ...action.payload };
-    }
     case getType(Intl.updateLocaleOptions):
       return { ...state, ...action.payload };
     default:

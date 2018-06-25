@@ -3,11 +3,13 @@ import { FormattedMessage } from 'react-intl';
 import { Avatar, Icon, Dropdown, Menu, Tooltip } from 'antd';
 import * as styles from './styles.module.scss';
 
+import { intlModels } from '@/store/ducks/intl';
 import { User } from '@/models';
 
 export interface NavHeaderProps {
   currentUser: User;
   locale: string;
+  localeOptions: Array<intlModels.IntlOption>;
   onMenuClick: () => void;
   onLangsClick: (locale: string) => void;
 }
@@ -18,7 +20,7 @@ class NavHeader extends React.Component<NavHeaderProps> {
   };
 
   public render() {
-    const { onMenuClick, currentUser, locale } = this.props;
+    const { onMenuClick, currentUser, locale, localeOptions } = this.props;
     const { handleLangsClick } = this;
 
     const menu = (
@@ -44,8 +46,9 @@ class NavHeader extends React.Component<NavHeaderProps> {
         selectedKeys={[locale]}
         onClick={handleLangsClick}
       >
-        <Menu.Item key="en-US"> English</Menu.Item>
-        <Menu.Item key="zh-Hant"> 繁體中文</Menu.Item>
+        {localeOptions.map(option => (
+          <Menu.Item key={option.code}>{option.displayName}</Menu.Item>
+        ))}
       </Menu>
     );
     return (

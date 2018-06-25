@@ -4,7 +4,7 @@ import { Dispatch } from 'redux';
 import { Layout } from 'antd';
 import { Location } from 'history';
 
-import { intlActions } from '@/store/ducks/intl';
+import { intlActions, intlModels } from '@/store/ducks/intl';
 import { RootState, RootAction } from '@/store/ducks';
 import SiderMenu from '@/components/SiderMenu';
 import NavHeader from '@/components/NavHeader';
@@ -18,6 +18,7 @@ const { Content, Header, Footer } = Layout;
 
 interface MainLayoutProps {
   locale: string;
+  localeOptions: Array<intlModels.IntlOption>;
   location: Location;
   changeLanguage: (newLocale: string) => any;
 }
@@ -29,7 +30,7 @@ class MainLayout extends React.PureComponent<MainLayoutProps, any> {
 
   public render() {
     const { handleMenuClick } = this;
-    const { locale, location, changeLanguage } = this.props;
+    const { locale, localeOptions, location, changeLanguage } = this.props;
     const currentUser = {
       name: 'Lucien',
       type: UserType.Admin
@@ -51,6 +52,7 @@ class MainLayout extends React.PureComponent<MainLayoutProps, any> {
                 onLangsClick={changeLanguage}
                 currentUser={currentUser}
                 locale={locale}
+                localeOptions={localeOptions}
               />
             </Header>
             <Content className={styles.content}>
@@ -67,6 +69,7 @@ class MainLayout extends React.PureComponent<MainLayoutProps, any> {
 const mapStateToProps = (state: RootState) => {
   return {
     locale: state.intl.locale,
+    localeOptions: state.intl.options,
     location: state.router.location
   };
 };
