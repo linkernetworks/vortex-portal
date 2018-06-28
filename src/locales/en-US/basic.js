@@ -1,4 +1,3 @@
-/* tslint:disable */
 export default {
   'node': 'node',
   'pod': 'pod',

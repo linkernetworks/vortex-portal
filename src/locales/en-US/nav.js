@@ -1,4 +1,3 @@
-/* tslint:disable */
 export default {
   'nav.profile': 'Profile',
   'nav.language': 'Language',

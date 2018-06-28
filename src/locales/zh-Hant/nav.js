@@ -1,4 +1,3 @@
-/* tslint:disable */
 export default {
   'nav.profile': '會員中心',
   'nav.language': '語言',

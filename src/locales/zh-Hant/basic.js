@@ -1,4 +1,3 @@
-/* tslint:disable */
 export default {
   'node': '節點',
   'pod': '群',
