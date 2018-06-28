@@ -8,11 +8,14 @@
     "interface-over-type-literal": false,
     "array-type": [true, "generic"],
     "no-console": false,
-    "member-ordering": false,
-    "no-unused-variable": {"severity": "warning"}
+    "member-ordering": false
   },
   "rulesDirectory": ["tslint-plugin-prettier"],
   "linterOptions": {
-    "exclude": ["config/**/*.js", "node_modules/**/*.ts"]
+    "exclude": [
+      "config-overrides.js",
+      "config/**/*.js",
+      "node_modules/**/*.ts"
+    ]
   }
 }
