@@ -41,11 +41,13 @@ const getLocaleMessages = (locale: string) => {
 const options = [
   {
     code: 'en-US',
-    displayName: 'English'
+    displayName: 'English',
+    abbr: 'EN'
   },
   {
     code: 'zh-Hant',
-    displayName: '繁體中文'
+    displayName: '繁體中文',
+    abbr: '繁'
   }
 ];
 

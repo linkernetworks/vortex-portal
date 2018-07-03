@@ -5,4 +5,5 @@ export interface Locale {
 export interface IntlOption {
   code: string;
   displayName: string;
+  abbr?: string;
 }

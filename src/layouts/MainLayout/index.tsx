@@ -20,10 +20,10 @@ interface MainLayoutProps {
   locale: string;
   localeOptions: Array<intlModels.IntlOption>;
   location: Location;
-  changeLanguage: (newLocale: string) => any;
+  changeLanguage: (locale: string) => any;
 }
 
-class MainLayout extends React.PureComponent<MainLayoutProps, any> {
+class MainLayout extends React.PureComponent<MainLayoutProps, object> {
   protected handleMenuClick = () => {
     return;
   };

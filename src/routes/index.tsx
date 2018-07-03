@@ -2,10 +2,12 @@ import * as React from 'react';
 import { Switch, Redirect, Route, RouteProps } from 'react-router-dom';
 
 import MainLayout from '@/layouts/MainLayout';
+import UserLayout from '@/layouts/UserLayout';
 import Node from '@/routes/Compute/Node';
 import Overview from '@/routes/Compute/Overview';
 import Service from '@/routes/Service';
 import Storage from '@/routes/Storage';
+import Login from '@/routes/Login';
 import NotFound from '@/routes/Exception/404';
 
 interface RouteWithLayoutProps extends RouteProps {
@@ -19,7 +21,7 @@ export function RouteWithLayout({
   ...rest
 }: RouteWithLayoutProps) {
   const childComponent = (props: object) => (
-    <Layout>
+    <Layout {...props}>
       <Component {...props} />
     </Layout>
   );
@@ -28,6 +30,7 @@ export function RouteWithLayout({
 
 const appRoutes = (
   <Switch>
+    <RouteWithLayout layout={UserLayout} component={Login} path="/login" />
     <Redirect exact={true} from="/" to="/compute/overview" />
     <Redirect exact={true} from="/compute" to="/compute/overview" />
     <RouteWithLayout
