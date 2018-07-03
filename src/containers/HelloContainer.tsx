@@ -1,4 +1,5 @@
-import { connect, Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import { default as Hello, Props } from '@/components/Hello';
 import { enthusiasmActions } from '@/store/ducks/enthusiasm';
 import { RootState, RootAction } from '@/store/ducks';
@@ -15,4 +16,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
   onDecrement: () => dispatch(enthusiasmActions.decrementEnthusiasm())
 });
 
-export default connect<Props>(mapStateToProps, mapDispatchToProps)(Hello);
+export default connect<Props>(
+  mapStateToProps,
+  mapDispatchToProps
+)(Hello);

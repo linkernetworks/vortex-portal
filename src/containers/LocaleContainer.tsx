@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
 import { LocaleProvider } from 'antd';
 import { IntlProvider, addLocaleData } from 'react-intl';
 
@@ -86,4 +87,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
     dispatch(intlActions.updateLocaleOptions({ options: newOptions }))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(LocaleContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LocaleContainer);

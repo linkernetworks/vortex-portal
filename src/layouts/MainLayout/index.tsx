@@ -79,4 +79,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
     dispatch(intlActions.updateLocale({ locale: newLocale }))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MainLayout);
