@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import * as classNames from 'classnames';
 import { Form, Input, Icon, Button, Divider, Row, Col } from 'antd';
 import { FormattedMessage } from 'react-intl';
