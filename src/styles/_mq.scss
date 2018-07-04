@@ -1,0 +1,15 @@
+@import "./variables";
+
+$mq-base-font-size: $font-size-lg;
+$mq-responsive: true;
+
+$mq-breakpoints: (
+  phone: $screen-xs,
+  tablet: $screen-sm,
+  desktop: $screen-md,
+  wide: $screen-lg,
+  full: $screen-xl,
+  large-desktop: $screen-xxl
+);
+
+@import "~sass-mq";

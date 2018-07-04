@@ -110,7 +110,11 @@ class Login extends React.PureComponent<LoginPageProps, object> {
               <Divider className={styles.divider}>
                 <FormattedMessage id="user.dont_have_hint" />
               </Divider>
-              <Button size="large" className={styles['login-button']}>
+              <Button
+                size="large"
+                className={styles['login-button']}
+                href="/signup"
+              >
                 <FormattedMessage id="user.signup" />
               </Button>
             </div>

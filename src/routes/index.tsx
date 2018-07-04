@@ -30,7 +30,8 @@ export function RouteWithLayout({
 
 const appRoutes = (
   <Switch>
-    <RouteWithLayout layout={UserLayout} component={Login} path="/login" />
+    <RouteWithLayout layout={UserLayout} component={Login} path="/signin" />
+    <RouteWithLayout layout={UserLayout} component={Login} path="/signup" />
     <Redirect exact={true} from="/" to="/compute/overview" />
     <Redirect exact={true} from="/compute" to="/compute/overview" />
     <RouteWithLayout

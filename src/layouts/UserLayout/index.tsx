@@ -7,10 +7,10 @@ import * as styles from './styles.module.scss';
 const particlesParams = {
   particles: {
     number: {
-      value: 28,
+      value: 32,
       density: {
         enable: true,
-        value_area: 1820
+        value_area: 1480
       }
     },
     color: {
@@ -33,10 +33,24 @@ const particlesParams = {
       speed: 2.8
     }
   },
+  interactivity: {
+    events: {
+      onhover: {
+        enable: false
+      },
+      onclick: {
+        enable: false
+      }
+    }
+  },
   retina_detect: true
 };
 
-class UserLayout extends React.PureComponent<object, object> {
+class UserLayout extends React.Component<object, object> {
+  public shouldComponentUpdate() {
+    return false;
+  }
+
   public render() {
     return (
       <div className={styles.container}>

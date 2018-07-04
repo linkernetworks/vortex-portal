@@ -1,24 +1,26 @@
 @import "../../styles/variables";
+@import "../../styles/mq";
 
-.card {
-  padding: $card-padding-wider;
-  background: #fff;
-  border-radius: $border-radius-base;
-  box-shadow: rgba(0, 0, 0, 0.1) 0 8px 40px 6px;
-}
-
+$width: 320px;
 
 .billboard {
   position: relative;
-  z-index: 100;
-  width: 320px;
-  height: 60vh;
-  max-height: 480px;
+  width: 80%;
+  min-width: $width;
+  margin: 0 auto;
   padding: $card-padding-wider;
-  border-radius: $border-radius-base;
   color: #fff;
+  z-index: 100;
+  border-radius: $border-radius-base $border-radius-base 0 0;
   background: linear-gradient($purple-6, #8A2387);
-  // box-shadow: rgba(0, 0, 0, 0.1) 0 8px 40px 6px;
+
+  @include mq($from: desktop) {
+    width: $width;
+    height: 60vh;
+    max-height: 480px;
+    margin: 0;
+    border-radius: $border-radius-base;
+  }
 
   &::before {
     content: '';
@@ -33,8 +35,13 @@
     background-image: url(../../assets/pattern.jpg), linear-gradient($purple-6, #702c63);
     background-position: center center;
     background-size: cover;
-    border-radius: $border-radius-base;
+    border-radius: $border-radius-base $border-radius-base 0 0;
     box-shadow: rgba(0, 0, 0, 0.5) 0 1px 10px 6px;
+
+    @include mq($from: desktop) {
+      border-radius: $border-radius-base;
+    }
+
   }
 }
 
@@ -81,14 +88,22 @@
 }
 
 .form {
-  width: 320px;
+  width: 80%;
+  min-width: $width;
   padding: $card-padding-wider;
-  border-radius: 0 $border-radius-base $border-radius-base 0;
+  margin: 0 auto;
+  border-radius: 0 0 $border-radius-base $border-radius-base;
   background: #fff;
   box-shadow: rgba(0, 0, 0, 0.1) 0 8px 40px 6px;
 
   :global(.ant-form-item:last-of-type) {
     margin: 0;
+  }
+
+  @include mq($from: desktop) {
+    width: $width;
+    margin: 0;
+    border-radius: 0 $border-radius-base $border-radius-base 0;
   }
 }
 
