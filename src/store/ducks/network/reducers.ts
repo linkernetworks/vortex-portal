@@ -1,5 +1,5 @@
 import { ActionType, StateType, getType } from 'typesafe-actions';
-import Network from './actions';
+import * as Network from './actions';
 import { Network as networkModel, dataPathType } from './models';
 
 export type NetworkStateType = StateType<typeof networkReducer>;

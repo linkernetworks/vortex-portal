@@ -1,5 +1,5 @@
 import { ActionType, StateType, getType } from 'typesafe-actions';
-import Intl from './actions';
+import * as Intl from './actions';
 
 export type IntlStateType = StateType<typeof intlReducer>;
 export type IntlActionType = ActionType<typeof Intl>;

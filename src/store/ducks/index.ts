@@ -1,16 +1,11 @@
 import { combineReducers } from 'redux';
+import { combineEpics } from 'redux-observable';
 import {
   routerReducer,
   RouterState,
   RouterAction,
   LocationChangeAction
 } from 'react-router-redux';
-
-import {
-  default as enthusiasm,
-  EnthusiasmActionType,
-  EnthusiasmStateType
-} from './enthusiasm';
 
 import { default as intl, IntlActionType, IntlStateType } from './intl';
 
@@ -20,23 +15,31 @@ import {
   NetworkStateType
 } from './network';
 
+import {
+  default as cluster,
+  ClusterActionType,
+  ClusterStateType
+} from './cluster';
+
 export interface RootState {
   router: RouterState;
-  enthusiasm: EnthusiasmStateType;
   intl: IntlStateType;
+  cluster: ClusterStateType;
   network: NetworkStateType;
 }
 
 type ReactRouterAction = RouterAction | LocationChangeAction;
 export type RootAction =
   | ReactRouterAction
-  | EnthusiasmActionType
   | IntlActionType
+  | ClusterActionType
   | NetworkActionType;
+
+export const rootEpic = combineEpics();
 
 export default combineReducers<RootState>({
   router: routerReducer,
-  enthusiasm,
   intl,
+  cluster,
   network
 });
