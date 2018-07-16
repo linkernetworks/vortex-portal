@@ -1,5 +1,3 @@
-/* tslint:disable */
-
 const { getLoader } = require("react-app-rewired");
 const tsImportPluginFactory = require('ts-import-plugin')
 const rewireCssModules = require('react-app-rewire-css-modules');

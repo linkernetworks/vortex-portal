@@ -7,6 +7,7 @@ import Node from '@/routes/Compute/Node';
 import Overview from '@/routes/Compute/Overview';
 import Service from '@/routes/Service';
 import Storage from '@/routes/Storage';
+import Network from '@/routes/Network';
 import Login from '@/routes/Login';
 import NotFound from '@/routes/Exception/404';
 
@@ -44,6 +45,7 @@ const appRoutes = (
       component={Node}
       path="/compute/node"
     />
+    <RouteWithLayout layout={MainLayout} component={Network} path="/network" />
     <RouteWithLayout layout={MainLayout} component={Service} path="/service" />
     <RouteWithLayout layout={MainLayout} component={Storage} path="/storage" />
     <Route component={NotFound} />

@@ -55,9 +55,7 @@ class MainLayout extends React.PureComponent<MainLayoutProps, object> {
                 localeOptions={localeOptions}
               />
             </Header>
-            <Content className={styles.content}>
-              <div className={styles.card}>{this.props.children}</div>
-            </Content>
+            <Content className={styles.content}>{this.props.children}</Content>
             <Footer className={styles.footer}>Made by ❤️</Footer>
           </Layout>
         </Layout>

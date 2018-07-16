@@ -1,0 +1,77 @@
+@import '../../styles/variables';
+
+$tag-gutter: 8px;
+
+.column {
+  flex: 2;
+
+  :global {
+    .title {
+      color: $text-color-secondary;
+      font-size: $font-size-sm;
+      line-height: 20px;
+    }
+    .content {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.leading {
+  width: 100%;
+
+  :global(.title) {
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.nodes {
+  display: flex;
+  flex: 2;
+  overflow-x: auto;
+}
+
+.node {
+  margin-right: 1em;
+  min-width: 52px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  :global {
+    .icon {
+      font-size: 2.4em;
+    }
+    .name {
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+.modal {
+  :global {
+    // .ant-modal {
+    //   top: 0;
+    // }
+
+    // .ant-modal-content {
+    //   height: 100vh;
+    // }
+  }
+}
+
+.tags {
+  margin-bottom: -$tag-gutter;
+}
+
+.tag {
+  margin-bottom: $tag-gutter;
+}
+
+.add {
+  margin: 1em 0;
+  width: 100%;
+}
+

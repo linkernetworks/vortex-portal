@@ -35,17 +35,7 @@ export const menuData: Array<MenuItem> = [
   {
     name: 'network',
     path: 'network',
-    icon: 'share-alt',
-    children: [
-      {
-        name: 'ovs',
-        path: 'ovs'
-      },
-      {
-        name: 'dpdk',
-        path: 'dpdk'
-      }
-    ]
+    icon: 'share-alt'
   },
   {
     name: 'service',
