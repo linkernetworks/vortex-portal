@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import { createEpicMiddleware } from 'redux-observable';
 import createHistory from 'history/createBrowserHistory';
 
-import rootReducer, { rootEpic } from './ducks';
+import rootReducer, { rootEpic } from '@/store/ducks';
 
 const initialState = {};
 export const history = createHistory();
@@ -15,8 +15,8 @@ const epicMiddleware = createEpicMiddleware();
 
 const enhancers: Array<any> = [];
 const middlewares: Array<Middleware> = [
-  thunk,
   routerMiddleware(history),
+  thunk,
   epicMiddleware
 ];
 
@@ -31,6 +31,16 @@ const composeEnhancers = composeWithDevTools(
 
 export default function configureStore() {
   const store = createStore(rootReducer, initialState, composeEnhancers);
+
+  // Hot reload reducers
+  if (process.env.NODE_ENV === 'development') {
+    if (module.hot) {
+      module.hot.accept('./ducks/index', () =>
+        store.replaceReducer(require('./ducks/index').default)
+      );
+    }
+  }
+
   epicMiddleware.run(rootEpic);
   return store;
 }
