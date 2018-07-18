@@ -2,11 +2,11 @@ import { applyMiddleware, createStore, Middleware } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import logger from 'redux-logger';
-import thunk from 'redux-thunk';
+import thunk, { ThunkMiddleware } from 'redux-thunk';
 import { createEpicMiddleware } from 'redux-observable';
 import createHistory from 'history/createBrowserHistory';
 
-import rootReducer, { rootEpic } from '@/store/ducks';
+import rootReducer, { rootEpic, RootState, RootAction } from '@/store/ducks';
 
 const initialState = {};
 export const history = createHistory();
@@ -16,7 +16,7 @@ const epicMiddleware = createEpicMiddleware();
 const enhancers: Array<any> = [];
 const middlewares: Array<Middleware> = [
   routerMiddleware(history),
-  thunk,
+  thunk as ThunkMiddleware<RootState, RootAction>,
   epicMiddleware
 ];
 

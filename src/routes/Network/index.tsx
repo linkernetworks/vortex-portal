@@ -16,10 +16,11 @@ import {
 } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dispatch } from 'redux';
+import { Dispatch, bindActionCreators } from 'redux';
 
 import * as styles from './styles.module.scss';
-import { RootState, RootAction } from '@/store/ducks';
+import { RootState, RootAction, RTDispatch } from '@/store/ducks';
+import { clusterOperations } from '@/store/ducks/cluster';
 import { networkModels, networkActions } from '@/store/ducks/network';
 
 const ListItem = List.Item;
@@ -42,6 +43,7 @@ interface NetworkState {
 interface NetworkProps {
   networks: Array<networkModels.Network>;
   deleteNetwork: (id: string) => any;
+  fetchNodes: () => any;
 }
 
 class Network extends React.Component<NetworkProps, NetworkState> {
@@ -50,6 +52,10 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     this.state = {
       dataSource: []
     };
+  }
+
+  public componentDidMount() {
+    this.props.fetchNodes();
   }
 
   protected renderTags = (tags: Array<string | number>) => {
@@ -157,7 +163,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   protected renderCreateModal = () => {
     return (
       <Modal
-        visible={true}
+        visible={false}
         wrapClassName={styles.modal}
         title={<FormattedMessage id="network.createNewNetwork" />}
       >
@@ -194,7 +200,8 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
+const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
+  fetchNodes: () => dispatch(clusterOperations.fetchNodesRequest()),
   deleteNetwork: (id: string) => dispatch(networkActions.deleteNetwork({ id }))
 });
 

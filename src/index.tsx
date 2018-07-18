@@ -7,9 +7,9 @@ import { faServer, faPlug } from '@fortawesome/free-solid-svg-icons';
 
 import './styles/index.scss';
 
-import { default as appRoutes } from './routes';
-import configureStore, { history } from './store/configureStore';
-import registerServiceWorker from './registerServiceWorker';
+import { default as appRoutes } from '@/routes';
+import configureStore, { history } from '@/store/configureStore';
+import registerServiceWorker from '@/registerServiceWorker';
 import LocaleContainer from '@/containers/LocaleContainer';
 
 const store = configureStore();

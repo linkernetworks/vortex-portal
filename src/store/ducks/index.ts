@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { ThunkDispatch, ThunkAction } from 'redux-thunk';
 import { combineEpics } from 'redux-observable';
 import {
   routerReducer,
@@ -7,19 +8,24 @@ import {
   LocationChangeAction
 } from 'react-router-redux';
 
-import { default as intl, IntlActionType, IntlStateType } from './intl';
+import {
+  default as intl,
+  IntlActionType,
+  IntlStateType
+} from '@/store/ducks/intl';
 
 import {
   default as network,
   NetworkActionType,
   NetworkStateType
-} from './network';
+} from '@/store/ducks/network';
 
 import {
   default as cluster,
+  clusterOperations,
   ClusterActionType,
   ClusterStateType
-} from './cluster';
+} from '@/store/ducks/cluster';
 
 export interface RootState {
   router: RouterState;
@@ -34,6 +40,10 @@ export type RootAction =
   | IntlActionType
   | ClusterActionType
   | NetworkActionType;
+
+// Redux Thunk
+export type RTDispatch = ThunkDispatch<RootState, undefined, RootAction>;
+export type RTAction<R> = ThunkAction<R, RootState, undefined, RootAction>;
 
 export const rootEpic = combineEpics();
 
