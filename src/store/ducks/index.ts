@@ -22,7 +22,6 @@ import {
 
 import {
   default as cluster,
-  clusterOperations,
   ClusterActionType,
   ClusterStateType
 } from '@/store/ducks/cluster';

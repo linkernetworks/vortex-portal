@@ -16,7 +16,7 @@ import {
 } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dispatch, bindActionCreators } from 'redux';
+import { Dispatch } from 'redux';
 
 import * as styles from './styles.module.scss';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
@@ -201,7 +201,7 @@ const mapStateToProps = (state: RootState) => {
 };
 
 const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
-  fetchNodes: () => dispatch(clusterOperations.fetchNodesRequest()),
+  fetchNodes: () => dispatch(clusterOperations.fetchNodes()),
   deleteNetwork: (id: string) => dispatch(networkActions.deleteNetwork({ id }))
 });
 

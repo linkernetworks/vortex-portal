@@ -1,6 +1,5 @@
 import { ActionType, StateType, getType } from 'typesafe-actions';
 import * as Cluster from './actions';
-import * as operations from './operations';
 
 export type ClusterStateType = StateType<typeof clusterReducer>;
 export type ClusterActionType = ActionType<typeof Cluster>;
@@ -18,8 +17,8 @@ export function clusterReducer(
   }
 
   switch (action.type) {
-    case getType(Cluster.fetchNodesSuccess):
-      return { ...state, nodes: action.payload.nodes };
+    case getType(Cluster.fetchNodes.success):
+      return { ...state, nodes: action.payload };
     default:
       return state;
   }
