@@ -14,8 +14,7 @@ export const fetchNodeNICs = createAsyncAction(
 )<
   void,
   {
-    node: string;
-    nics: Array<Node.NetworkInterfaceController>;
+    [node: string]: Array<Node.NetworkInterfaceController>;
   },
   Error
 >();

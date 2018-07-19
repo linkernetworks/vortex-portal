@@ -43,7 +43,7 @@ interface NetworkState {
 interface NetworkProps {
   networks: Array<networkModels.Network>;
   deleteNetwork: (id: string) => any;
-  fetchNodes: () => any;
+  fetchNodesWithNICs: () => any;
 }
 
 class Network extends React.Component<NetworkProps, NetworkState> {
@@ -55,7 +55,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   }
 
   public componentDidMount() {
-    this.props.fetchNodes();
+    this.props.fetchNodesWithNICs();
   }
 
   protected renderTags = (tags: Array<string | number>) => {
@@ -201,7 +201,7 @@ const mapStateToProps = (state: RootState) => {
 };
 
 const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
-  fetchNodes: () => dispatch(clusterOperations.fetchNodes()),
+  fetchNodesWithNICs: () => dispatch(clusterOperations.fetchNodesWithNICs()),
   deleteNetwork: (id: string) => dispatch(networkActions.deleteNetwork({ id }))
 });
 
