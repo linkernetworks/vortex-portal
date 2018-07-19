@@ -6,5 +6,13 @@ import {
 
 import * as networkModels from './models';
 import * as networkActions from './actions';
-export { networkModels, networkActions, NetworkActionType, NetworkStateType };
+import * as networkOperations from './operations';
+
+export {
+  networkModels,
+  networkActions,
+  networkOperations,
+  NetworkActionType,
+  NetworkStateType
+};
 export default networkReducer;

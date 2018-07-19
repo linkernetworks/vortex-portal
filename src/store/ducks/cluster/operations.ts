@@ -1,7 +1,6 @@
 import { RTAction } from '../index';
 import { clusterActions, ClusterActionType } from './index';
 import * as nodeAPI from '@/services/node';
-import { resolve } from 'path';
 
 export const fetchNodes = (): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
