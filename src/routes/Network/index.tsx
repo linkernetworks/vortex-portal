@@ -2,7 +2,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import {
   Card,
-  Input,
   Button,
   Tag,
   Icon,
@@ -10,7 +9,6 @@ import {
   List,
   Popconfirm,
   Modal,
-  Form,
   Row,
   Col
 } from 'antd';
@@ -19,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dispatch } from 'redux';
 
 import * as styles from './styles.module.scss';
+import { Omit } from '@/utils/types';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
 import {
@@ -27,13 +26,15 @@ import {
   networkOperations
 } from '@/store/ducks/network';
 
+import NetworkFrom from '@/components/NetworkForm';
+
 const ListItem = List.Item;
 const TreeNode = Tree.TreeNode;
 
 interface NetworkRecord {
   key?: string | number;
   networkname: string;
-  brigename: string;
+  bridgename: string;
   node: Array<string>;
   type: string;
   physicalInterface: Array<string>;
@@ -42,12 +43,14 @@ interface NetworkRecord {
 
 interface NetworkState {
   isCreating: boolean;
+  formDate?: {
+    name: string;
+  };
   dataSource: Array<NetworkRecord>;
 }
 
 interface NetworkProps {
   networks: Array<networkModels.Network>;
-  fetchNewtorks: () => any;
   fetchNodesWithNICs: () => any;
   deleteNetwork: (id: string) => any;
 }
@@ -57,12 +60,14 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     super(props);
     this.state = {
       isCreating: false,
+      formDate: {
+        name: ''
+      },
       dataSource: []
     };
   }
 
   public componentDidMount() {
-    this.props.fetchNewtorks();
     this.props.fetchNodesWithNICs();
   }
 
@@ -171,13 +176,11 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   protected renderCreateModal = () => {
     return (
       <Modal
-        visible={false}
+        visible={true}
         wrapClassName={styles.modal}
         title={<FormattedMessage id="network.createNewNetwork" />}
       >
-        <Form>
-          <Input />
-        </Form>
+        <NetworkFrom name={this.state.formDate!.name} />
       </Modal>
     );
   };
@@ -209,7 +212,6 @@ const mapStateToProps = (state: RootState) => {
 };
 
 const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
-  fetchNewtorks: () => dispatch(networkOperations.fetchNeworks()),
   fetchNodesWithNICs: () => dispatch(clusterOperations.fetchNodesWithNICs()),
   deleteNetwork: (id: string) => dispatch(networkActions.deleteNetwork({ id }))
 });
