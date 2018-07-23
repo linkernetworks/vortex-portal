@@ -4,6 +4,7 @@ import { Form, Button, Icon, Dropdown, Select, Input, Radio, Tag } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import * as styles from './styles.module.scss';
 import * as Network from '@/models/Network';
+import EditableTagGroup from '@/components/EditableTagGroup';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -29,11 +30,8 @@ class NetworkForm extends React.PureComponent<NetworkFormProps, object> {
               },
               {
                 validator(rule, value, callback) {
-                  if (value === 'e') {
-                    callback(rule.message);
-                  } else {
-                    callback();
-                  }
+                  const result = value ? rule.message : '';
+                  callback(result);
                 },
                 message: 'Please enter the unique network name.'
               }
@@ -44,6 +42,9 @@ class NetworkForm extends React.PureComponent<NetworkFormProps, object> {
           <RadioButton>
             {/* <RadioButton value=""></RadioButton> */}
           </RadioButton>
+        </FormItem>
+        <FormItem label={<FormattedMessage id="network.trunk" />}>
+          <EditableTagGroup />
         </FormItem>
         <FormItem label={<FormattedMessage id="network.nodes" />}>
           <Input />

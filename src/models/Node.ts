@@ -1,3 +1,12 @@
+import { dataPathType } from '@/models/Network';
+export interface Node {
+  [name: string]: {
+    detail: Detail;
+    resource: Resource;
+    nics: NetworkInterfaceController;
+  };
+}
+
 export interface Detail {
   hostname: string;
   createAt: number;
@@ -6,7 +15,7 @@ export interface Detail {
   kernelVersion: string;
   kubeproxyVersion: string;
   kubernetesVersion: string;
-  label: Map<string, string>;
+  labels: Map<string, string>;
 }
 
 export interface Resource {
@@ -25,18 +34,28 @@ export interface Resource {
 }
 
 export interface NetworkInterfaceController {
+  [interfaceName: string]: {
+    default: boolean;
+    type: dataPathType;
+    ip: string;
+    pciID: string;
+    nicNetworkTraffic: {
+      receiveBytesTotal: number;
+      transmitBytesTotal: number;
+      receivePacketsTotal: number;
+      transmitPacketsTotal: number;
+    };
+  };
+}
+
+export interface NICBrief {
   name: string;
   default: boolean;
-  type: NICType;
+  type: dataPathType;
   pciID: string;
 }
 
 export interface Info {
   detail: Detail;
   resource: Resource;
-}
-
-export enum NICType {
-  virtual = 'virtual',
-  physical = 'physical'
 }

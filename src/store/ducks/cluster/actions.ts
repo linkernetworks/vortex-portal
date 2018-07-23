@@ -5,7 +5,7 @@ export const fetchNodes = createAsyncAction(
   'FETCH_NODES_REQUEST',
   'FETCH_NODES_SUCCESS',
   'FETCH_NODES_FAILURE'
-)<void, Array<string>, Error>();
+)<void, Node.Node, Error>();
 
 export const fetchNodeNICs = createAsyncAction(
   'FETCH_NICS_REQUEST',
@@ -14,7 +14,7 @@ export const fetchNodeNICs = createAsyncAction(
 )<
   void,
   {
-    [node: string]: Array<Node.NetworkInterfaceController>;
+    [node: string]: Array<Node.NICBrief>;
   },
   Error
 >();

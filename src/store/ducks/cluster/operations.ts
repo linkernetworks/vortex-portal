@@ -35,7 +35,7 @@ export const fetchNodeNICs = (
 export const fetchNodesWithNICs = (): RTAction<Promise<void>> => {
   return async (dispatch, getState) => {
     await dispatch(fetchNodes());
-    const nodes = getState().cluster.nodes;
+    const nodes = getState().cluster.allNodes;
     nodes.map(node => {
       return dispatch(fetchNodeNICs(node));
     });
