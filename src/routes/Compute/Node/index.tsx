@@ -66,8 +66,13 @@ class Node extends React.Component<NodeProps, NodeState> {
   };
 
   protected renderDetail = (key: string) => {
+    const time = new Date(this.props.nodes[key].detail.createAt);
     return (
       <div>
+        {this.renderListItemContent(
+          <FormattedMessage id={`node.detail.createdAt`} />,
+          time.toISOString()
+        )}
         {this.renderListItemContent(
           <FormattedMessage id={`node.detail.status`} />,
           this.props.nodes[key].detail.status

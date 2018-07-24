@@ -59,19 +59,19 @@ class Pod extends React.Component<PodProps, PodState> {
               <Col span={8}>
                 {this.renderListItemContent(
                   <FormattedMessage id={`container.name`} />,
-                  <div>{container.name}</div>
+                  container.name
                 )}
               </Col>
               <Col span={8}>
                 {this.renderListItemContent(
                   <FormattedMessage id={`container.image`} />,
-                  <div>{container.image}</div>
+                  container.image
                 )}
               </Col>
               <Col span={8}>
                 {this.renderListItemContent(
                   <FormattedMessage id={`container.command`} />,
-                  <div>{container.command}</div>
+                  container.command
                 )}
               </Col>
             </Row>

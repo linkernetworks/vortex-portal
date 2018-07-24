@@ -1,4 +1,5 @@
 export default {
+  'node.detail.createdAt': 'Created At',
   'node.detail.status': 'Status',
   'node.detail.os': 'OS',
   'node.detail.kernelVersion': 'Kernel Version',
