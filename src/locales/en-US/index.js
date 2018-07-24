@@ -6,6 +6,8 @@ import network from './network';
 import action from './action';
 import form from './form'
 import node from './node';
+import pod from './pod';
+import container from './container';
 
 export default {
   'parentLocale': 'en',
@@ -17,5 +19,7 @@ export default {
   ...form,
   ...side,
   ...network,
-  ...node
+  ...node,
+  ...pod,
+  ...container
 };

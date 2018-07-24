@@ -6,6 +6,7 @@ export type ClusterActionType = ActionType<typeof Cluster>;
 
 const initialState = {
   nodes: {},
+  pods: [],
   allNodes: [],
   nics: {},
   isLoading: false
@@ -20,6 +21,7 @@ export function clusterReducer(
   }
 
   switch (action.type) {
+    case getType(Cluster.fetchPods.request):
     case getType(Cluster.fetchNodes.request):
     case getType(Cluster.fetchNodeNICs.request):
       return { ...state, isLoading: true };
@@ -33,6 +35,12 @@ export function clusterReducer(
     case getType(Cluster.fetchNodeNICs.success):
       const nics = { ...state.nics, ...action.payload };
       return { ...state, nics, isLoading: false };
+    case getType(Cluster.fetchPods.success):
+      return {
+        ...state,
+        pods: action.payload,
+        isLoading: false
+      };
     default:
       return state;
   }

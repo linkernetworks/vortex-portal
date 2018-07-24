@@ -1,5 +1,6 @@
 import { createAsyncAction } from 'typesafe-actions';
 import * as Node from '@/models/Node';
+import * as Pod from '@/models/Pod';
 
 export const fetchNodes = createAsyncAction(
   'FETCH_NODES_REQUEST',
@@ -18,3 +19,9 @@ export const fetchNodeNICs = createAsyncAction(
   },
   Error
 >();
+
+export const fetchPods = createAsyncAction(
+  'FETCH_PODS_REQUEST',
+  'FETCH_PODS_SUCCESS',
+  'FETCH_PODS_FAILURE'
+)<void, Array<Pod.Pod>, Error>();

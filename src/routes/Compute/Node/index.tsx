@@ -33,11 +33,11 @@ class Node extends React.Component<NodeProps, NodeState> {
     this.props.fetchNodes();
   }
 
-  protected showDetail = () => {
+  protected showMore = () => {
     this.setState({ visible: true });
   };
 
-  protected hideDetail = () => {
+  protected hideMore = () => {
     this.setState({ visible: false });
   };
 
@@ -146,14 +146,6 @@ class Node extends React.Component<NodeProps, NodeState> {
               this.props.nodes[key].resource.allocatablePods
             )}
           </Col>
-          <Col span={12}>
-            {this.renderListItemContent(
-              <FormattedMessage
-                id={`node.resource.allocatableEphemeralStorage`}
-              />,
-              this.props.nodes[key].resource.allocatableEphemeralStorage
-            )}
-          </Col>
         </Row>
         <Row>
           <Col span={6}>
@@ -229,7 +221,7 @@ class Node extends React.Component<NodeProps, NodeState> {
       <Card
         title={this.props.nodes[key].detail.hostname}
         extra={
-          <a onClick={this.showDetail} href="#">
+          <a onClick={this.showMore} href="#">
             More
           </a>
         }
@@ -241,7 +233,7 @@ class Node extends React.Component<NodeProps, NodeState> {
           width={720}
           placement="right"
           closable={false}
-          onClose={this.hideDetail}
+          onClose={this.hideMore}
           visible={this.state.visible}
         >
           <h2>Resources</h2>

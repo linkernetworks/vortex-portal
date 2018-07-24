@@ -1,6 +1,7 @@
 import { RTAction } from '../index';
 import { clusterActions, ClusterActionType } from './index';
 import * as nodeAPI from '@/services/node';
+import * as podAPI from '@/services/pod';
 
 export const fetchNodes = (): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
@@ -32,12 +33,24 @@ export const fetchNodeNICs = (
   };
 };
 
-export const fetchNodesWithNICs = (): RTAction<Promise<void>> => {
-  return async (dispatch, getState) => {
-    await dispatch(fetchNodes());
-    const nodes = getState().cluster.allNodes;
-    nodes.map(async node => {
-      return await dispatch(fetchNodeNICs(node));
-    });
+// export const fetchNodesWithNICs = (): RTAction<Promise<void>> => {
+//   return async (dispatch, getState) => {
+//     await dispatch(fetchNodes());
+//     const nodes = getState().cluster.allNodes;
+//     nodes.map(node => {
+//       return dispatch(fetchNodeNICs(node));
+//     });
+//   };
+// };
+
+export const fetchPods = (): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.fetchPods.request);
+    try {
+      const res = await podAPI.getPods();
+      return dispatch(clusterActions.fetchPods.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.fetchPods.failure(e));
+    }
   };
 };
