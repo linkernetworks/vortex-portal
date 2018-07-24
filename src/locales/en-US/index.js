@@ -5,6 +5,7 @@ import user from './user';
 import network from './network';
 import action from './action';
 import form from './form'
+import node from './node';
 
 export default {
   'parentLocale': 'en',
@@ -15,5 +16,6 @@ export default {
   ...action,
   ...form,
   ...side,
-  ...network
+  ...network,
+  ...node
 };

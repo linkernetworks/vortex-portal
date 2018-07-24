@@ -29,8 +29,8 @@ export interface Resource {
   allocatablePods: number;
   allocatableEphemeralStorage: number;
   capacityCPU: number;
-  capacityMemory: number;
   capacityPods: number;
+  capacityMemory: number;
   capacityEphemeralStorage: number;
 }
 
