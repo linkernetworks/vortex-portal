@@ -14,6 +14,7 @@ import { Card } from 'antd';
 
 interface NodeState {
   visible: boolean;
+  currentKey: string;
 }
 
 interface NodeProps {
@@ -25,7 +26,8 @@ class Node extends React.Component<NodeProps, NodeState> {
   constructor(props: NodeProps) {
     super(props);
     this.state = {
-      visible: false
+      visible: false,
+      currentKey: ''
     };
   }
 
@@ -33,8 +35,8 @@ class Node extends React.Component<NodeProps, NodeState> {
     this.props.fetchNodes();
   }
 
-  protected showMore = () => {
-    this.setState({ visible: true });
+  protected showMore = (key: string) => {
+    this.setState({ visible: true, currentKey: key });
   };
 
   protected hideMore = () => {
@@ -92,10 +94,6 @@ class Node extends React.Component<NodeProps, NodeState> {
         {this.renderListItemContent(
           <FormattedMessage id={`node.detail.kubernetesVersion`} />,
           this.props.nodes[key].detail.kubernetesVersion
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`node.detail.labels`} />,
-          this.renderLabels(this.props.nodes[key].detail.labels)
         )}
       </div>
     );
@@ -226,32 +224,18 @@ class Node extends React.Component<NodeProps, NodeState> {
       <Card
         title={this.props.nodes[key].detail.hostname}
         extra={
-          <a onClick={this.showMore} href="#">
+          <a onClick={() => this.showMore(key)} href="#">
             More
           </a>
         }
       >
         {this.renderDetail(key)}
-
-        <Drawer
-          title={this.props.nodes[key].detail.hostname}
-          width={720}
-          placement="right"
-          closable={false}
-          onClose={this.hideMore}
-          visible={this.state.visible}
-        >
-          <h2>Resources</h2>
-          {this.renderResource(key)}
-
-          <h2>Interfaces</h2>
-          {this.renderInterface(key)}
-        </Drawer>
       </Card>
     );
   };
 
   public render() {
+    const { currentKey } = this.state;
     return (
       <div>
         <Row>
@@ -263,6 +247,28 @@ class Node extends React.Component<NodeProps, NodeState> {
             );
           })}
         </Row>
+        {this.props.nodes.hasOwnProperty(currentKey) && (
+          <Drawer
+            title={this.props.nodes[currentKey].detail.hostname}
+            width={720}
+            placement="right"
+            closable={false}
+            onClose={this.hideMore}
+            visible={this.state.visible}
+          >
+            <h2>Labels</h2>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.detail.labels`} />,
+              this.renderLabels(this.props.nodes[currentKey].detail.labels)
+            )}
+
+            <h2>Resources</h2>
+            {this.renderResource(currentKey)}
+
+            <h2>Interfaces</h2>
+            {this.renderInterface(currentKey)}
+          </Drawer>
+        )}
       </div>
     );
   }

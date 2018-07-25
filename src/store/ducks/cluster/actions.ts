@@ -24,4 +24,4 @@ export const fetchPods = createAsyncAction(
   'FETCH_PODS_REQUEST',
   'FETCH_PODS_SUCCESS',
   'FETCH_PODS_FAILURE'
-)<void, Array<Pod.Pod>, Error>();
+)<void, Pod.Pod, Error>();

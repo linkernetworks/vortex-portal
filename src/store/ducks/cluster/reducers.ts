@@ -6,7 +6,7 @@ export type ClusterActionType = ActionType<typeof Cluster>;
 
 const initialState = {
   nodes: {},
-  pods: [],
+  pods: {},
   allNodes: [],
   nics: {},
   isLoading: false

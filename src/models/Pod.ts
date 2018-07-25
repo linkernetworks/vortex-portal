@@ -1,8 +1,15 @@
-import * as Container from '@/models/Container';
-
 export interface Pod {
-  id: string;
-  name: string;
-  containers: Array<Container.Container>;
-  createdAt: string;
+  [name: string]: {
+    podName: string;
+    namespace: string;
+    node: string;
+    status: string;
+    createAt: number;
+    createByKind: string;
+    createByName: string;
+    ip: string;
+    labels: Map<string, string>;
+    restartCount: number;
+    containers: Array<string>;
+  };
 }
