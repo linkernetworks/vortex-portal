@@ -5,7 +5,7 @@ export const fetchNodes = createAsyncAction(
   'FETCH_NODES_REQUEST',
   'FETCH_NODES_SUCCESS',
   'FETCH_NODES_FAILURE'
-)<void, Node.Node, Error>();
+)<void, Node.Nodes, Error>();
 
 export const fetchNodeNICs = createAsyncAction(
   'FETCH_NICS_REQUEST',

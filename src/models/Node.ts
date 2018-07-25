@@ -1,9 +1,11 @@
+export interface Nodes {
+  [name: string]: Node;
+}
+
 export interface Node {
-  [name: string]: {
-    detail: Detail;
-    resource: Resource;
-    nics: NetworkInterfaceController;
-  };
+  detail: Detail;
+  resource: Resource;
+  nics: NetworkInterfaceController;
 }
 
 export interface Detail {

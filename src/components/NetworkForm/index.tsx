@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { map, get } from 'lodash';
-import { Form, Button, Icon, Dropdown, Select, Input, Radio } from 'antd';
+import { map } from 'lodash';
+import { Form, Button, Icon, Select, Input, Radio } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
 import * as styles from './styles.module.scss';
@@ -18,7 +18,7 @@ const RadioGroup = Radio.Group;
 const Option = Select.Option;
 
 interface NetworkFormProps {
-  nodes: Node.Node;
+  nodes: Node.Nodes;
 }
 
 interface NetworkFormState

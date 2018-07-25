@@ -25,7 +25,7 @@ import {
   networkActions,
   networkOperations
 } from '@/store/ducks/network';
-import { Node, NICType } from '@/models/Node';
+import { Nodes, NICType } from '@/models/Node';
 
 import NetworkFrom from '@/components/NetworkForm';
 
@@ -47,7 +47,7 @@ interface NetworkState {
 }
 
 interface NetworkProps {
-  nodes: Node;
+  nodes: Nodes;
   networks: Array<networkModels.Network>;
   fetchNodes: () => any;
   deleteNetwork: (id: string) => any;
@@ -206,7 +206,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   }
 }
 
-const getNodesWithPysicalNIC = (nodes: Node, list: Array<string>) => {
+const getNodesWithPysicalNIC = (nodes: Nodes, list: Array<string>) => {
   return list.reduce((acc, nodeName) => {
     const node = nodes[nodeName];
     const nics = pickBy(

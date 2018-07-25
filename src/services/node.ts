@@ -1,7 +1,7 @@
 import axios, { AxiosPromise } from 'axios';
 import * as Node from '@/models/Node';
 
-export const getNodes = (): AxiosPromise<Node.Node> => {
+export const getNodes = (): AxiosPromise<Node.Nodes> => {
   return axios.get('/v1/monitoring/nodes');
 };
 
