@@ -13,11 +13,11 @@ import {
   Col
 } from 'antd';
 import { FormattedMessage } from 'react-intl';
+import { pickBy } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dispatch } from 'redux';
 
 import * as styles from './styles.module.scss';
-import { Omit } from '@/utils/types';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
 import {
@@ -25,12 +25,12 @@ import {
   networkActions,
   networkOperations
 } from '@/store/ducks/network';
+import { Node, NICType } from '@/models/Node';
 
 import NetworkFrom from '@/components/NetworkForm';
 
 const ListItem = List.Item;
 const TreeNode = Tree.TreeNode;
-
 interface NetworkRecord {
   key?: string | number;
   networkname: string;
@@ -43,15 +43,13 @@ interface NetworkRecord {
 
 interface NetworkState {
   isCreating: boolean;
-  formDate?: {
-    name: string;
-  };
   dataSource: Array<NetworkRecord>;
 }
 
 interface NetworkProps {
+  nodes: Node;
   networks: Array<networkModels.Network>;
-  fetchNodesWithNICs: () => any;
+  fetchNodes: () => any;
   deleteNetwork: (id: string) => any;
 }
 
@@ -59,16 +57,13 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   constructor(props: NetworkProps) {
     super(props);
     this.state = {
-      isCreating: false,
-      formDate: {
-        name: ''
-      },
+      isCreating: true,
       dataSource: []
     };
   }
 
   public componentDidMount() {
-    this.props.fetchNodesWithNICs();
+    this.props.fetchNodes();
   }
 
   protected renderTags = (tags: Array<string | number>) => {
@@ -176,11 +171,13 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   protected renderCreateModal = () => {
     return (
       <Modal
-        visible={true}
+        visible={this.state.isCreating}
         wrapClassName={styles.modal}
+        onCancel={() => this.setState({ isCreating: false })}
+        destroyOnClose={true}
         title={<FormattedMessage id="network.createNewNetwork" />}
       >
-        <NetworkFrom name={this.state.formDate!.name} />
+        <NetworkFrom nodes={this.props.nodes} />
       </Modal>
     );
   };
@@ -195,7 +192,11 @@ class Network extends React.Component<NetworkProps, NetworkState> {
             dataSource={this.props.networks}
             renderItem={this.renderListItem}
           />
-          <Button type="dashed" className={styles.add}>
+          <Button
+            type="dashed"
+            className={styles.add}
+            onClick={() => this.setState({ isCreating: true })}
+          >
             <Icon type="plus" /> <FormattedMessage id="network.add" />
           </Button>
         </Card>
@@ -205,14 +206,34 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   }
 }
 
+const getNodesWithPysicalNIC = (nodes: Node, list: Array<string>) => {
+  return list.reduce((acc, nodeName) => {
+    const node = nodes[nodeName];
+    const nics = pickBy(
+      node.nics,
+      (_, key) => node.nics[key].type === NICType.physical
+    );
+
+    return {
+      ...acc,
+      [nodeName]: {
+        ...node,
+        nics
+      }
+    };
+  }, {});
+};
+
 const mapStateToProps = (state: RootState) => {
   return {
+    allNodes: state.cluster.allNodes,
+    nodes: getNodesWithPysicalNIC(state.cluster.nodes, state.cluster.allNodes),
     networks: state.network.networks
   };
 };
 
 const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
-  fetchNodesWithNICs: () => dispatch(clusterOperations.fetchNodesWithNICs()),
+  fetchNodes: () => dispatch(clusterOperations.fetchNodes()),
   deleteNetwork: (id: string) => dispatch(networkActions.deleteNetwork({ id }))
 });
 

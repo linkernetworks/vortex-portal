@@ -1,4 +1,3 @@
-import { dataPathType } from '@/models/Network';
 export interface Node {
   [name: string]: {
     detail: Detail;
@@ -36,7 +35,7 @@ export interface Resource {
 export interface NetworkInterfaceController {
   [interfaceName: string]: {
     default: boolean;
-    type: dataPathType;
+    type: NICType;
     ip: string;
     pciID: string;
     nicNetworkTraffic: {
@@ -51,11 +50,16 @@ export interface NetworkInterfaceController {
 export interface NICBrief {
   name: string;
   default: boolean;
-  type: dataPathType;
+  type: NICType;
   pciID: string;
 }
 
 export interface Info {
   detail: Detail;
   resource: Resource;
+}
+
+export enum NICType {
+  virtual = 'virtual',
+  physical = 'physical'
 }

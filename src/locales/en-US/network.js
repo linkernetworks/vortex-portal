@@ -8,5 +8,8 @@ export default {
   'network.VLANTag': 'Trunk VLAN Tag',
   'network.add': 'Add Network Setting',
   'network.noTrunk': 'None Trunk',
-  'network.createNewNetwork': 'Create New Network!',
+  'network.createNewNetwork': 'Create New Network',
+  'network.newTag': 'New Tag',
+  'network.hint.selectNode': 'Select a node',
+  'network.hint.selectInterface': 'Select a interface',
 };

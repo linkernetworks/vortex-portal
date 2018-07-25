@@ -1,25 +1,31 @@
 import * as React from 'react';
 import { Tag, Input, Tooltip, Icon } from 'antd';
 
-interface EditableTagGroupState {
+interface EditableTagGroupProps {
   tags: Array<React.ReactText>;
+  addMessage: React.ReactChild;
+  validator: (value: React.ReactText) => boolean;
+  onChange: (changedValue: any) => void;
+}
+interface EditableTagGroupState {
   inputVisible: boolean;
   inputValue: string;
+  validated: boolean;
 }
 
 class EditableTagGroup extends React.PureComponent<
-  object,
+  EditableTagGroupProps,
   EditableTagGroupState
 > {
   private input: React.RefObject<Input>;
 
-  constructor(props: object) {
+  constructor(props: EditableTagGroupProps) {
     super(props);
     this.input = React.createRef();
     this.state = {
-      tags: [],
       inputVisible: false,
-      inputValue: ''
+      inputValue: '',
+      validated: false
     };
   }
 
@@ -31,31 +37,57 @@ class EditableTagGroup extends React.PureComponent<
   };
 
   protected handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
-    this.setState({ inputValue: e.currentTarget.value });
-  };
-
-  protected handleInputConfirm = () => {
-    const { inputValue } = this.state;
-    let { tags } = this.state;
-    if (inputValue && tags.indexOf(inputValue) === -1) {
-      tags = [...tags, inputValue];
-    }
     this.setState({
-      tags,
-      inputVisible: false,
-      inputValue: ''
+      inputValue: e.currentTarget.value,
+      validated: this.props.validator(e.currentTarget.value)
     });
   };
 
+  protected handleInputConfirm = () => {
+    const { inputValue, validated } = this.state;
+    let tags = this.props.tags;
+
+    if (validated && inputValue && tags.indexOf(inputValue) === -1) {
+      tags = [...tags, inputValue].sort((a, b) => +a - +b);
+      this.props.onChange(tags);
+
+      this.setState({
+        inputVisible: false,
+        inputValue: '',
+        validated: false
+      });
+    }
+  };
+
   protected handleClose = (removedTag: string) => {
-    const tags = this.state.tags.filter(tag => tag !== removedTag);
-    this.setState({ tags });
+    const tags = this.props.tags.filter(tag => tag !== removedTag);
+    this.props.onChange(tags);
   };
 
   public render() {
-    const { tags, inputVisible, inputValue } = this.state;
+    const { inputVisible, inputValue } = this.state;
+    const { tags, addMessage } = this.props;
     return (
       <div>
+        {tags.map((tag: string) => {
+          const isLongTag = tag.length > 20;
+          const tagElem = (
+            <Tag
+              key={tag}
+              closable={true}
+              afterClose={() => this.handleClose(tag)}
+            >
+              {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+            </Tag>
+          );
+          return isLongTag ? (
+            <Tooltip title={tag} key={tag}>
+              {tagElem}
+            </Tooltip>
+          ) : (
+            tagElem
+          );
+        })}
         {inputVisible && (
           <Input
             ref={this.input}
@@ -73,7 +105,7 @@ class EditableTagGroup extends React.PureComponent<
             onClick={this.showInput}
             style={{ background: '#fff', borderStyle: 'dashed' }}
           >
-            <Icon type="plus" /> New Tag
+            <Icon type="plus" /> {addMessage}
           </Tag>
         )}
       </div>

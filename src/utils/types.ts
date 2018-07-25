@@ -12,3 +12,11 @@ export type Diff<T extends object, U extends object> = Pick<
 export type Omit<T, K extends keyof T> = T extends any
   ? Pick<T, SetComplement<keyof T, K>>
   : never;
+
+// Form field type generator
+export type FormField<T> = {
+  [P in keyof T]: {
+    value: T[P] extends object ? T[P] : T[P] | undefined;
+    validateStatus: string;
+  }
+};
