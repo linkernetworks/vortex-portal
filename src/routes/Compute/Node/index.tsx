@@ -14,11 +14,12 @@ import { Card } from 'antd';
 
 interface NodeState {
   visible: boolean;
-  currentKey: string;
+  currentNode: string;
 }
 
 interface NodeProps {
-  nodes: NodeModel.Node;
+  nodes: NodeModel.Nodes;
+  allNodes: Array<string>;
   fetchNodes: () => any;
 }
 
@@ -27,7 +28,7 @@ class Node extends React.Component<NodeProps, NodeState> {
     super(props);
     this.state = {
       visible: false,
-      currentKey: ''
+      currentNode: ''
     };
   }
 
@@ -35,8 +36,8 @@ class Node extends React.Component<NodeProps, NodeState> {
     this.props.fetchNodes();
   }
 
-  protected showMore = (key: string) => {
-    this.setState({ visible: true, currentKey: key });
+  protected showMore = (node: string) => {
+    this.setState({ visible: true, currentNode: node });
   };
 
   protected hideMore = () => {
@@ -67,8 +68,8 @@ class Node extends React.Component<NodeProps, NodeState> {
     );
   };
 
-  protected renderDetail = (key: string) => {
-    const time = new Date(this.props.nodes[key].detail.createAt);
+  protected renderDetail = (node: string) => {
+    const time = new Date(this.props.nodes[node].detail.createAt * 1000);
     return (
       <div>
         {this.renderListItemContent(
@@ -77,42 +78,42 @@ class Node extends React.Component<NodeProps, NodeState> {
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`node.detail.status`} />,
-          this.props.nodes[key].detail.status
+          this.props.nodes[node].detail.status
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`node.detail.os`} />,
-          this.props.nodes[key].detail.os
+          this.props.nodes[node].detail.os
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`node.detail.kernelVersion`} />,
-          this.props.nodes[key].detail.kernelVersion
+          this.props.nodes[node].detail.kernelVersion
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`node.detail.kubeproxyVersion`} />,
-          this.props.nodes[key].detail.kubeproxyVersion
+          this.props.nodes[node].detail.kubeproxyVersion
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`node.detail.kubernetesVersion`} />,
-          this.props.nodes[key].detail.kubernetesVersion
+          this.props.nodes[node].detail.kubernetesVersion
         )}
       </div>
     );
   };
 
-  protected renderResource = (key: string) => {
+  protected renderResource = (node: string) => {
     return (
       <div>
         <Row>
           <Col span={12}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.cpuRequests`} />,
-              this.props.nodes[key].resource.cpuRequests
+              this.props.nodes[node].resource.cpuRequests
             )}
           </Col>
           <Col span={12}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.cpuLimits`} />,
-              this.props.nodes[key].resource.cpuLimits
+              this.props.nodes[node].resource.cpuLimits
             )}
           </Col>
         </Row>
@@ -120,25 +121,25 @@ class Node extends React.Component<NodeProps, NodeState> {
           <Col span={6}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.memoryRequests`} />,
-              this.props.nodes[key].resource.memoryRequests
+              this.props.nodes[node].resource.memoryRequests
             )}
           </Col>
           <Col span={6}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.memoryLimits`} />,
-              this.props.nodes[key].resource.memoryLimits
+              this.props.nodes[node].resource.memoryLimits
             )}
           </Col>
           <Col span={6}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.allocatableCPU`} />,
-              this.props.nodes[key].resource.allocatableCPU
+              this.props.nodes[node].resource.allocatableCPU
             )}
           </Col>
           <Col span={6}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.allocatableMemory`} />,
-              this.props.nodes[key].resource.allocatableMemory
+              this.props.nodes[node].resource.allocatableMemory
             )}
           </Col>
         </Row>
@@ -146,7 +147,7 @@ class Node extends React.Component<NodeProps, NodeState> {
           <Col span={12}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.allocatablePods`} />,
-              this.props.nodes[key].resource.allocatablePods
+              this.props.nodes[node].resource.allocatablePods
             )}
           </Col>
         </Row>
@@ -154,19 +155,19 @@ class Node extends React.Component<NodeProps, NodeState> {
           <Col span={6}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.capacityCPU`} />,
-              this.props.nodes[key].resource.capacityCPU
+              this.props.nodes[node].resource.capacityCPU
             )}
           </Col>
           <Col span={6}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.capacityPods`} />,
-              this.props.nodes[key].resource.capacityPods
+              this.props.nodes[node].resource.capacityPods
             )}
           </Col>
           <Col span={6}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.capacityMemory`} />,
-              this.props.nodes[key].resource.capacityMemory
+              this.props.nodes[node].resource.capacityMemory
             )}
           </Col>
           <Col span={6}>
@@ -174,7 +175,7 @@ class Node extends React.Component<NodeProps, NodeState> {
               <FormattedMessage
                 id={`node.resource.capacityEphemeralStorage`}
               />,
-              this.props.nodes[key].resource.capacityEphemeralStorage
+              this.props.nodes[node].resource.capacityEphemeralStorage
             )}
           </Col>
         </Row>
@@ -182,10 +183,10 @@ class Node extends React.Component<NodeProps, NodeState> {
     );
   };
 
-  protected renderInterface = (key: string) => {
+  protected renderInterface = (node: string) => {
     return (
       <div>
-        {Object.keys(this.props.nodes[key].nics).map(name => {
+        {Object.keys(this.props.nodes[node].nics).map(name => {
           return (
             <div key={name}>
               <Col span={6}>
@@ -197,19 +198,19 @@ class Node extends React.Component<NodeProps, NodeState> {
               <Col span={6}>
                 {this.renderListItemContent(
                   <FormattedMessage id={`node.nics.type`} />,
-                  this.props.nodes[key].nics[name].type
+                  this.props.nodes[node].nics[name].type
                 )}
               </Col>
               <Col span={6}>
                 {this.renderListItemContent(
                   <FormattedMessage id={`node.nics.ip`} />,
-                  this.props.nodes[key].nics[name].ip
+                  this.props.nodes[node].nics[name].ip
                 )}
               </Col>
               <Col span={6}>
                 {this.renderListItemContent(
                   <FormattedMessage id={`node.nics.pciID`} />,
-                  this.props.nodes[key].nics[name].pciID
+                  this.props.nodes[node].nics[name].pciID
                 )}
               </Col>
             </div>
@@ -219,37 +220,33 @@ class Node extends React.Component<NodeProps, NodeState> {
     );
   };
 
-  protected renderCardItem = (key: string) => {
+  protected renderCardItem = (node: string) => {
     return (
       <Card
-        title={this.props.nodes[key].detail.hostname}
-        extra={
-          <a onClick={() => this.showMore(key)} href="#">
-            More
-          </a>
-        }
+        title={this.props.nodes[node].detail.hostname}
+        extra={<a onClick={() => this.showMore(node)}>More</a>}
       >
-        {this.renderDetail(key)}
+        {this.renderDetail(node)}
       </Card>
     );
   };
 
   public render() {
-    const { currentKey } = this.state;
+    const { currentNode } = this.state;
     return (
       <div>
         <Row>
-          {Object.keys(this.props.nodes).map(key => {
+          {this.props.allNodes.map(node => {
             return (
-              <Col key={key} span={12}>
-                {this.renderCardItem(key)}
+              <Col key={node} span={12}>
+                {this.renderCardItem(node)}
               </Col>
             );
           })}
         </Row>
-        {this.props.nodes.hasOwnProperty(currentKey) && (
+        {this.props.nodes.hasOwnProperty(currentNode) && (
           <Drawer
-            title={this.props.nodes[currentKey].detail.hostname}
+            title={this.props.nodes[currentNode].detail.hostname}
             width={720}
             placement="right"
             closable={false}
@@ -259,14 +256,14 @@ class Node extends React.Component<NodeProps, NodeState> {
             <h2>Labels</h2>
             {this.renderListItemContent(
               <FormattedMessage id={`node.detail.labels`} />,
-              this.renderLabels(this.props.nodes[currentKey].detail.labels)
+              this.renderLabels(this.props.nodes[currentNode].detail.labels)
             )}
 
             <h2>Resources</h2>
-            {this.renderResource(currentKey)}
+            {this.renderResource(currentNode)}
 
             <h2>Interfaces</h2>
-            {this.renderInterface(currentKey)}
+            {this.renderInterface(currentNode)}
           </Drawer>
         )}
       </div>
@@ -285,7 +282,8 @@ const mapStateToProps = (state: RootState) => {
   });
 
   return {
-    nodes: state.cluster.nodes
+    nodes: state.cluster.nodes,
+    allNodes: state.cluster.allNodes
   };
 };
 

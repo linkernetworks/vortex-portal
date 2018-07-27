@@ -5,6 +5,7 @@ import MainLayout from '@/layouts/MainLayout';
 import UserLayout from '@/layouts/UserLayout';
 import Node from '@/routes/Compute/Node';
 import Pod from '@/routes/Compute/Pod';
+import Container from '@/routes/Compute/Container';
 import Overview from '@/routes/Compute/Overview';
 import Service from '@/routes/Service';
 import Storage from '@/routes/Storage';
@@ -47,6 +48,11 @@ const appRoutes = (
       path="/compute/node"
     />
     <RouteWithLayout layout={MainLayout} component={Pod} path="/compute/pod" />
+    <RouteWithLayout
+      layout={MainLayout}
+      component={Container}
+      path="/compute/container"
+    />
     <RouteWithLayout layout={MainLayout} component={Network} path="/network" />
     <RouteWithLayout layout={MainLayout} component={Service} path="/service" />
     <RouteWithLayout layout={MainLayout} component={Storage} path="/storage" />

@@ -2,6 +2,7 @@ import { RTAction } from '../index';
 import { clusterActions, ClusterActionType } from './index';
 import * as nodeAPI from '@/services/node';
 import * as podAPI from '@/services/pod';
+import * as containerAPI from '@/services/container';
 
 export const fetchNodes = (): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
@@ -51,6 +52,32 @@ export const fetchPods = (): RTAction<Promise<ClusterActionType>> => {
       return dispatch(clusterActions.fetchPods.success(res.data));
     } catch (e) {
       return dispatch(clusterActions.fetchPods.failure(e));
+    }
+  };
+};
+
+export const fetchContainers = (): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.fetchContainers.request);
+    try {
+      const res = await containerAPI.getContainers();
+      return dispatch(clusterActions.fetchContainers.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.fetchContainers.failure(e));
+    }
+  };
+};
+
+export const fetchContainer = (
+  container: string
+): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.fetchContainer.request);
+    try {
+      const res = await containerAPI.getContainer(container);
+      return dispatch(clusterActions.fetchContainer.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.fetchContainer.failure(e));
     }
   };
 };

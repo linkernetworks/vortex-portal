@@ -1,11 +1,13 @@
-export interface Nodes {
-  [name: string]: Node;
-}
+import { dataPathType } from '@/models/Network';
 
 export interface Node {
   detail: Detail;
   resource: Resource;
   nics: NetworkInterfaceController;
+}
+
+export interface Nodes {
+  [name: string]: Node;
 }
 
 export interface Detail {

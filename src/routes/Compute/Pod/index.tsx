@@ -1,24 +1,34 @@
 import * as React from 'react';
 import * as PodModel from '@/models/Pod';
+import * as ContainerModel from '@/models/Container';
+import * as NetworkModel from '@/models/Network';
 import { connect } from 'react-redux';
-import { Row, Col, Tag, Drawer } from 'antd';
+import { Row, Col, Tag, Drawer, Button, Icon, Modal } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { dataPathType } from '@/models/Network';
 
 import { Dispatch } from 'redux';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterActions, clusterOperations } from '@/store/ducks/cluster';
 
+import * as containerAPI from '@/services/container';
+import * as networkAPI from '@/services/network';
+
 import * as styles from './styles.module.scss';
 import { Card } from 'antd';
 
+import PodForm from '@/components/PodForm';
+
 interface PodState {
-  visible: boolean;
-  currentKey: string;
+  visibleDrawer: boolean;
+  visibleModal: boolean;
+  currentPod: string;
+  containers: Array<ContainerModel.Container>;
+  networks: Array<NetworkModel.Network>;
 }
 
 interface PodProps {
-  pods: PodModel.Pod;
+  pods: PodModel.Pods;
+  allPods: Array<string>;
   fetchPods: () => any;
 }
 
@@ -26,8 +36,11 @@ class Pod extends React.Component<PodProps, PodState> {
   constructor(props: PodProps) {
     super(props);
     this.state = {
-      visible: false,
-      currentKey: ''
+      visibleDrawer: false,
+      visibleModal: false,
+      currentPod: '',
+      containers: [],
+      networks: []
     };
   }
 
@@ -35,12 +48,30 @@ class Pod extends React.Component<PodProps, PodState> {
     this.props.fetchPods();
   }
 
-  protected showMore = (key: string) => {
-    this.setState({ visible: true, currentKey: key });
+  protected showCreate = () => {
+    networkAPI.getNetworks().then(res => {
+      this.setState({ networks: res.data });
+    });
+    this.setState({ visibleModal: true });
+  };
+
+  protected hideCreate = () => {
+    this.setState({ visibleModal: false });
+  };
+
+  protected showMore = (pod: string) => {
+    const containers: Array<ContainerModel.Container> = [];
+    this.props.pods[pod].containers.map(container => {
+      containerAPI.getContainer(container).then(res => {
+        containers.push(res.data);
+        this.setState({ containers });
+      });
+    });
+    this.setState({ visibleDrawer: true, currentPod: pod });
   };
 
   protected hideMore = () => {
-    this.setState({ visible: false });
+    this.setState({ visibleDrawer: false });
   };
 
   protected renderLabels = (labels: Map<string, string>) => {
@@ -67,91 +98,143 @@ class Pod extends React.Component<PodProps, PodState> {
     );
   };
 
-  protected renderDetail = (key: string) => {
+  protected renderContainer = () => {
+    return (
+      <div>
+        {this.state.containers.map(container => {
+          return (
+            <Row key={container.detail.containerName}>
+              <Col span={6}>
+                {this.renderListItemContent(
+                  <FormattedMessage id={`container.detail.name`} />,
+                  container.detail.containerName
+                )}
+              </Col>
+              <Col span={6}>
+                {this.renderListItemContent(
+                  <FormattedMessage id={`container.status.status`} />,
+                  container.status.status
+                )}
+              </Col>
+              <Col span={6}>
+                {this.renderListItemContent(
+                  <FormattedMessage id={`container.detail.namespace`} />,
+                  container.detail.namespace
+                )}
+              </Col>
+              <Col span={6}>
+                {this.renderListItemContent(
+                  <FormattedMessage id={`container.detail.image`} />,
+                  container.detail.image
+                )}
+              </Col>
+            </Row>
+          );
+        })}
+      </div>
+    );
+  };
+
+  protected renderDetail = (pod: string) => {
+    const time = new Date(this.props.pods[pod].createAt * 1000);
     return (
       <div>
         {this.renderListItemContent(
           <FormattedMessage id={`pod.status`} />,
-          this.props.pods[key].status
+          this.props.pods[pod].status
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`pod.namespace`} />,
-          this.props.pods[key].namespace
+          this.props.pods[pod].namespace
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`pod.ip`} />,
-          this.props.pods[key].ip
+          this.props.pods[pod].ip
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`pod.node`} />,
-          this.props.pods[key].node
+          this.props.pods[pod].node
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`pod.createAt`} />,
-          this.props.pods[key].createAt
+          time.toISOString()
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`pod.createByName`} />,
-          this.props.pods[key].createByName
+          this.props.pods[pod].createByName
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`pod.createByKind`} />,
-          this.props.pods[key].createByKind
+          this.props.pods[pod].createByKind
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`pod.restartCount`} />,
-          this.props.pods[key].restartCount
+          this.props.pods[pod].restartCount
         )}
       </div>
     );
   };
 
-  protected renderCardItem = (key: string) => {
+  protected renderCardItem = (pod: string) => {
     return (
       <Card
-        title={this.props.pods[key].podName}
-        extra={
-          <a onClick={() => this.showMore(key)} href="#">
-            More
-          </a>
-        }
+        title={this.props.pods[pod].podName}
+        extra={<a onClick={() => this.showMore(pod)}>More</a>}
       >
-        {this.renderDetail(key)}
+        {this.renderDetail(pod)}
       </Card>
     );
   };
 
+  protected renderCreateModal = () => {
+    return (
+      <Modal
+        visible={this.state.visibleModal}
+        wrapClassName={styles.modal}
+        title={<FormattedMessage id="pod.add" />}
+        onCancel={this.hideCreate}
+      >
+        <PodForm networks={this.state.networks} />
+      </Modal>
+    );
+  };
+
   public render() {
-    const { currentKey } = this.state;
+    const { currentPod } = this.state;
     return (
       <div>
         <Row>
-          {Object.keys(this.props.pods).map(key => {
+          {this.props.allPods.map(pod => {
             return (
-              <Col key={this.props.pods[key].podName} span={6}>
-                {this.renderCardItem(key)}
+              <Col key={this.props.pods[pod].podName} span={6}>
+                {this.renderCardItem(pod)}
               </Col>
             );
           })}
         </Row>
-        {this.props.pods.hasOwnProperty(currentKey) && (
+        {this.props.pods.hasOwnProperty(currentPod) && (
           <Drawer
-            title={this.props.pods[currentKey].podName}
+            title={this.props.pods[currentPod].podName}
             width={720}
             placement="right"
             closable={false}
             onClose={this.hideMore}
-            visible={this.state.visible}
+            visible={this.state.visibleDrawer}
           >
             <h2>Labels</h2>
             {this.renderListItemContent(
               <FormattedMessage id={`pod.labels`} />,
-              this.renderLabels(this.props.pods[currentKey].labels)
+              this.renderLabels(this.props.pods[currentPod].labels)
             )}
 
             <h2>Containers</h2>
+            {this.renderContainer()}
           </Drawer>
         )}
+        <Button type="dashed" className={styles.add} onClick={this.showCreate}>
+          <Icon type="plus" /> <FormattedMessage id="pod.add" />
+        </Button>
+        {this.renderCreateModal()}
       </div>
     );
   }
@@ -159,7 +242,8 @@ class Pod extends React.Component<PodProps, PodState> {
 
 const mapStateToProps = (state: RootState) => {
   return {
-    pods: state.cluster.pods
+    pods: state.cluster.pods,
+    allPods: state.cluster.allPods
   };
 };
 

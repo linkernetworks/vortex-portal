@@ -1,6 +1,7 @@
 export default {
   'network.name': 'Name',
   'network.bridgeName': 'Bridge',
+  'network.interfaceName': 'Interface',
   'network.nodes': 'Nodes',
   'network.type': 'Datapath Type',
   'network.physicalInterface': 'Physical Interface',
@@ -8,6 +9,9 @@ export default {
   'network.createdAt': 'created at',
   'network.vlanTags': 'Trunk VLAN Tags',
   'network.noTrunk': 'None Trunk',
+  'network.createNewNetwork': 'Create New Network!',
+  'network.ipAddress': 'IP Address',
+  'network.netmask': 'Mask',
   'network.newTag': 'New Tag',
   'network.add': 'Add Network Setting',
   'network.form.nodesWithInterface': 'Nodes with Physical Interface',

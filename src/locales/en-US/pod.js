@@ -1,4 +1,5 @@
 export default {
+  'pod.name': 'Name',
   'pod.namespace': 'Namespace',
   'pod.node': 'Node',
   'pod.status': 'Status',
@@ -9,4 +10,5 @@ export default {
   'pod.labels': 'Labels',
   'pod.restartCount': 'Restart Count',
   'pod.containers': 'Containers',
+  'pod.add': 'Create New Pod',
 };
