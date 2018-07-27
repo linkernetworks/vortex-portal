@@ -5,5 +5,6 @@ export default {
   'action.confirm': 'confirm',
   'action.cancel': 'cancel',
   'action.create': 'create',
+  'action.removeAll': 'remove all',
   'action.confirmToDelete': 'Are you sure delete this?',
 }

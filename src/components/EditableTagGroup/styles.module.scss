@@ -1,0 +1,15 @@
+@import '../../styles/variables';
+
+.input {
+  width: 78px;
+  margin-right: 8px;
+}
+
+.tag {
+  background: #fff;
+  border-style: dashed;
+}
+
+.removeAll {
+  font-size: $font-size-sm;
+}

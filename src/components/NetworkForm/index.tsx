@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { map, isEmpty } from 'lodash';
-import { Form, Button, Icon, Select, Input, Radio } from 'antd';
+import { Modal, Form, Button, Icon, Select, Input, Radio } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
 import * as styles from './styles.module.scss';
@@ -17,7 +17,11 @@ const RadioGroup = Radio.Group;
 const Option = Select.Option;
 
 interface NetworkFormProps {
+  visible: boolean;
+  isLoading: boolean;
   nodes: Node.Nodes;
+  onCancel: () => void;
+  onSubmit: () => void;
 }
 
 interface NetworkFormState extends FormField<Network.NetworkFields> {}
@@ -88,7 +92,7 @@ class NetworkForm extends React.PureComponent<
     );
   };
 
-  protected checkRequired = (field: keyof NetworkFormState) => {
+  protected checkRequired = (field: keyof FormField<Network.NetworkFields>) => {
     const value = this.state[field].value;
     const changed = {};
     let result;
@@ -132,7 +136,7 @@ class NetworkForm extends React.PureComponent<
   };
 
   protected handleRawFieldChange = (
-    field: keyof NetworkFormState,
+    field: keyof FormField<Network.NetworkFields>,
     e: React.FormEvent<HTMLInputElement>
   ) => {
     const { value } = e.currentTarget;
@@ -141,7 +145,10 @@ class NetworkForm extends React.PureComponent<
     this.setState(changed);
   };
 
-  protected handleFieldChange = (field: keyof NetworkFormState, value: any) => {
+  protected handleFieldChange = (
+    field: keyof FormField<Network.NetworkFields>,
+    value: any
+  ) => {
     const changed = {};
     changed[field] = { ...this.state[field], value };
     this.setState(changed);
@@ -261,73 +268,95 @@ class NetworkForm extends React.PureComponent<
   };
 
   public render() {
-    const { nodes } = this.props;
+    const { nodes, visible, isLoading, onCancel } = this.props;
 
     return (
-      <Form>
-        <FormItem
-          label={<FormattedMessage id="network.name" />}
-          required={true}
-          validateStatus={this.state.name.validateStatus}
-          help={this.state.name.errorMsg}
-        >
-          <FormattedMessage id="network.hint.enterNetworkName">
-            {(placeholder: string) => (
-              <Input
-                value={this.state.name.value}
-                onChange={this.handleRawFieldChange.bind(this, 'name')}
-                onBlur={this.checkRequired.bind(this, 'name')}
-                placeholder={placeholder}
-              />
-            )}
-          </FormattedMessage>
-        </FormItem>
-        <FormItem
-          label={<FormattedMessage id="network.type" />}
-          required={true}
-        >
-          <RadioGroup
-            buttonStyle="solid"
-            value={this.getTypeRadioValue()}
-            onChange={this.handleTypeChange}
+      <Modal
+        visible={visible}
+        wrapClassName={styles.modal}
+        onCancel={onCancel}
+        title={<FormattedMessage id="network.form.createNewNetwork" />}
+        footer={[
+          <Button key="cancel" onClick={onCancel}>
+            <FormattedMessage id="action.cancel" />
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            loading={isLoading}
+            // onClick={this.handleOk}
           >
-            <RadioButton value="system">System</RadioButton>
-            <RadioButton value="netdev">Netdev</RadioButton>
-            <RadioButton value="dpdk">Netdev with DPDK</RadioButton>
-          </RadioGroup>
-        </FormItem>
-
-        <FormItem
-          label={<FormattedMessage id="network.form.nodesWithInterface" />}
-          required={true}
-          validateStatus={this.state.nodes.validateStatus}
-          help={this.state.nodes.errorMsg}
-        >
-          {this.renderNodes()}
-          {this.state.nodes.value.length < Object.keys(nodes).length && (
-            <Button
-              type="dashed"
-              style={{ width: '100%' }}
-              onClick={this.handleMoreNodeClick}
+            <FormattedMessage id="action.create" />
+          </Button>
+        ]}
+      >
+        <Form>
+          <FormItem
+            label={<FormattedMessage id="network.name" />}
+            required={true}
+            validateStatus={this.state.name.validateStatus}
+            help={this.state.name.errorMsg}
+          >
+            <FormattedMessage id="network.hint.enterNetworkName">
+              {(placeholder: string) => (
+                <Input
+                  value={this.state.name.value}
+                  onChange={this.handleRawFieldChange.bind(this, 'name')}
+                  onBlur={this.checkRequired.bind(this, 'name')}
+                  placeholder={placeholder}
+                />
+              )}
+            </FormattedMessage>
+          </FormItem>
+          <FormItem
+            label={<FormattedMessage id="network.type" />}
+            required={true}
+          >
+            <RadioGroup
+              buttonStyle="solid"
+              value={this.getTypeRadioValue()}
+              onChange={this.handleTypeChange}
             >
-              <Icon type="plus" />
-              <FormattedMessage id="network.form.addMoreNode" />
-            </Button>
-          )}
-        </FormItem>
-        <FormItem
-          label={<FormattedMessage id="network.VLANTag" />}
-          validateStatus={this.state.VLANTags.validateStatus}
-          help={this.state.VLANTags.errorMsg}
-        >
-          <EditableTagGroup
-            tags={this.state.VLANTags.value}
-            onChange={this.handleFieldChange.bind(this, 'VLANTags')}
-            validator={this.checkVLANTag}
-            addMessage={<FormattedMessage id="network.newTag" />}
-          />
-        </FormItem>
-      </Form>
+              <RadioButton value="system">System</RadioButton>
+              <RadioButton value="netdev">Netdev</RadioButton>
+              <RadioButton value="dpdk">Netdev with DPDK</RadioButton>
+            </RadioGroup>
+          </FormItem>
+
+          <FormItem
+            label={<FormattedMessage id="network.form.nodesWithInterface" />}
+            required={true}
+            validateStatus={this.state.nodes.validateStatus}
+            help={this.state.nodes.errorMsg}
+          >
+            {this.renderNodes()}
+            {this.state.nodes.value.length < Object.keys(nodes).length && (
+              <Button
+                type="dashed"
+                style={{ width: '100%' }}
+                onClick={this.handleMoreNodeClick}
+              >
+                <Icon type="plus" />
+                <FormattedMessage id="network.form.addMoreNode" />
+              </Button>
+            )}
+          </FormItem>
+          <FormItem
+            className={styles['last-form-item']}
+            label={<FormattedMessage id="network.VLANTag" />}
+            validateStatus={this.state.VLANTags.validateStatus}
+            help={this.state.VLANTags.errorMsg}
+          >
+            <EditableTagGroup
+              tags={this.state.VLANTags.value}
+              canRemoveAll={true}
+              onChange={this.handleFieldChange.bind(this, 'VLANTags')}
+              validator={this.checkVLANTag}
+              addMessage={<FormattedMessage id="network.newTag" />}
+            />
+          </FormItem>
+        </Form>
+      </Modal>
     );
   }
 }

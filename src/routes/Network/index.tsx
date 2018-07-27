@@ -8,7 +8,6 @@ import {
   Tree,
   List,
   Popconfirm,
-  Modal,
   Row,
   Col
 } from 'antd';
@@ -49,7 +48,9 @@ interface NetworkState {
 interface NetworkProps {
   nodes: Nodes;
   networks: Array<networkModels.Network>;
+  isLoading: boolean;
   fetchNodes: () => any;
+  addNetwork: () => any;
   deleteNetwork: (id: string) => any;
 }
 
@@ -168,35 +169,6 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     );
   };
 
-  protected renderCreateModal = () => {
-    return (
-      <Modal
-        visible={this.state.isCreating}
-        wrapClassName={styles.modal}
-        destroyOnClose={true}
-        title={<FormattedMessage id="network.form.createNewNetwork" />}
-        footer={[
-          <Button
-            key="cancel"
-            onClick={() => this.setState({ isCreating: false })}
-          >
-            <FormattedMessage id="action.cancel" />
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            // loading={loading}
-            // onClick={this.handleOk}
-          >
-            <FormattedMessage id="action.create" />
-          </Button>
-        ]}
-      >
-        <NetworkFrom nodes={this.props.nodes} />
-      </Modal>
-    );
-  };
-
   public render() {
     return (
       <div>
@@ -215,7 +187,13 @@ class Network extends React.Component<NetworkProps, NetworkState> {
             <Icon type="plus" /> <FormattedMessage id="network.add" />
           </Button>
         </Card>
-        {this.renderCreateModal()}
+        <NetworkFrom
+          visible={this.state.isCreating}
+          isLoading={this.props.isLoading}
+          onCancel={() => this.setState({ isCreating: false })}
+          onSubmit={this.props.addNetwork}
+          nodes={this.props.nodes}
+        />
       </div>
     );
   }
@@ -243,7 +221,8 @@ const mapStateToProps = (state: RootState) => {
   return {
     allNodes: state.cluster.allNodes,
     nodes: getNodesWithPysicalNIC(state.cluster.nodes, state.cluster.allNodes),
-    networks: state.network.networks
+    networks: state.network.networks,
+    isLoading: state.network.isLoading
   };
 };
 

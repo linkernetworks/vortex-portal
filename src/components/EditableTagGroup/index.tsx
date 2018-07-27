@@ -1,5 +1,8 @@
 import * as React from 'react';
 import { Tag, Input, Tooltip, Icon, Button } from 'antd';
+import { FormattedMessage } from 'react-intl';
+
+import * as styles from './styles.module.scss';
 
 interface EditableTagGroupProps {
   tags: Array<React.ReactText>;
@@ -39,6 +42,10 @@ class EditableTagGroup extends React.PureComponent<
       { inputVisible: true },
       () => this.input.current && this.input.current.focus()
     );
+  };
+
+  protected handleRemoveAll = () => {
+    this.props.onChange([]);
   };
 
   protected handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -98,7 +105,7 @@ class EditableTagGroup extends React.PureComponent<
             ref={this.input}
             type="text"
             size="small"
-            style={{ width: 78 }}
+            className={styles.input}
             value={inputValue}
             onChange={this.handleInputChange}
             onBlur={this.handleInputConfirm}
@@ -106,14 +113,22 @@ class EditableTagGroup extends React.PureComponent<
           />
         )}
         {!inputVisible && (
-          <Tag
-            onClick={this.showInput}
-            style={{ background: '#fff', borderStyle: 'dashed' }}
-          >
+          <Tag onClick={this.showInput} className={styles.tag}>
             <Icon type="plus" /> {addMessage}
           </Tag>
         )}
-        {canRemoveAll && tags.length !== 0 && <Button>Remove All</Button>}
+        {canRemoveAll &&
+          tags.length !== 0 && (
+            <Button
+              size="small"
+              className={styles.removeAll}
+              type="danger"
+              ghost={true}
+              onClick={this.handleRemoveAll}
+            >
+              <FormattedMessage id="action.removeAll" />
+            </Button>
+          )}
       </div>
     );
   }
