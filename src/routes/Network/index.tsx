@@ -173,9 +173,24 @@ class Network extends React.Component<NetworkProps, NetworkState> {
       <Modal
         visible={this.state.isCreating}
         wrapClassName={styles.modal}
-        onCancel={() => this.setState({ isCreating: false })}
         destroyOnClose={true}
-        title={<FormattedMessage id="network.createNewNetwork" />}
+        title={<FormattedMessage id="network.form.createNewNetwork" />}
+        footer={[
+          <Button
+            key="cancel"
+            onClick={() => this.setState({ isCreating: false })}
+          >
+            <FormattedMessage id="action.cancel" />
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            // loading={loading}
+            // onClick={this.handleOk}
+          >
+            <FormattedMessage id="action.create" />
+          </Button>
+        ]}
       >
         <NetworkFrom nodes={this.props.nodes} />
       </Modal>
@@ -234,6 +249,7 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
   fetchNodes: () => dispatch(clusterOperations.fetchNodes()),
+  addNetwork: (data: any) => dispatch(networkOperations.addNetwork(data)),
   deleteNetwork: (id: string) => dispatch(networkActions.deleteNetwork({ id }))
 });
 

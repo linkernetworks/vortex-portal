@@ -1,0 +1,22 @@
+@import '../../styles/variables';
+
+.node {
+  display: flex;
+  margin-bottom: 12px;
+
+  .delete {
+    line-height: $btn-height-base - 2px;
+    margin-right: 8px;
+    color: $error-color;
+    &:hover {
+      color: $red-4;
+    }
+  }
+  .selectGroup {
+    flex: 1;
+  }
+}
+
+.full {
+  width: 100%l
+}

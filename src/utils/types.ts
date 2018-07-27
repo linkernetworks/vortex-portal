@@ -17,6 +17,7 @@ export type Omit<T, K extends keyof T> = T extends any
 export type FormField<T> = {
   [P in keyof T]: {
     value: T[P] extends object ? T[P] : T[P] | undefined;
-    validateStatus: string;
+    validateStatus?: 'success' | 'warning' | 'error' | 'validating';
+    errorMsg?: React.ReactChild;
   }
 };

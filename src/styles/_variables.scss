@@ -7,6 +7,7 @@ $gold-6: #faad14;
 $purple-6: #722ed1;
 $yellow-6: #fadb14;
 
+$red-4: #ff7875;
 
 $purple-8: #391085;
 $purple-10: #120338;
@@ -25,7 +26,8 @@ $normal-color           : #d9d9d9;
 // alert info backgrounds.
 $primary-1: tint($primary-color, 90%);
 $primary-2: tint($primary-color, 80%);
-
+$primary-5: tint($primary-color, 20%);
+$primary-7: tint($primary-color, 5%);
 
 // Background color for `<body>`
 $body-background        : #fff;
@@ -191,3 +193,54 @@ $card-padding-base: 24px;
 $card-padding-wider: 32px;
 $card-actions-background: $background-color-light;
 $card-shadow: 0 2px 8px rgba(0, 0, 0, .09);
+
+// Buttons
+$btn-font-weight        : 400;
+$btn-border-radius-base : $border-radius-base;
+$btn-border-radius-sm   : $border-radius-base;
+
+$btn-primary-color      : #fff;
+$btn-primary-bg         : $primary-color;
+
+$btn-default-color      : $text-color;
+$btn-default-bg         : #fff;
+$btn-default-border     : $border-color-base;
+
+$btn-danger-color       : $error-color;
+$btn-danger-bg          : $background-color-base;
+$btn-danger-border      : $border-color-base;
+
+$btn-disable-color      : $disabled-color;
+$btn-disable-bg         : $disabled-bg;
+$btn-disable-border     : $border-color-base;
+
+$btn-padding-base       : 0 $padding-md - 1px;
+$btn-font-size-lg       : $font-size-lg;
+$btn-font-size-sm       : $font-size-base;
+$btn-padding-lg         : $btn-padding-base;
+$btn-padding-sm         : 0 $padding-xs - 1px;
+
+$btn-height-base        : 32px;
+$btn-height-lg          : 40px;
+$btn-height-sm          : 24px;
+
+$btn-circle-size        : $btn-height-base;
+$btn-circle-size-lg     : $btn-height-lg;
+$btn-circle-size-sm     : $btn-height-sm;
+
+$btn-group-border       : $primary-5;
+
+// Checkbox
+$checkbox-size          : 16px;
+$checkbox-color         : $primary-color;
+$checkbox-check-color   : #fff;
+
+// Radio
+$radio-size             : 16px;
+$radio-dot-color        : $primary-color;
+
+// Radio buttons
+$radio-button-bg           : $btn-default-bg;
+$radio-button-color        : $btn-default-color;
+$radio-button-hover-color  : $primary-5;
+$radio-button-active-color : $primary-7;

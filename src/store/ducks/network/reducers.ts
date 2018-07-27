@@ -74,8 +74,9 @@ const fixtures: Array<networkModel> = [
   }
 ];
 
-const initialState: { networks: Array<networkModel> } = {
-  networks: fixtures
+const initialState = {
+  networks: fixtures,
+  isLoading: ''
 };
 
 export function networkReducer(
@@ -87,9 +88,21 @@ export function networkReducer(
   }
 
   switch (action.type) {
+    case getType(Network.addNetwork.request):
+      return {
+        ...state,
+        isLoading: true
+      };
+    case getType(Network.addNetwork.success):
+      return {
+        ...state,
+        isLoading: false,
+        networks: [...state.networks, action.payload]
+      };
     case getType(Network.deleteNetwork):
       return {
         ...state,
+        isLoading: false,
         networks: state.networks.filter(
           record => record.id !== action.payload.id
         )

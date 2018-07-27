@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Tag, Input, Tooltip, Icon } from 'antd';
+import { Tag, Input, Tooltip, Icon, Button } from 'antd';
 
 interface EditableTagGroupProps {
   tags: Array<React.ReactText>;
   addMessage: React.ReactChild;
   validator: (value: React.ReactText) => boolean;
   onChange: (changedValue: any) => void;
+  canRemoveAll?: boolean;
 }
 interface EditableTagGroupState {
   inputVisible: boolean;
@@ -18,6 +19,10 @@ class EditableTagGroup extends React.PureComponent<
   EditableTagGroupState
 > {
   private input: React.RefObject<Input>;
+
+  public static defaultProps: Partial<EditableTagGroupProps> = {
+    canRemoveAll: false
+  };
 
   constructor(props: EditableTagGroupProps) {
     super(props);
@@ -66,7 +71,7 @@ class EditableTagGroup extends React.PureComponent<
 
   public render() {
     const { inputVisible, inputValue } = this.state;
-    const { tags, addMessage } = this.props;
+    const { tags, addMessage, canRemoveAll } = this.props;
     return (
       <div>
         {tags.map((tag: string) => {
@@ -108,6 +113,7 @@ class EditableTagGroup extends React.PureComponent<
             <Icon type="plus" /> {addMessage}
           </Tag>
         )}
+        {canRemoveAll && tags.length !== 0 && <Button>Remove All</Button>}
       </div>
     );
   }

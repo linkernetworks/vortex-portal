@@ -1,3 +1,3 @@
 export default {
-  'form.message.requred': 'Please enter the'
+  'form.message.requred': 'The {field} is required!'
 }

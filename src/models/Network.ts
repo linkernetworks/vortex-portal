@@ -1,3 +1,4 @@
+import { Omit } from '@/utils/types';
 export interface Network {
   id: string;
   name: string;
@@ -8,6 +9,8 @@ export interface Network {
   nodes: Array<NetworkNode>;
   createdAt?: Date;
 }
+
+export type NetworkFields = Omit<Network, 'id' | 'bridgeName' | 'createdAt'>;
 
 interface NetworkNode {
   name: string;
