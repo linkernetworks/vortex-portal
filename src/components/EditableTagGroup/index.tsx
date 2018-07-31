@@ -8,7 +8,7 @@ interface EditableTagGroupProps {
   tags: Array<React.ReactText>;
   addMessage: React.ReactChild;
   validator: (value: React.ReactText) => boolean;
-  onChange: (changedValue: any) => void;
+  onChange: (changedValue: Array<React.ReactText>) => void;
   canRemoveAll?: boolean;
 }
 interface EditableTagGroupState {

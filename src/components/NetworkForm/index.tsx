@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { map, isEmpty } from 'lodash';
+import { map, isEmpty, mapValues } from 'lodash';
 import { Modal, Form, Button, Icon, Select, Input, Radio } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
@@ -20,8 +20,11 @@ interface NetworkFormProps {
   visible: boolean;
   isLoading: boolean;
   nodes: Node.Nodes;
+  nodesWithUsedInterfaces: {
+    [node: string]: Array<string>;
+  };
   onCancel: () => void;
-  onSubmit: () => void;
+  onSubmit: (data: any) => void;
 }
 
 interface NetworkFormState extends FormField<Network.NetworkFields> {}
@@ -32,7 +35,18 @@ class NetworkForm extends React.PureComponent<
 > {
   constructor(props: NetworkFormProps) {
     super(props);
-    this.state = {
+    this.state = this.stateFactory();
+  }
+
+  protected nodeFactory = () => {
+    return {
+      name: '',
+      physicalInterfaces: []
+    };
+  };
+
+  protected stateFactory = () => {
+    return {
       name: {
         value: ''
       },
@@ -45,21 +59,22 @@ class NetworkForm extends React.PureComponent<
       nodes: {
         value: [this.nodeFactory()]
       },
-      VLANTags: {
+      vlanTags: {
         value: []
       }
-    };
-  }
-
-  protected nodeFactory = () => {
-    return {
-      name: '',
-      physicalInterface: []
     };
   };
 
   protected getFlatFormFieldValue = () => {
-    return this.state;
+    const flatted = mapValues(this.state, 'value') as Network.NetworkFields;
+    if (!this.state.isDPDKPort.value) {
+      flatted.nodes!.forEach(node => {
+        node.physicalInterfaces.forEach(
+          physicalInterface => (physicalInterface.pciID = '')
+        );
+      });
+    }
+    return flatted;
   };
 
   protected getTypeRadioValue = () => {
@@ -72,7 +87,7 @@ class NetworkForm extends React.PureComponent<
   };
 
   protected getInterfaces = (nodeName: string) => {
-    const { nodes } = this.props;
+    const { nodes, nodesWithUsedInterfaces } = this.props;
     return nodeName === ''
       ? []
       : map(nodes[nodeName].nics, (item, key) => {
@@ -80,7 +95,12 @@ class NetworkForm extends React.PureComponent<
             name: key,
             pciID: item.pciID
           };
-        });
+        }).filter(
+          physicalInterface =>
+            nodesWithUsedInterfaces[nodeName].indexOf(
+              physicalInterface.name
+            ) === -1
+        );
   };
 
   protected getAvailableNodeList = (selfIdx: number) => {
@@ -126,8 +146,8 @@ class NetworkForm extends React.PureComponent<
       typeof value === 'string' ? (value.trim() === '' ? NaN : +value) : value;
     const result = Number.isInteger(trimmed) && trimmed >= 0 && trimmed <= 4095;
     this.setState({
-      VLANTags: {
-        ...this.state.VLANTags,
+      vlanTags: {
+        ...this.state.vlanTags,
         validateStatus: result ? 'success' : 'error',
         errorMsg: result ? '' : <FormattedMessage id="network.hint.VLANTag" />
       }
@@ -154,9 +174,41 @@ class NetworkForm extends React.PureComponent<
     this.setState(changed);
   };
 
+  protected handleTagsChange = (values: Array<React.ReactText>) => {
+    console.log(values.map(value => +value));
+    this.setState({
+      vlanTags: {
+        ...this.state.vlanTags,
+        value: values.map(value => +value)
+      }
+    });
+  };
+
   protected handleNodesChange = (index: number) => (newValue: string) => {
     const { nodes } = this.state;
     const node = { ...nodes.value[index], name: newValue };
+    const value = nodes.value.map((item, idx) => (idx === index ? node : item));
+
+    this.setState({
+      nodes: {
+        ...nodes,
+        value
+      }
+    });
+  };
+
+  protected handleInterfacesChange = (index: number) => (
+    newValue: Array<string>
+  ) => {
+    const { nodes } = this.state;
+    const nodeName = nodes.value[index].name;
+    const node = {
+      ...nodes.value[index],
+      physicalInterfaces: newValue.map(name => ({
+        name,
+        pciID: this.props.nodes[nodeName].nics[name].pciID
+      }))
+    };
     const value = nodes.value.map((item, idx) => (idx === index ? node : item));
 
     this.setState({
@@ -216,7 +268,14 @@ class NetworkForm extends React.PureComponent<
   };
 
   public handleSubmit = () => {
-    return;
+    const data = this.getFlatFormFieldValue();
+
+    this.props.onSubmit(data);
+  };
+
+  public handleClose = () => {
+    this.setState(this.stateFactory());
+    this.props.onCancel();
   };
 
   public renderNodes = () => {
@@ -248,6 +307,7 @@ class NetworkForm extends React.PureComponent<
             </Select>
             <Select
               mode="multiple"
+              onChange={this.handleInterfacesChange(idx)}
               style={{ width: '70%' }}
               placeholder={
                 <FormattedMessage id="network.hint.selectInterfaces" />
@@ -268,23 +328,24 @@ class NetworkForm extends React.PureComponent<
   };
 
   public render() {
-    const { nodes, visible, isLoading, onCancel } = this.props;
+    const { nodes, visible, isLoading } = this.props;
 
     return (
       <Modal
         visible={visible}
+        destroyOnClose={true}
         wrapClassName={styles.modal}
-        onCancel={onCancel}
+        onCancel={this.handleClose}
         title={<FormattedMessage id="network.form.createNewNetwork" />}
         footer={[
-          <Button key="cancel" onClick={onCancel}>
+          <Button key="cancel" onClick={this.handleClose}>
             <FormattedMessage id="action.cancel" />
           </Button>,
           <Button
             key="submit"
             type="primary"
             loading={isLoading}
-            // onClick={this.handleOk}
+            onClick={this.handleSubmit}
           >
             <FormattedMessage id="action.create" />
           </Button>
@@ -343,14 +404,14 @@ class NetworkForm extends React.PureComponent<
           </FormItem>
           <FormItem
             className={styles['last-form-item']}
-            label={<FormattedMessage id="network.VLANTag" />}
-            validateStatus={this.state.VLANTags.validateStatus}
-            help={this.state.VLANTags.errorMsg}
+            label={<FormattedMessage id="network.vlanTags" />}
+            validateStatus={this.state.vlanTags.validateStatus}
+            help={this.state.vlanTags.errorMsg}
           >
             <EditableTagGroup
-              tags={this.state.VLANTags.value}
+              tags={this.state.vlanTags.value}
               canRemoveAll={true}
-              onChange={this.handleFieldChange.bind(this, 'VLANTags')}
+              onChange={this.handleTagsChange}
               validator={this.checkVLANTag}
               addMessage={<FormattedMessage id="network.newTag" />}
             />

@@ -19,6 +19,6 @@ export const removeNetwork = createAsyncAction(
   'REMOVE_NETWORK_FAILURE'
 )<void, { id: string }, Error>();
 
-export const deleteNetwork = createStandardAction('DELETE_NETWORK')<{
-  id: string;
-}>();
+export const clearNetworkError = createStandardAction('CLEAR_NETWORK_ERROR')<
+  void
+>();

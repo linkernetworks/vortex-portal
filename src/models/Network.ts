@@ -5,7 +5,7 @@ export interface Network {
   bridgeName: string;
   type: dataPathType;
   isDPDKPort: boolean;
-  VLANTags: Array<number>;
+  vlanTags: Array<number>;
   nodes: Array<NetworkNode>;
   createdAt?: Date;
 }
@@ -14,9 +14,9 @@ export type NetworkFields = Omit<Network, 'id' | 'bridgeName' | 'createdAt'>;
 
 interface NetworkNode {
   name: string;
-  physicalInterface: Array<{
+  physicalInterfaces: Array<{
     name: string; // Could be empty
-    pciid: string; // Could be empty
+    pciID: string; // Could be empty
   }>;
 }
 

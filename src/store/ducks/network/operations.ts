@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { RTAction } from '../index';
 import { networkActions, NetworkActionType, networkModels } from './index';
 import * as networkAPI from '@/services/network';

@@ -1,82 +1,17 @@
 import { ActionType, StateType, getType } from 'typesafe-actions';
 import * as Network from './actions';
-import { Network as networkModel, dataPathType } from './models';
+import { Network as networkModel } from './models';
 
 export type NetworkStateType = StateType<typeof networkReducer>;
 export type NetworkActionType = ActionType<typeof Network>;
 
-const fixtures: Array<networkModel> = [
-  {
-    id: '1',
-    type: dataPathType.system,
-    name: 'myNetworkqweqweqweqeqweqweqweq',
-    bridgeName: '46541dabfadfe',
-    VLANTags: [
-      100,
-      260,
-      950,
-      0,
-      1024,
-      4000,
-      2401,
-      3120,
-      2301,
-      800,
-      1002,
-      1232,
-      1111
-    ],
-    isDPDKPort: false,
-    nodes: [
-      { name: 'node 1', physicalInterface: [{ name: 'eth0', pciid: '' }] }
-    ]
-  },
-  {
-    id: '2',
-    type: dataPathType.netdev,
-    name: 'myNetwork',
-    bridgeName: '32541dabfadfe',
-    VLANTags: [100, 260, 950],
-    isDPDKPort: false,
-    nodes: [
-      {
-        name: 'node 1',
-        physicalInterface: [{ name: 'eth0', pciid: '' }]
-      },
-      {
-        name: '2eeeqweqweqweqweqwe',
-        physicalInterface: [{ name: 'eth0', pciid: '' }]
-      },
-      { name: 'node 3', physicalInterface: [{ name: 'eth0', pciid: '' }] }
-    ]
-  },
-  {
-    id: '3',
-    type: dataPathType.netdev,
-    name: 'myNetwork',
-    bridgeName: '32541dabfadfe',
-    VLANTags: [],
-    isDPDKPort: true,
-    nodes: [
-      {
-        name: 'node 1',
-        physicalInterface: [{ name: '', pciid: '0013:00:01' }]
-      },
-      {
-        name: 'node 2',
-        physicalInterface: [{ name: '', pciid: '0023:00:01' }]
-      },
-      {
-        name: 'node 3',
-        physicalInterface: [{ name: '', pciid: '0013:00:02' }]
-      }
-    ]
-  }
-];
-
-const initialState = {
-  networks: fixtures,
-  isLoading: ''
+const initialState: {
+  networks: Array<networkModel>;
+  isLoading: boolean;
+  error?: Error;
+} = {
+  networks: [],
+  isLoading: false
 };
 
 export function networkReducer(
@@ -88,10 +23,18 @@ export function networkReducer(
   }
 
   switch (action.type) {
+    case getType(Network.fetchNetworks.request):
     case getType(Network.addNetwork.request):
+    case getType(Network.removeNetwork.request):
       return {
         ...state,
         isLoading: true
+      };
+    case getType(Network.fetchNetworks.success):
+      return {
+        ...state,
+        isLoading: false,
+        networks: action.payload
       };
     case getType(Network.addNetwork.success):
       return {
@@ -99,13 +42,23 @@ export function networkReducer(
         isLoading: false,
         networks: [...state.networks, action.payload]
       };
-    case getType(Network.deleteNetwork):
+    case getType(Network.removeNetwork.success):
       return {
         ...state,
         isLoading: false,
         networks: state.networks.filter(
           record => record.id !== action.payload.id
         )
+      };
+    case getType(Network.removeNetwork.failure):
+      return {
+        ...state,
+        error: action.payload
+      };
+    case getType(Network.clearNetworkError):
+      return {
+        ...state,
+        error: null
       };
     default:
       return state;

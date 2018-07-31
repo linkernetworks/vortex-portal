@@ -8,64 +8,64 @@ import {
   Tree,
   List,
   Popconfirm,
+  message,
   Row,
   Col
 } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { pickBy } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dispatch } from 'redux';
 
 import * as styles from './styles.module.scss';
-import { RootState, RootAction, RTDispatch } from '@/store/ducks';
-import { clusterOperations } from '@/store/ducks/cluster';
+import { RootState, RTDispatch } from '@/store/ducks';
+import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
 import {
   networkModels,
-  networkActions,
+  networkSelectors,
   networkOperations
 } from '@/store/ducks/network';
-import { Nodes, NICType } from '@/models/Node';
+import { Nodes } from '@/models/Node';
 
 import NetworkFrom from '@/components/NetworkForm';
 
 const ListItem = List.Item;
 const TreeNode = Tree.TreeNode;
-interface NetworkRecord {
-  key?: string | number;
-  networkname: string;
-  bridgename: string;
-  node: Array<string>;
-  type: string;
-  physicalInterface: Array<string>;
-  vlanTag: Array<string>;
-}
 
 interface NetworkState {
   isCreating: boolean;
-  dataSource: Array<NetworkRecord>;
 }
 
 interface NetworkProps {
   nodes: Nodes;
+  nodesWithUsedInterfaces: {
+    [node: string]: Array<string>;
+  };
   networks: Array<networkModels.Network>;
   isLoading: boolean;
+  networkError?: Error;
   fetchNodes: () => any;
-  addNetwork: () => any;
-  deleteNetwork: (id: string) => any;
+  fetchNetworks: () => any;
+  addNetwork: (data: networkModels.NetworkFields) => any;
+  removeNetwork: (id: string) => any;
 }
 
 class Network extends React.Component<NetworkProps, NetworkState> {
   constructor(props: NetworkProps) {
     super(props);
     this.state = {
-      isCreating: true,
-      dataSource: []
+      isCreating: false
     };
   }
 
   public componentDidMount() {
     this.props.fetchNodes();
+    this.props.fetchNetworks();
   }
+
+  protected handleSubmit = (data: networkModels.NetworkFields) => {
+    this.props.addNetwork(data).then(() => {
+      this.setState({ isCreating: false });
+    });
+  };
 
   protected renderTags = (tags: Array<string | number>) => {
     return (
@@ -81,13 +81,10 @@ class Network extends React.Component<NetworkProps, NetworkState> {
 
   protected renderListItemAction = (id: string) => {
     return [
-      <a href="javascript:;" key="action.edit">
-        <FormattedMessage id="action.edit" />
-      </a>,
       <Popconfirm
         key="action.delete"
         title={<FormattedMessage id="action.confirmToDelete" />}
-        onConfirm={this.props.deleteNetwork.bind(this, id)}
+        onConfirm={this.props.removeNetwork.bind(this, id)}
       >
         <a href="javascript:;">
           <FormattedMessage id="action.delete" />
@@ -129,11 +126,11 @@ class Network extends React.Component<NetworkProps, NetworkState> {
         </div>
 
         {this.renderListItemContent(
-          <FormattedMessage id={`network.VLANTag`} />,
-          item.VLANTags.length === 0 ? (
+          <FormattedMessage id={`network.vlanTags`} />,
+          item.vlanTags.length === 0 ? (
             <FormattedMessage id="network.noTrunk" />
           ) : (
-            this.renderTags(item.VLANTags)
+            this.renderTags(item.vlanTags)
           )
         )}
       </ListItem>
@@ -153,13 +150,13 @@ class Network extends React.Component<NetworkProps, NetworkState> {
               key={`${node.name}-${idx}`}
               icon={<FontAwesomeIcon icon="server" />}
             >
-              {node.physicalInterface.map(physicalInterface => (
+              {node.physicalInterfaces.map(physicalInterface => (
                 <TreeNode
                   key={`${node.name}-${idx}-${physicalInterface.name}-${
-                    physicalInterface.pciid
+                    physicalInterface.pciID
                   }`}
                   icon={<FontAwesomeIcon icon="server" />}
-                  title={physicalInterface.name || physicalInterface.pciid}
+                  title={physicalInterface.name || physicalInterface.pciID}
                 />
               ))}
             </TreeNode>
@@ -191,45 +188,34 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           visible={this.state.isCreating}
           isLoading={this.props.isLoading}
           onCancel={() => this.setState({ isCreating: false })}
-          onSubmit={this.props.addNetwork}
+          onSubmit={this.handleSubmit}
           nodes={this.props.nodes}
+          nodesWithUsedInterfaces={this.props.nodesWithUsedInterfaces}
         />
       </div>
     );
   }
 }
 
-const getNodesWithPysicalNIC = (nodes: Nodes, list: Array<string>) => {
-  return list.reduce((acc, nodeName) => {
-    const node = nodes[nodeName];
-    const nics = pickBy(
-      node.nics,
-      (_, key) => node.nics[key].type === NICType.physical
-    );
-
-    return {
-      ...acc,
-      [nodeName]: {
-        ...node,
-        nics
-      }
-    };
-  }, {});
-};
-
 const mapStateToProps = (state: RootState) => {
   return {
     allNodes: state.cluster.allNodes,
-    nodes: getNodesWithPysicalNIC(state.cluster.nodes, state.cluster.allNodes),
+    nodes: clusterSelectors.getNodesWithPhysicalInterfaces(state.cluster),
     networks: state.network.networks,
-    isLoading: state.network.isLoading
+    nodesWithUsedInterfaces: networkSelectors.NodesWithUsedInterface(
+      state.network
+    ),
+    isLoading: state.network.isLoading,
+    networkError: state.network.error
   };
 };
 
-const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
+const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchNodes: () => dispatch(clusterOperations.fetchNodes()),
-  addNetwork: (data: any) => dispatch(networkOperations.addNetwork(data)),
-  deleteNetwork: (id: string) => dispatch(networkActions.deleteNetwork({ id }))
+  fetchNetworks: () => dispatch(networkOperations.fetchNetworks()),
+  addNetwork: (data: networkModels.NetworkFields) =>
+    dispatch(networkOperations.addNetwork(data)),
+  removeNetwork: (id: string) => dispatch(networkOperations.removeNetwork(id))
 });
 
 export default connect(
