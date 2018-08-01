@@ -1,17 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-  Card,
-  Button,
-  Tag,
-  Icon,
-  Tree,
-  List,
-  Popconfirm,
-  message,
-  Row,
-  Col
-} from 'antd';
+import { Card, Button, Tag, Icon, Tree, List, Popconfirm } from 'antd';
+import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -117,55 +107,65 @@ class Network extends React.Component<NetworkProps, NetworkState> {
         : (item.type as string);
     return (
       <ListItem key={item.id} actions={this.renderListItemAction(item.id)}>
-        <div className={styles.leading}>
-          <h3 className="title" title={item.name}>
-            {item.name}
-          </h3>
-        </div>
+        <div className={styles.content}>
+          <div className={styles.leading}>
+            <h3 className="title" title={item.name}>
+              {item.name}
+            </h3>
+          </div>
+          <div className={styles.property}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`network.type`} />,
+              item.type
+            )}
 
-        {this.renderListItemContent(
-          <FormattedMessage id={`network.type`} />,
-          item.type
-        )}
+            {this.renderListItemContent(
+              <FormattedMessage id={`network.bridgeName`} />,
+              item.bridgeName
+            )}
 
-        {this.renderListItemContent(
-          <FormattedMessage id={`network.bridgeName`} />,
-          item.bridgeName
-        )}
-
-        {this.renderListItemContent(
-          <FormattedMessage id={`network.vlanTags`} />,
-          item.vlanTags.length === 0 ? (
-            <FormattedMessage id="network.noTrunk" />
-          ) : (
-            this.renderTags(item.vlanTags)
-          ),
-          2
-        )}
-
-        {this.renderListItemContent(
-          <FormattedMessage id={`network.nodes`} />,
-          <Tree showIcon={true} selectable={false}>
-            {item.nodes.map((node, idx) => (
-              <TreeNode
-                title={node.name}
-                key={`${node.name}-${idx}`}
-                icon={<FontAwesomeIcon icon="server" />}
-              >
-                {node.physicalInterfaces.map(physicalInterface => (
+            {this.renderListItemContent(
+              <FormattedMessage id={`network.nodes`} />,
+              <Tree showIcon={true} selectable={false}>
+                {item.nodes.map((node, idx) => (
                   <TreeNode
-                    key={`${node.name}-${idx}-${physicalInterface.name}-${
-                      physicalInterface.pciID
-                    }`}
+                    title={node.name}
+                    key={`${node.name}-${idx}`}
                     icon={<FontAwesomeIcon icon="server" />}
-                    title={physicalInterface.name || physicalInterface.pciID}
-                  />
+                  >
+                    {node.physicalInterfaces.map(physicalInterface => (
+                      <TreeNode
+                        key={`${node.name}-${idx}-${physicalInterface.name}-${
+                          physicalInterface.pciID
+                        }`}
+                        icon={<FontAwesomeIcon icon="plug" />}
+                        title={
+                          physicalInterface.name || physicalInterface.pciID
+                        }
+                      />
+                    ))}
+                  </TreeNode>
                 ))}
-              </TreeNode>
-            ))}
-          </Tree>,
-          2
-        )}
+              </Tree>,
+              2
+            )}
+
+            {this.renderListItemContent(
+              <FormattedMessage id={`network.vlanTags`} />,
+              item.vlanTags.length === 0 ? (
+                <FormattedMessage id="network.noTrunk" />
+              ) : (
+                this.renderTags(item.vlanTags)
+              ),
+              2
+            )}
+
+            {this.renderListItemContent(
+              <FormattedMessage id={'network.createdAt'} />,
+              moment(item.createdAt).calendar()
+            )}
+          </div>
+        </div>
       </ListItem>
     );
   };

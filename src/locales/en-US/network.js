@@ -5,6 +5,7 @@ export default {
   'network.type': 'Datapath Type',
   'network.physicalInterface': 'Physical Interface',
   'network.trunk': 'Trunk',
+  'network.createdAt': 'created at',
   'network.vlanTags': 'Trunk VLAN Tags',
   'network.noTrunk': 'None Trunk',
   'network.newTag': 'New Tag',

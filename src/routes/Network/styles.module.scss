@@ -2,25 +2,38 @@
 
 $tag-gutter: 8px;
 
+.content {
+  flex-direction: column;
+  width: 100%;
+}
+
+.property {
+  display: flex;
+}
+
+
 .column {
   :global {
     .title {
       color: $text-color-secondary;
       font-size: $font-size-sm;
-      line-height: 20px;
     }
+
     .content {
       margin-bottom: 0;
+    }
+
+    .ant-tree > li:first-child {
+      padding-top: 0px;
     }
   }
 }
 
 
 .leading {
-  width: 160px;
-  align-self: center;
-
+  margin-bottom: 6px;
   :global(.title) {
+    font-size: $font-size-lg;
     margin-bottom: 0;
     white-space: nowrap;
     overflow: hidden;
@@ -47,18 +60,6 @@ $tag-gutter: 8px;
     .name {
       font-size: $font-size-sm;
     }
-  }
-}
-
-.modal {
-  :global {
-    // .ant-modal {
-    //   top: 0;
-    // }
-
-    // .ant-modal-content {
-    //   height: 100vh;
-    // }
   }
 }
 
