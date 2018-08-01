@@ -3,8 +3,6 @@
 $tag-gutter: 8px;
 
 .column {
-  flex: 2;
-
   :global {
     .title {
       color: $text-color-secondary;
@@ -17,8 +15,10 @@ $tag-gutter: 8px;
   }
 }
 
+
 .leading {
-  width: 100%;
+  width: 160px;
+  align-self: center;
 
   :global(.title) {
     margin-bottom: 0;

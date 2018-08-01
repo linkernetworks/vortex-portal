@@ -99,10 +99,11 @@ class Network extends React.Component<NetworkProps, NetworkState> {
 
   protected renderListItemContent = (
     title: string | React.ReactNode,
-    content: string | React.ReactNode
+    content: string | React.ReactNode,
+    col = 1
   ) => {
     return (
-      <div className={styles.column}>
+      <div className={styles.column} style={{ flex: col }}>
         <div className="title">{title}</div>
         <div className="content">{content}</div>
       </div>
@@ -120,14 +121,17 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           <h3 className="title" title={item.name}>
             {item.name}
           </h3>
-          <span>{type}</span>
         </div>
-        <div>
-          {this.renderListItemContent(
-            <FormattedMessage id={`network.bridgeName`} />,
-            item.bridgeName
-          )}
-        </div>
+
+        {this.renderListItemContent(
+          <FormattedMessage id={`network.type`} />,
+          item.type
+        )}
+
+        {this.renderListItemContent(
+          <FormattedMessage id={`network.bridgeName`} />,
+          item.bridgeName
+        )}
 
         {this.renderListItemContent(
           <FormattedMessage id={`network.vlanTags`} />,
@@ -135,38 +139,34 @@ class Network extends React.Component<NetworkProps, NetworkState> {
             <FormattedMessage id="network.noTrunk" />
           ) : (
             this.renderTags(item.vlanTags)
-          )
+          ),
+          2
+        )}
+
+        {this.renderListItemContent(
+          <FormattedMessage id={`network.nodes`} />,
+          <Tree showIcon={true} selectable={false}>
+            {item.nodes.map((node, idx) => (
+              <TreeNode
+                title={node.name}
+                key={`${node.name}-${idx}`}
+                icon={<FontAwesomeIcon icon="server" />}
+              >
+                {node.physicalInterfaces.map(physicalInterface => (
+                  <TreeNode
+                    key={`${node.name}-${idx}-${physicalInterface.name}-${
+                      physicalInterface.pciID
+                    }`}
+                    icon={<FontAwesomeIcon icon="server" />}
+                    title={physicalInterface.name || physicalInterface.pciID}
+                  />
+                ))}
+              </TreeNode>
+            ))}
+          </Tree>,
+          2
         )}
       </ListItem>
-    );
-  };
-
-  protected renderListItemExtra = (item: networkModels.Network) => {
-    return this.renderListItemContent(
-      <FormattedMessage id={`network.nodes`} />,
-      item.nodes.length === 0 ? (
-        <FormattedMessage id="network.noTrunk" />
-      ) : (
-        <Tree showIcon={true} selectable={false}>
-          {item.nodes.map((node, idx) => (
-            <TreeNode
-              title={node.name}
-              key={`${node.name}-${idx}`}
-              icon={<FontAwesomeIcon icon="server" />}
-            >
-              {node.physicalInterfaces.map(physicalInterface => (
-                <TreeNode
-                  key={`${node.name}-${idx}-${physicalInterface.name}-${
-                    physicalInterface.pciID
-                  }`}
-                  icon={<FontAwesomeIcon icon="server" />}
-                  title={physicalInterface.name || physicalInterface.pciID}
-                />
-              ))}
-            </TreeNode>
-          ))}
-        </Tree>
-      )
     );
   };
 
@@ -178,7 +178,6 @@ class Network extends React.Component<NetworkProps, NetworkState> {
         <Card title="Network">
           <List
             bordered={true}
-            itemLayout="vertical"
             dataSource={networks}
             renderItem={this.renderListItem}
           />
