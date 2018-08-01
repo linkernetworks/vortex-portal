@@ -27,13 +27,13 @@ export interface Status {
 }
 
 export interface Resource {
-  cpuUsagePercentage: number;
-  memoryUsageBytes: number;
+  cpuUsagePercentage: any;
+  memoryUsageBytes: any;
 }
 
 export interface Traffic {
-  receiveBytesTotal: number;
-  transmitBytesTotal: number;
-  receivePacketsTotal: number;
-  transmitPacketsTotal: number;
+  receiveBytesTotal: any;
+  transmitBytesTotal: any;
+  receivePacketsTotal: any;
+  transmitPacketsTotal: any;
 }

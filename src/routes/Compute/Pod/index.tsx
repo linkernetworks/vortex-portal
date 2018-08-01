@@ -61,17 +61,6 @@ class Pod extends React.Component<PodProps, PodState> {
   };
 
   protected handleSubmit = (data: any) => {
-    let networkType = '';
-    switch (data.networkName) {
-      case 'hostNetwork':
-        networkType = 'host';
-        break;
-      case 'clusterNetwork':
-        networkType = 'cluster';
-        break;
-      default:
-        networkType = 'custom';
-    }
     const podRequest: PodModel.PodRequest = {
       name: data.podName,
       namespace: 'default',
@@ -91,11 +80,24 @@ class Pod extends React.Component<PodProps, PodState> {
           netmask: data.netMask
         }
       ],
-      networkType,
+      networkType: '',
       volumes: [],
       nodeAffinity: [],
-      capability: true
+      restartPolicy: data.restartPolicy,
+      capability: data.capability
     };
+    switch (data.networkName) {
+      case 'hostNetwork':
+        podRequest.networkType = 'host';
+        podRequest.networks = [];
+        break;
+      case 'clusterNetwork':
+        podRequest.networkType = 'cluster';
+        podRequest.networks = [];
+        break;
+      default:
+        podRequest.networkType = 'custom';
+    }
     if (data.hasOwnProperty('VLANTag')) {
       podRequest.networks[0].vlan = data.VLANTag;
     }

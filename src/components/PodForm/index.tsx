@@ -12,7 +12,8 @@ import {
   Tag,
   InputNumber,
   Row,
-  Col
+  Col,
+  Checkbox
 } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import { FormField } from '@/utils/types';
@@ -57,7 +58,9 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
       interfaceName: '',
       image: '',
       podName: '',
-      containerName: ''
+      containerName: '',
+      restartPolicy: '',
+      capability: false
     };
   }
 
@@ -91,6 +94,16 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
     e: React.FormEvent<HTMLInputElement>
   ) => {
     const { value } = e.currentTarget;
+    const changed = {};
+    changed[field] = value;
+    this.setState(changed);
+  };
+
+  protected handleCheckboxChange = (
+    field: string,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.checked;
     const changed = {};
     changed[field] = value;
     this.setState(changed);
@@ -189,6 +202,37 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                 </Row>
               </div>
             )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label={<FormattedMessage id="pod.restartPolicy" />}
+          >
+            {getFieldDecorator('restartPolicy', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please select your restart policy'
+                }
+              ]
+            })(
+              <Select
+                onChange={this.handleChange.bind(this, 'restartPolicy')}
+                placeholder="Select a restart policy"
+                style={{ width: 200 }}
+              >
+                <Option value="Always">Always</Option>
+                <Option value="OnFailure">OnFailure</Option>
+                <Option value="Never">Never</Option>
+              </Select>
+            )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label={<FormattedMessage id="pod.capability" />}
+          >
+            <Checkbox
+              onChange={this.handleCheckboxChange.bind(this, 'capability')}
+            />
           </FormItem>
           <h2>Container</h2>
           <FormItem

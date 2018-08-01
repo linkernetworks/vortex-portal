@@ -35,6 +35,7 @@ export interface PodRequest {
   volumes: Array<string>;
   nodeAffinity: Array<string>;
   networkType: string;
+  restartPolicy: string;
   capability: boolean;
 }
 

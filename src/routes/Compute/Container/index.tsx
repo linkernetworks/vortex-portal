@@ -78,7 +78,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
               />,
 
               this.props.containers[container].nicNetworkTraffic
-                .receiveBytesTotal
+                .receiveBytesTotal.length
             )}
           </Col>
           <Col span={6}>
@@ -88,7 +88,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
               />,
 
               this.props.containers[container].nicNetworkTraffic
-                .transmitBytesTotal
+                .transmitBytesTotal.length
             )}
           </Col>
           <Col span={6}>
@@ -98,7 +98,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
               />,
 
               this.props.containers[container].nicNetworkTraffic
-                .receivePacketsTotal
+                .receivePacketsTotal.length
             )}
           </Col>
           <Col span={6}>
@@ -108,7 +108,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
               />,
 
               this.props.containers[container].nicNetworkTraffic
-                .transmitPacketsTotal
+                .transmitPacketsTotal.length
             )}
           </Col>
         </Row>
@@ -124,12 +124,14 @@ class Container extends React.Component<ContainerProps, ContainerState> {
             {this.renderListItemContent(
               <FormattedMessage id={`container.resource.cpuUsagePercentage`} />,
               this.props.containers[container].resource.cpuUsagePercentage
+                .length
             )}
           </Col>
           <Col span={12}>
             {this.renderListItemContent(
               <FormattedMessage id={`container.resource.memoryUsageBytes`} />,
-              this.props.containers[container].resource.memoryUsageBytes
+              this.props.containers[container].resource.memoryUsageBytes.length
+                .value
             )}
           </Col>
         </Row>
