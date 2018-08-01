@@ -1,5 +1,6 @@
 import { RTAction } from '../index';
 import { clusterActions, ClusterActionType } from './index';
+import * as PodModel from '@/models/Pod';
 import * as nodeAPI from '@/services/node';
 import * as podAPI from '@/services/pod';
 import * as containerAPI from '@/services/container';
@@ -56,6 +57,18 @@ export const fetchPods = (): RTAction<Promise<ClusterActionType>> => {
   };
 };
 
+export const fetchPod = (pod: string): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.fetchPod.request);
+    try {
+      const res = await podAPI.getPod(pod);
+      return dispatch(clusterActions.fetchPod.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.fetchPod.failure(e));
+    }
+  };
+};
+
 export const fetchContainers = (): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
     dispatch(clusterActions.fetchContainers.request);
@@ -78,6 +91,20 @@ export const fetchContainer = (
       return dispatch(clusterActions.fetchContainer.success(res.data));
     } catch (e) {
       return dispatch(clusterActions.fetchContainer.failure(e));
+    }
+  };
+};
+
+export const addPod = (
+  data: PodModel.PodRequest
+): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.addPod.request);
+    try {
+      const res = await podAPI.createPod(data);
+      return dispatch(clusterActions.addPod.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.addPod.failure(e));
     }
   };
 };

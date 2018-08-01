@@ -6,6 +6,7 @@ export default {
   'container.detail.node': 'Node',
   'container.detail.image': 'Image',
   'container.detail.command': 'Command',
+  'container.detail.newCommand': 'New Command',
 
   'container.status.status': 'Status',
   'container.status.waitingReason': 'Waiting Reason',

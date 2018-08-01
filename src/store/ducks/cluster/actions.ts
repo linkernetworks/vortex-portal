@@ -21,6 +21,12 @@ export const fetchNodeNICs = createAsyncAction(
   Error
 >();
 
+export const fetchPod = createAsyncAction(
+  'FETCH_POD_REQUEST',
+  'FETCH_POD_SUCCESS',
+  'FETCH_POD_FAILURE'
+)<void, Pod.Pod, Error>();
+
 export const fetchPods = createAsyncAction(
   'FETCH_PODS_REQUEST',
   'FETCH_PODS_SUCCESS',
@@ -38,3 +44,9 @@ export const fetchContainer = createAsyncAction(
   'FETCH_CONTAINER_SUCCESS',
   'FETCH_CONTAINER_FAILURE'
 )<void, Container.Container, Error>();
+
+export const addPod = createAsyncAction(
+  'ADD_Pod_REQUEST',
+  'ADD_Pod_SUCCESS',
+  'ADD_Pod_FAILURE'
+)<void, Pod.PodRequest, Error>();

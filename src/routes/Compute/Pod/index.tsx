@@ -3,7 +3,7 @@ import * as PodModel from '@/models/Pod';
 import * as ContainerModel from '@/models/Container';
 import * as NetworkModel from '@/models/Network';
 import { connect } from 'react-redux';
-import { Row, Col, Tag, Drawer, Button, Icon, Modal } from 'antd';
+import { Row, Col, Tag, Drawer, Button, Icon } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
 import { Dispatch } from 'redux';
@@ -30,6 +30,7 @@ interface PodProps {
   pods: PodModel.Pods;
   allPods: Array<string>;
   fetchPods: () => any;
+  addPod: (data: PodModel.PodRequest) => any;
 }
 
 class Pod extends React.Component<PodProps, PodState> {
@@ -56,6 +57,49 @@ class Pod extends React.Component<PodProps, PodState> {
   };
 
   protected hideCreate = () => {
+    this.setState({ visibleModal: false });
+  };
+
+  protected handleSubmit = (data: any) => {
+    let networkType = '';
+    switch (data.networkName) {
+      case 'hostNetwork':
+        networkType = 'host';
+        break;
+      case 'clusterNetwork':
+        networkType = 'cluster';
+        break;
+      default:
+        networkType = 'custom';
+    }
+    const podRequest: PodModel.PodRequest = {
+      name: data.podName,
+      namespace: 'default',
+      labels: data.labels,
+      containers: [
+        {
+          name: data.containerName,
+          image: data.image,
+          command: data.commands.value
+        }
+      ],
+      networks: [
+        {
+          name: data.networkName,
+          ifName: data.interfaceName,
+          ipAddress: data.ipAddress,
+          netmask: data.netMask
+        }
+      ],
+      networkType,
+      volumes: [],
+      nodeAffinity: [],
+      capability: true
+    };
+    if (data.hasOwnProperty('VLANTag')) {
+      podRequest.networks[0].vlan = data.VLANTag;
+    }
+    this.props.addPod(podRequest);
     this.setState({ visibleModal: false });
   };
 
@@ -186,19 +230,6 @@ class Pod extends React.Component<PodProps, PodState> {
     );
   };
 
-  protected renderCreateModal = () => {
-    return (
-      <Modal
-        visible={this.state.visibleModal}
-        wrapClassName={styles.modal}
-        title={<FormattedMessage id="pod.add" />}
-        onCancel={this.hideCreate}
-      >
-        <PodForm networks={this.state.networks} />
-      </Modal>
-    );
-  };
-
   public render() {
     const { currentPod } = this.state;
     return (
@@ -234,7 +265,12 @@ class Pod extends React.Component<PodProps, PodState> {
         <Button type="dashed" className={styles.add} onClick={this.showCreate}>
           <Icon type="plus" /> <FormattedMessage id="pod.add" />
         </Button>
-        {this.renderCreateModal()}
+        <PodForm
+          networks={this.state.networks}
+          visible={this.state.visibleModal}
+          onCancel={this.hideCreate}
+          onSubmit={this.handleSubmit}
+        />
       </div>
     );
   }
@@ -248,7 +284,10 @@ const mapStateToProps = (state: RootState) => {
 };
 
 const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
-  fetchPods: () => dispatch(clusterOperations.fetchPods())
+  fetchPods: () => dispatch(clusterOperations.fetchPods()),
+  addPod: (data: PodModel.PodRequest) => {
+    dispatch(clusterOperations.addPod(data));
+  }
 });
 
 export default connect(

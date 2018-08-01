@@ -8,6 +8,8 @@ export default {
   'network.trunk': 'Trunk',
   'network.createdAt': 'created at',
   'network.vlanTags': 'Trunk VLAN Tags',
+  'network.VLANTag': 'Trunk VLAN Tag',
+  'network.newVLANTag': 'New VLANTag',
   'network.noTrunk': 'None Trunk',
   'network.createNewNetwork': 'Create New Network!',
   'network.ipAddress': 'IP Address',
