@@ -39,6 +39,7 @@ export interface NetworkInterfaceController {
     default: boolean;
     type: NICType;
     ip: string;
+    dpdk: boolean;
     pciID: string;
     nicNetworkTraffic: {
       receiveBytesTotal: number;
@@ -52,6 +53,7 @@ export interface NetworkInterfaceController {
 export interface NICBrief {
   name: string;
   default: boolean;
+  dpdk: boolean;
   type: NICType;
   pciID: string;
 }

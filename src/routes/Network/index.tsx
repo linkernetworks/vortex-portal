@@ -61,9 +61,13 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     this.props.fetchNetworks();
   }
 
-  protected handleSubmit = (data: networkModels.NetworkFields) => {
+  protected handleSubmit = (
+    data: networkModels.NetworkFields,
+    successCB: () => void
+  ) => {
     this.props.addNetwork(data).then(() => {
       this.setState({ isCreating: false });
+      successCB();
     });
   };
 
@@ -167,13 +171,15 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   };
 
   public render() {
+    const { networks } = this.props;
+    const networkNames = networks.map(network => network.name);
     return (
       <div>
         <Card title="Network">
           <List
             bordered={true}
             itemLayout="vertical"
-            dataSource={this.props.networks}
+            dataSource={networks}
             renderItem={this.renderListItem}
           />
           <Button
@@ -189,6 +195,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           isLoading={this.props.isLoading}
           onCancel={() => this.setState({ isCreating: false })}
           onSubmit={this.handleSubmit}
+          networkNames={networkNames}
           nodes={this.props.nodes}
           nodesWithUsedInterfaces={this.props.nodesWithUsedInterfaces}
         />
@@ -201,10 +208,10 @@ const mapStateToProps = (state: RootState) => {
   return {
     allNodes: state.cluster.allNodes,
     nodes: clusterSelectors.getNodesWithPhysicalInterfaces(state.cluster),
-    networks: state.network.networks,
     nodesWithUsedInterfaces: networkSelectors.NodesWithUsedInterface(
       state.network
     ),
+    networks: state.network.networks,
     isLoading: state.network.isLoading,
     networkError: state.network.error
   };

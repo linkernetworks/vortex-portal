@@ -25,7 +25,7 @@ interface NetworkFormProps {
   };
   networkNames: Array<string>;
   onCancel: () => void;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: any, successCB?: () => void) => void;
 }
 
 interface NetworkFormState extends FormField<Network.NetworkFields> {}
@@ -89,20 +89,26 @@ class NetworkForm extends React.PureComponent<
 
   protected getInterfaces = (nodeName: string) => {
     const { nodes, nodesWithUsedInterfaces } = this.props;
+    const { isDPDKPort } = this.state;
     return nodeName === ''
       ? []
-      : map(nodes[nodeName].nics, (item, key) => {
-          return {
-            name: key,
-            pciID: item.pciID
-          };
-        }).filter(
-          physicalInterface =>
-            !nodesWithUsedInterfaces[nodeName] ||
-            nodesWithUsedInterfaces[nodeName].indexOf(
-              physicalInterface.name
-            ) === -1
-        );
+      : map(nodes[nodeName].nics, (item, key) => ({
+          name: key,
+          pciID: item.pciID,
+          dpdk: item.dpdk
+        }))
+          .filter(
+            // filter out dpdk
+            physicalInterface => isDPDKPort.value === physicalInterface.dpdk
+          )
+          .filter(
+            // filter used interface
+            physicalInterface =>
+              !nodesWithUsedInterfaces[nodeName] ||
+              nodesWithUsedInterfaces[nodeName].indexOf(
+                physicalInterface.name
+              ) === -1
+          );
   };
 
   protected getAvailableNodeList = (selfIdx: number) => {
@@ -116,9 +122,13 @@ class NetworkForm extends React.PureComponent<
 
   protected checkRequired = (field: keyof FormField<Network.NetworkFields>) => {
     const origin = this.state[field];
-    const { value, validateStatus, errorMsg } = origin;
+    const { value, validateStatus } = origin;
     const changed = {};
     let result;
+
+    if (validateStatus === 'error') {
+      return;
+    }
 
     switch (typeof value) {
       case 'string':
@@ -129,9 +139,9 @@ class NetworkForm extends React.PureComponent<
 
     changed[field] = {
       ...origin,
-      validateStatus: validateStatus && result ? 'success' : 'error',
+      validateStatus: result ? 'success' : 'error',
       errorMsg: result ? (
-        errorMsg
+        ''
       ) : (
         <FormattedMessage
           id="form.message.requred"
@@ -246,27 +256,29 @@ class NetworkForm extends React.PureComponent<
 
   protected handleTypeChange = (e: RadioChangeEvent) => {
     const value = e.target.value;
-    const { type, isDPDKPort } = this.state;
-    if (value === Network.dataPathType.system) {
+    const { type, isDPDKPort, nodes } = this.state;
+    const isDPDKChanged = isDPDKPort.value !== (value === 'dpdk');
+    console.log(isDPDKChanged);
+
+    this.setState({
+      type: {
+        ...type,
+        value:
+          value === Network.dataPathType.system
+            ? Network.dataPathType.system
+            : Network.dataPathType.netdev
+      },
+      isDPDKPort: {
+        ...isDPDKPort,
+        value: value === 'dpdk'
+      }
+    });
+
+    if (isDPDKChanged) {
       this.setState({
-        type: {
-          ...type,
-          value: Network.dataPathType.system
-        },
-        isDPDKPort: {
-          ...isDPDKPort,
-          value: false
-        }
-      });
-    } else {
-      this.setState({
-        type: {
-          ...type,
-          value: Network.dataPathType.netdev
-        },
-        isDPDKPort: {
-          ...isDPDKPort,
-          value: value === 'dpdk'
+        nodes: {
+          ...nodes,
+          value: nodes.value.map(node => ({ ...node, physicalInterfaces: [] }))
         }
       });
     }
@@ -294,8 +306,8 @@ class NetworkForm extends React.PureComponent<
 
   public handleSubmit = () => {
     const data = this.getFlatFormFieldValue();
-
-    this.props.onSubmit(data);
+    // TODO: validate
+    this.props.onSubmit(data, () => this.setState(this.stateFactory()));
   };
 
   public handleClose = () => {
@@ -304,7 +316,6 @@ class NetworkForm extends React.PureComponent<
   };
 
   public renderNodes = () => {
-    const { nodes } = this.props;
     return this.state.nodes.value.map((node, idx) => {
       return (
         <div key={idx} className={styles.node}>
@@ -332,6 +343,9 @@ class NetworkForm extends React.PureComponent<
             </Select>
             <Select
               mode="multiple"
+              value={node.physicalInterfaces.map(
+                physicalInterface => physicalInterface.name
+              )}
               onChange={this.handleInterfacesChange(idx)}
               style={{ width: '70%' }}
               placeholder={
@@ -358,7 +372,6 @@ class NetworkForm extends React.PureComponent<
     return (
       <Modal
         visible={visible}
-        destroyOnClose={true}
         wrapClassName={styles.modal}
         onCancel={this.handleClose}
         title={<FormattedMessage id="network.form.createNewNetwork" />}

@@ -13,6 +13,7 @@ export default {
   'network.form.createNewNetwork': 'Create New Network',
   'network.form.addMoreNode': 'Add more nodes',
   'network.hint.enterNetworkName': 'Give a unique network name',
+  'network.hint.uniqueName': '{name} has been used! Try a new name.',
   'network.hint.selectNode': 'Select a node',
   'network.hint.selectInterfaces': 'Select interfaces',
   'network.hint.VLANTag': 'Please enter a number between 0 ~ 4095.',
