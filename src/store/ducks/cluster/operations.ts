@@ -4,7 +4,7 @@ import * as nodeAPI from '@/services/node';
 
 export const fetchNodes = (): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
-    dispatch(clusterActions.fetchNodes.request);
+    dispatch(clusterActions.fetchNodes.request());
     try {
       const res = await nodeAPI.getNodes();
       return dispatch(clusterActions.fetchNodes.success(res.data));
@@ -18,7 +18,7 @@ export const fetchNodeNICs = (
   node: string
 ): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
-    dispatch(clusterActions.fetchNodeNICs.request);
+    dispatch(clusterActions.fetchNodeNICs.request());
     try {
       const res = await nodeAPI.getNodeNICs(node);
       return dispatch(
@@ -36,8 +36,8 @@ export const fetchNodesWithNICs = (): RTAction<Promise<void>> => {
   return async (dispatch, getState) => {
     await dispatch(fetchNodes());
     const nodes = getState().cluster.allNodes;
-    nodes.map(node => {
-      return dispatch(fetchNodeNICs(node));
+    nodes.map(async node => {
+      return await dispatch(fetchNodeNICs(node));
     });
   };
 };
