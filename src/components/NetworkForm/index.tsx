@@ -23,6 +23,7 @@ interface NetworkFormProps {
   nodesWithUsedInterfaces: {
     [node: string]: Array<string>;
   };
+  networkNames: Array<string>;
   onCancel: () => void;
   onSubmit: (data: any) => void;
 }
@@ -97,6 +98,7 @@ class NetworkForm extends React.PureComponent<
           };
         }).filter(
           physicalInterface =>
+            !nodesWithUsedInterfaces[nodeName] ||
             nodesWithUsedInterfaces[nodeName].indexOf(
               physicalInterface.name
             ) === -1
@@ -113,7 +115,8 @@ class NetworkForm extends React.PureComponent<
   };
 
   protected checkRequired = (field: keyof FormField<Network.NetworkFields>) => {
-    const value = this.state[field].value;
+    const origin = this.state[field];
+    const { value, validateStatus, errorMsg } = origin;
     const changed = {};
     let result;
 
@@ -125,10 +128,10 @@ class NetworkForm extends React.PureComponent<
     }
 
     changed[field] = {
-      ...this.state[field],
-      validateStatus: result ? 'success' : 'error',
+      ...origin,
+      validateStatus: validateStatus && result ? 'success' : 'error',
       errorMsg: result ? (
-        ''
+        errorMsg
       ) : (
         <FormattedMessage
           id="form.message.requred"
@@ -139,6 +142,24 @@ class NetworkForm extends React.PureComponent<
       )
     };
     this.setState(changed);
+  };
+
+  protected checkName = (value: string) => {
+    const result = this.props.networkNames.indexOf(value) === -1;
+    this.setState({
+      name: {
+        ...this.state.name,
+        validateStatus: result ? 'success' : 'error',
+        errorMsg: result ? (
+          ''
+        ) : (
+          <FormattedMessage
+            id="network.hint.uniqueName"
+            values={{ name: value }}
+          />
+        )
+      }
+    });
   };
 
   protected checkVLANTag = (value: number | string) => {
@@ -167,15 +188,19 @@ class NetworkForm extends React.PureComponent<
 
   protected handleFieldChange = (
     field: keyof FormField<Network.NetworkFields>,
-    value: any
+    value: any,
+    callback: (value: any) => void
   ) => {
     const changed = {};
     changed[field] = { ...this.state[field], value };
-    this.setState(changed);
+    this.setState(changed, () => callback(value));
+  };
+
+  protected handleNameChange = (e: React.FormEvent<HTMLInputElement>) => {
+    this.handleFieldChange('name', e.currentTarget.value, this.checkName);
   };
 
   protected handleTagsChange = (values: Array<React.ReactText>) => {
-    console.log(values.map(value => +value));
     this.setState({
       vlanTags: {
         ...this.state.vlanTags,
@@ -355,6 +380,7 @@ class NetworkForm extends React.PureComponent<
           <FormItem
             label={<FormattedMessage id="network.name" />}
             required={true}
+            hasFeedback={true}
             validateStatus={this.state.name.validateStatus}
             help={this.state.name.errorMsg}
           >
@@ -362,7 +388,7 @@ class NetworkForm extends React.PureComponent<
               {(placeholder: string) => (
                 <Input
                   value={this.state.name.value}
-                  onChange={this.handleRawFieldChange.bind(this, 'name')}
+                  onChange={this.handleNameChange}
                   onBlur={this.checkRequired.bind(this, 'name')}
                   placeholder={placeholder}
                 />
