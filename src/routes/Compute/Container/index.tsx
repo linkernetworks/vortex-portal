@@ -10,6 +10,7 @@ import { clusterActions, clusterOperations } from '@/store/ducks/cluster';
 
 import * as styles from './styles.module.scss';
 import { Card } from 'antd';
+import { TimelineChart } from 'ant-design-pro/lib/Charts';
 
 interface ContainerState {
   visibleDrawer: boolean;
@@ -46,11 +47,12 @@ class Container extends React.Component<ContainerProps, ContainerState> {
   protected renderCommands = (command: Array<string>) => {
     return (
       <div className={styles.commands}>
-        {command.map(c => (
-          <Tag className={styles.command} key={c}>
-            {c}
-          </Tag>
-        ))}
+        {command != null &&
+          command.map(c => (
+            <Tag className={styles.command} key={c}>
+              {c}
+            </Tag>
+          ))}
       </div>
     );
   };
@@ -67,71 +69,46 @@ class Container extends React.Component<ContainerProps, ContainerState> {
     );
   };
 
-  protected renderTraffic = (container: string) => {
+  protected renderChart(data: Array<{ timestamp: number; value: string }>) {
+    const chartData: Array<{ x: any; y1: string; y2: string }> = [];
+    data.map(d => {
+      chartData.push({
+        x: new Date(d.timestamp * 1000).getTime(),
+        y1: d.value,
+        y2: ''
+      });
+    });
     return (
-      <div>
-        <Row>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage
-                id={`container.nicNetworkTraffic.receiveBytesTotal`}
-              />,
-
-              this.props.containers[container].nicNetworkTraffic
-                .receiveBytesTotal.length
-            )}
-          </Col>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage
-                id={`container.nicNetworkTraffic.transmitBytesTotal`}
-              />,
-
-              this.props.containers[container].nicNetworkTraffic
-                .transmitBytesTotal.length
-            )}
-          </Col>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage
-                id={`container.nicNetworkTraffic.receivePacketsTotal`}
-              />,
-
-              this.props.containers[container].nicNetworkTraffic
-                .receivePacketsTotal.length
-            )}
-          </Col>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage
-                id={`container.nicNetworkTraffic.transmitPacketsTotal`}
-              />,
-
-              this.props.containers[container].nicNetworkTraffic
-                .transmitPacketsTotal.length
-            )}
-          </Col>
-        </Row>
-      </div>
+      <TimelineChart
+        height={300}
+        data={chartData}
+        titleMap={{ y1: 'Usage', y2: '' }}
+      />
     );
-  };
+  }
 
   protected renderResource = (container: string) => {
     return (
       <div>
         <Row>
-          <Col span={12}>
+          <Col span={24}>
             {this.renderListItemContent(
               <FormattedMessage id={`container.resource.cpuUsagePercentage`} />,
-              this.props.containers[container].resource.cpuUsagePercentage
-                .length
+              <div>
+                {this.renderChart(
+                  this.props.containers[container].resource.cpuUsagePercentage
+                )}
+              </div>
             )}
           </Col>
-          <Col span={12}>
+          <Col span={24}>
             {this.renderListItemContent(
               <FormattedMessage id={`container.resource.memoryUsageBytes`} />,
-              this.props.containers[container].resource.memoryUsageBytes.length
-                .value
+              <div>
+                {this.renderChart(
+                  this.props.containers[container].resource.memoryUsageBytes
+                )}
+              </div>
             )}
           </Col>
         </Row>
@@ -140,6 +117,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
   };
 
   protected renderStatus = (container: string) => {
+    return <div />;
     return (
       <div>
         <Row>

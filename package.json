@@ -6,7 +6,9 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
     "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
     "@fortawesome/react-fontawesome": "^0.1.0-11",
+    "@types/numeral": "0.0.25",
     "@types/webpack-env": "^1.13.6",
+    "ant-design-pro": "^2.0.0-beta.2",
     "antd": "^3.7.0",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
@@ -67,7 +69,7 @@
   },
   "proxy": {
     "v1": {
-      "target": "http://172.17.8.100:7890",
+      "target": "http://172.17.8.100:32326",
       "ws": true
     }
   }

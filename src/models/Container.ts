@@ -27,13 +27,13 @@ export interface Status {
 }
 
 export interface Resource {
-  cpuUsagePercentage: any;
-  memoryUsageBytes: any;
+  cpuUsagePercentage: Array<{ timestamp: number; value: string }>;
+  memoryUsageBytes: Array<{ timestamp: number; value: string }>;
 }
 
 export interface Traffic {
-  receiveBytesTotal: any;
-  transmitBytesTotal: any;
-  receivePacketsTotal: any;
-  transmitPacketsTotal: any;
+  receiveBytesTotal: Array<{ timestamp: number; value: string }>;
+  transmitBytesTotal: Array<{ timestamp: number; value: string }>;
+  receivePacketsTotal: Array<{ timestamp: number; value: string }>;
+  transmitPacketsTotal: Array<{ timestamp: number; value: string }>;
 }
