@@ -12,4 +12,4 @@ FROM nginx:stable-alpine
 ARG BuildPath=/usr/src/app
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build $BuildPath/build /var/www
-EXPOSE 80
+EXPOSE 8080
