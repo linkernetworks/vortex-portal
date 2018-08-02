@@ -116,7 +116,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           <div className={styles.property}>
             {this.renderListItemContent(
               <FormattedMessage id={`network.type`} />,
-              item.type
+              type
             )}
 
             {this.renderListItemContent(

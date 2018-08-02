@@ -35,8 +35,8 @@
     "build": "react-app-rewired build --scripts-version react-scripts-ts",
     "test": "react-app-rewired test --scripts-version react-scripts-ts --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "lint": "tslint -p tsconfig.json -t stylish",
-    "lint:fix": "tslint --fix -p tsconfig.json -t stylish"
+    "lint": "tslint -p tsconfig.prod.json -t stylish",
+    "lint:fix": "tslint --fix -p tsconfig.prod.json -t stylish"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.4",

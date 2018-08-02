@@ -35,7 +35,11 @@ export const removeNetwork = (
     dispatch(networkActions.removeNetwork.request());
     try {
       const res = await networkAPI.deleteNetwork(id);
-      return dispatch(networkActions.removeNetwork.success({ id }));
+      if (!res.data.error) {
+        return dispatch(networkActions.removeNetwork.success({ id }));
+      } else {
+        throw new Error(res.data.message);
+      }
     } catch (e) {
       return dispatch(networkActions.removeNetwork.failure(e));
     }
