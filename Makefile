@@ -1,10 +1,10 @@
 ## vortex portal version
-PORTAL_VERSION = 0.1.0
+LAST_VERSION := $(shell node -p "require('./package.json').version")
 
 ## git tag version ########################################
 
 .PHONY: push.tag
 push.tag:
-	@echo "Current git tag version:"$(PORTAL_VERSION)
-	git tag $(PORTAL_VERSION)
+	@echo "Current git tag version: "$(LAST_VERSION)
+	git tag $(LAST_VERSION)
 	git push --tags
