@@ -10,6 +10,7 @@ import SiderMenu from '@/components/SiderMenu';
 import NavHeader from '@/components/NavHeader';
 import { UserType } from '@/models/User';
 import { getMenuData } from '@/routes/menu';
+import * as metaAPI from '@/services/meta';
 
 import * as styles from './styles.module.scss';
 import logo from '@/assets/logo.svg';
@@ -23,7 +24,26 @@ interface MainLayoutProps {
   changeLanguage: (locale: string) => any;
 }
 
-class MainLayout extends React.PureComponent<MainLayoutProps, object> {
+interface MainLayoutState {
+  version: string;
+}
+
+class MainLayout extends React.PureComponent<MainLayoutProps, MainLayoutState> {
+  constructor(props: MainLayoutProps) {
+    super(props);
+    this.state = {
+      version: ''
+    };
+  }
+
+  public componentDidMount() {
+    metaAPI.getVersion().then(res => {
+      this.setState({
+        version: res.data.message
+      });
+    });
+  }
+
   protected handleMenuClick = () => {
     return;
   };
@@ -56,7 +76,14 @@ class MainLayout extends React.PureComponent<MainLayoutProps, object> {
               />
             </Header>
             <Content className={styles.content}>{this.props.children}</Content>
-            <Footer className={styles.footer}>Made by ❤️</Footer>
+            <Footer className={styles.footer}>
+              <span className={styles.version}>
+                Backend: {this.state.version}
+              </span>
+              <span className={styles.version}>
+                Portal: v{process.env.REACT_APP_PORTAL_VERSION}
+              </span>
+            </Footer>
           </Layout>
         </Layout>
       </div>
