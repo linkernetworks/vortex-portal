@@ -1,5 +1,5 @@
 ## vortex portal version
-PORTAL_VERSION := $(shell node -p "require('./package.json').version")
+PORTAL_VERSION := "v$(shell node -p "require('./package.json').version")"
 
 ## git tag version ########################################
 
