@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl';
 import {
   Form,
   Button,
-  Icon,
   Modal,
   Dropdown,
   Select,
