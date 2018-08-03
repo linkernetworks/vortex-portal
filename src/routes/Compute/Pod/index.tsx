@@ -15,6 +15,7 @@ import * as networkAPI from '@/services/network';
 
 import * as styles from './styles.module.scss';
 import { Card } from 'antd';
+import { TimelineChart } from 'ant-design-pro/lib/Charts';
 
 import PodForm from '@/components/PodForm';
 
@@ -181,6 +182,69 @@ class Pod extends React.Component<PodProps, PodState> {
     );
   };
 
+  protected renderChart(
+    data1: Array<{ timestamp: number; value: string }>,
+    data2: Array<{ timestamp: number; value: string }>
+  ) {
+    const chartData: Array<{ x: any; y1: string; y2: string }> = [];
+    data1.map((d, i) => {
+      chartData.push({
+        x: new Date(d.timestamp * 1000).getTime(),
+        y1: data1[i].value,
+        y2: data2[i].value
+      });
+    });
+    return (
+      <TimelineChart
+        height={400}
+        data={chartData}
+        titleMap={{ y1: 'Receive Usage', y2: 'Transmit Usage' }}
+      />
+    );
+  }
+
+  protected renderInterface = (nics: PodModel.NICS) => {
+    return (
+      <div>
+        {Object.keys(nics).map(name => {
+          return (
+            <div key={name}>
+              <div>{name}</div>
+              <Row>
+                <Col span={24}>
+                  {this.renderListItemContent(
+                    <FormattedMessage
+                      id={`pod.nicNetworkTraffic.TXRXBytesTotal`}
+                    />,
+                    <div>
+                      {this.renderChart(
+                        nics[name].nicNetworkTraffic.receiveBytesTotal,
+                        nics[name].nicNetworkTraffic.transmitBytesTotal
+                      )}
+                    </div>
+                  )}
+                </Col>
+                <Col span={24}>
+                  {this.renderListItemContent(
+                    <FormattedMessage
+                      id={`pod.nicNetworkTraffic.TXRXPacketsTotal`}
+                    />,
+                    <div>
+                      {this.renderChart(
+                        nics[name].nicNetworkTraffic.receivePacketsTotal,
+                        nics[name].nicNetworkTraffic.transmitPacketsTotal
+                      )}
+                    </div>
+                  )}
+                </Col>
+              </Row>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   protected renderDetail = (pod: string) => {
     const time = new Date(this.props.pods[pod].createAt * 1000);
     return (
@@ -262,6 +326,9 @@ class Pod extends React.Component<PodProps, PodState> {
 
             <h2>Containers</h2>
             {this.renderContainer()}
+
+            <h2>Interface</h2>
+            {this.renderInterface(this.props.pods[currentPod].nics)}
           </Drawer>
         )}
         <Button type="dashed" className={styles.add} onClick={this.showCreate}>

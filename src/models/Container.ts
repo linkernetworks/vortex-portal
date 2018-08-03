@@ -2,7 +2,6 @@ export interface Container {
   detail: Detail;
   status: Status;
   resource: Resource;
-  nicNetworkTraffic: Traffic;
 }
 
 export interface Containers {
@@ -29,11 +28,4 @@ export interface Status {
 export interface Resource {
   cpuUsagePercentage: Array<{ timestamp: number; value: string }>;
   memoryUsageBytes: Array<{ timestamp: number; value: string }>;
-}
-
-export interface Traffic {
-  receiveBytesTotal: Array<{ timestamp: number; value: string }>;
-  transmitBytesTotal: Array<{ timestamp: number; value: string }>;
-  receivePacketsTotal: Array<{ timestamp: number; value: string }>;
-  transmitPacketsTotal: Array<{ timestamp: number; value: string }>;
 }
