@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { Dispatch } from 'redux';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
-import { clusterActions, clusterOperations } from '@/store/ducks/cluster';
+import { clusterOperations } from '@/store/ducks/cluster';
 
 import * as styles from './styles.module.scss';
 import { Card } from 'antd';

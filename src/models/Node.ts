@@ -1,5 +1,3 @@
-import { dataPathType } from '@/models/Network';
-
 export interface Node {
   detail: Detail;
   resource: Resource;

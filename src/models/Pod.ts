@@ -10,6 +10,7 @@ export interface Pod {
   labels: Map<string, string>;
   restartCount: number;
   containers: Array<string>;
+  nics: NICS;
 }
 
 export interface PodContainerRequest {
@@ -41,4 +42,17 @@ export interface PodRequest {
 
 export interface Pods {
   [name: string]: Pod;
+}
+
+export interface NICS {
+  [name: string]: {
+    nicNetworkTraffic: Traffic;
+  };
+}
+
+export interface Traffic {
+  receiveBytesTotal: Array<{ timestamp: number; value: string }>;
+  transmitBytesTotal: Array<{ timestamp: number; value: string }>;
+  receivePacketsTotal: Array<{ timestamp: number; value: string }>;
+  transmitPacketsTotal: Array<{ timestamp: number; value: string }>;
 }

@@ -8,7 +8,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { Dispatch } from 'redux';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
-import { clusterActions, clusterOperations } from '@/store/ducks/cluster';
+import { clusterOperations } from '@/store/ducks/cluster';
 
 import * as containerAPI from '@/services/container';
 import * as networkAPI from '@/services/network';

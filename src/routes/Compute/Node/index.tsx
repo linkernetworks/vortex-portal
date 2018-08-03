@@ -3,11 +3,10 @@ import * as NodeModel from '@/models/Node';
 import { connect } from 'react-redux';
 import { Row, Col, Tag, Drawer } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { dataPathType } from '@/models/Network';
 
 import { Dispatch } from 'redux';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
-import { clusterActions, clusterOperations } from '@/store/ducks/cluster';
+import { clusterOperations } from '@/store/ducks/cluster';
 
 import * as styles from './styles.module.scss';
 import { Card } from 'antd';

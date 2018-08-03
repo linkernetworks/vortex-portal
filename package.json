@@ -30,6 +30,7 @@
     "redux-thunk": "^2.3.0",
     "rxjs": "^6.2.2",
     "sass-mq": "^5.0.0",
+    "tslint-react": "^3.6.0",
     "typesafe-actions": "^2.0.4"
   },
   "scripts": {
