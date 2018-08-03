@@ -4,19 +4,14 @@ import {
   Form,
   Button,
   Modal,
-  Dropdown,
   Select,
   Input,
-  Radio,
-  Tag,
   InputNumber,
   Row,
   Col,
   Checkbox
 } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
-import { FormField } from '@/utils/types';
-import * as Pod from '@/models/Pod';
 import * as Network from '@/models/Network';
 import EditableTagGroup from '@/components/EditableTagGroup';
 
@@ -28,8 +23,6 @@ const formItemLayout = {
 };
 
 const Option = Select.Option;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
 
 interface PodFormProps extends FormComponentProps {
   networks: Array<Network.Network>;
