@@ -39,8 +39,9 @@
     "test": "react-app-rewired test --scripts-version react-scripts-ts --env=jsdom",
     "eject": "react-scripts-ts eject",
     "lint": "tslint -c tslint.prod.json -p tsconfig.prod.json -t stylish",
-    "lint:fix": "tslint --fix -p tsconfig.prod.json -t stylish"
+    "lint:fix": "tslint --fix -c tslint.prod.json -p tsconfig.prod.json -t stylish"
   },
+  "precommit": ["lint"],
   "devDependencies": {
     "@types/classnames": "^2.2.4",
     "@types/history": "^4.6.2",
@@ -55,6 +56,7 @@
     "@types/react-router-redux": "^5.0.15",
     "@types/redux-logger": "^3.0.6",
     "node-sass": "^4.9.0",
+    "pre-commit": "^1.2.2",
     "prettier": "^1.13.7",
     "react-app-rewire-css-modules": "codebandits/react-app-rewire-css-modules",
     "react-app-rewire-less": "^2.1.1",
