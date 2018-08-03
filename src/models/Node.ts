@@ -1,6 +1,6 @@
 export interface Node {
-  detail: Detail;
   resource: Resource;
+  detail: Detail;
   nics: NetworkInterfaceController;
 }
 
@@ -41,10 +41,10 @@ export interface NetworkInterfaceController {
     dpdk: boolean;
     pciID: string;
     nicNetworkTraffic: {
-      receiveBytesTotal: number;
-      transmitBytesTotal: number;
-      receivePacketsTotal: number;
-      transmitPacketsTotal: number;
+      receiveBytesTotal: Array<{ timestamp: number; value: string }>;
+      transmitBytesTotal: Array<{ timestamp: number; value: string }>;
+      receivePacketsTotal: Array<{ timestamp: number; value: string }>;
+      transmitPacketsTotal: Array<{ timestamp: number; value: string }>;
     };
   };
 }

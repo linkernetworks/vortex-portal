@@ -14,4 +14,7 @@ export default {
   'pod.add': 'Create New Pod',
   'pod.restartPolicy': 'Restart Policy',
   'pod.capability': 'Capability',
+
+  'pod.nicNetworkTraffic.TXRXBytesTotal': 'Receive/Transmit Bytes Total',
+  'pod.nicNetworkTraffic.TXRXPacketsTotal': 'Receive/Transmit Packets Total',
 };

@@ -10,6 +10,7 @@ import { clusterOperations } from '@/store/ducks/cluster';
 
 import * as styles from './styles.module.scss';
 import { Card } from 'antd';
+import { TimelineChart } from 'ant-design-pro/lib/Charts';
 
 interface NodeState {
   visible: boolean;
@@ -182,6 +183,33 @@ class Node extends React.Component<NodeProps, NodeState> {
     );
   };
 
+  protected renderChart(
+    data1: Array<{ timestamp: number; value: string }>,
+    data2: Array<{ timestamp: number; value: string }>
+  ) {
+    if (data1 === null) {
+      data1 = [];
+    }
+    if (data2 === null) {
+      data2 = [];
+    }
+    const chartData: Array<{ x: any; y1: string; y2: string }> = [];
+    data1.map((d, i) => {
+      chartData.push({
+        x: new Date(d.timestamp * 1000).getTime(),
+        y1: data1[i].value,
+        y2: data2[i].value
+      });
+    });
+    return (
+      <TimelineChart
+        height={400}
+        data={chartData}
+        titleMap={{ y1: 'Receive Usage', y2: 'Transmit Usage' }}
+      />
+    );
+  }
+
   protected renderInterface = (node: string) => {
     return (
       <div>
@@ -212,6 +240,32 @@ class Node extends React.Component<NodeProps, NodeState> {
                   this.props.nodes[node].nics[name].pciID
                 )}
               </Col>
+              <div>
+                {this.renderListItemContent(
+                  <FormattedMessage id={`node.nics.TXRXBytesTotal`} />,
+                  <div>
+                    {this.renderChart(
+                      this.props.nodes[node].nics[name].nicNetworkTraffic
+                        .receiveBytesTotal,
+                      this.props.nodes[node].nics[name].nicNetworkTraffic
+                        .transmitBytesTotal
+                    )}
+                  </div>
+                )}
+              </div>
+              <div>
+                {this.renderListItemContent(
+                  <FormattedMessage id={`node.nics.TXRXPacketsTotal`} />,
+                  <div>
+                    {this.renderChart(
+                      this.props.nodes[node].nics[name].nicNetworkTraffic
+                        .receivePacketsTotal,
+                      this.props.nodes[node].nics[name].nicNetworkTraffic
+                        .transmitPacketsTotal
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           );
         })}
@@ -275,6 +329,8 @@ const mapStateToProps = (state: RootState) => {
   Object.keys(state.cluster.nodes).map(key => {
     Object.keys(state.cluster.nodes[key].nics).map(name => {
       if (state.cluster.nodes[key].nics[name].type === 'virtual') {
+        delete state.cluster.nodes[key].nics[name];
+      } else if (state.cluster.nodes[key].nics[name].dpdk === true) {
         delete state.cluster.nodes[key].nics[name];
       }
     });

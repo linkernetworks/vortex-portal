@@ -15,9 +15,4 @@ export default {
 
   'container.resource.cpuUsagePercentage': 'CPU Usage Percentage',
   'container.resource.memoryUsageBytes': 'Memory Usage Bytes',
-
-  'container.nicNetworkTraffic.receiveBytesTotal': 'Receive Bytes Total',
-  'container.nicNetworkTraffic.transmitBytesTotal': 'Transmit Bytes Total',
-  'container.nicNetworkTraffic.receivePacketsTotal': 'Receive Packets Total',
-  'container.nicNetworkTraffic.transmitPacketsTotal': 'Transmit Packets Total',
 };

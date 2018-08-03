@@ -36,8 +36,8 @@ export interface PodRequest {
   volumes: Array<string>;
   nodeAffinity: Array<string>;
   networkType: string;
-  restartPolicy: string;
   capability: boolean;
+  restartPolicy: string;
 }
 
 export interface Pods {
@@ -46,13 +46,11 @@ export interface Pods {
 
 export interface NICS {
   [name: string]: {
-    nicNetworkTraffic: Traffic;
+    nicNetworkTraffic: {
+      receiveBytesTotal: Array<{ timestamp: number; value: string }>;
+      transmitBytesTotal: Array<{ timestamp: number; value: string }>;
+      receivePacketsTotal: Array<{ timestamp: number; value: string }>;
+      transmitPacketsTotal: Array<{ timestamp: number; value: string }>;
+    };
   };
-}
-
-export interface Traffic {
-  receiveBytesTotal: Array<{ timestamp: number; value: string }>;
-  transmitBytesTotal: Array<{ timestamp: number; value: string }>;
-  receivePacketsTotal: Array<{ timestamp: number; value: string }>;
-  transmitPacketsTotal: Array<{ timestamp: number; value: string }>;
 }

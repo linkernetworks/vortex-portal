@@ -24,4 +24,6 @@ export default {
   'node.nics.type': 'Type',
   'node.nics.ip': 'IP',
   'node.nics.pciID': 'PCI ID',
+  'node.nics.TXRXBytesTotal': 'Receive/Transmit Bytes Total',
+  'node.nics.TXRXPacketsTotal': 'Receive/Transmit Packets Total',
 };
