@@ -74,6 +74,11 @@
     "v1": {
       "target": "http://172.17.8.100:32326",
       "ws": true
+    },
+    "registry": {
+      "target": "https://dockerhub.pw",
+      "pathRewrite": { "^/registry": "" },
+      "changeOrigin": true
     }
   }
 }
