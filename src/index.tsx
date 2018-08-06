@@ -3,7 +3,11 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faServer, faPlug } from '@fortawesome/free-solid-svg-icons';
+import {
+  faServer,
+  faPlug,
+  faDatabase
+} from '@fortawesome/free-solid-svg-icons';
 
 import './styles/index.scss';
 
@@ -13,7 +17,7 @@ import registerServiceWorker from '@/registerServiceWorker';
 import LocaleContainer from '@/containers/LocaleContainer';
 
 const store = configureStore();
-library.add(faServer, faPlug);
+library.add(faServer, faPlug, faDatabase);
 
 ReactDOM.render(
   <Provider store={store}>

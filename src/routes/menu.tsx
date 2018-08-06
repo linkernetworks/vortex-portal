@@ -1,9 +1,10 @@
+import * as React from 'react';
 import { UserType } from '@/models/User';
 
 export interface MenuItem {
   name: string;
   path: string;
-  icon?: string;
+  icon?: React.ReactChild;
   children?: Array<MenuItem>;
   authority?: UserType;
 }
@@ -44,6 +45,7 @@ export const menuData: Array<MenuItem> = [
   },
   {
     name: 'storage',
+    icon: 'database',
     path: 'storage'
   },
   {

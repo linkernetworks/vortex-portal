@@ -25,7 +25,7 @@ interface SiderMenuProps {
   menuData: Array<MenuItem>;
 }
 
-const getIcon = (icon: string) => {
+const getIcon = (icon: React.ReactChild) => {
   if (typeof icon === 'string' && icon.indexOf('http') === 0) {
     return (
       <img
