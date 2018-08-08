@@ -475,7 +475,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
               {this.state.networks.map(
                 (network: PodModel.PodNetworkRequest, index: number) => {
                   return (
-                    <TabPane tab={'Network' + index} key={network.key}>
+                    <TabPane tab={'Network' + (index + 1)} key={network.key}>
                       <FormItem
                         {...formItemLayout}
                         label={<FormattedMessage id="network.name" />}
@@ -622,7 +622,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
             {this.state.containers.map(
               (container: PodModel.PodContainerRequest, index: number) => {
                 return (
-                  <TabPane tab={'Container' + index} key={container.key}>
+                  <TabPane tab={'Container' + (index + 1)} key={container.key}>
                     <FormItem
                       {...formItemLayout}
                       label={<FormattedMessage id="container.detail.name" />}
