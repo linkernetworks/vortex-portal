@@ -61,47 +61,7 @@ class Pod extends React.Component<PodProps, PodState> {
     this.setState({ visibleModal: false });
   };
 
-  protected handleSubmit = (data: any) => {
-    const podRequest: PodModel.PodRequest = {
-      name: data.podName,
-      namespace: 'default',
-      labels: data.labels,
-      containers: [
-        {
-          name: data.containerName,
-          image: data.image,
-          command: data.commands.value
-        }
-      ],
-      networks: [
-        {
-          name: data.networkName,
-          ifName: data.interfaceName,
-          ipAddress: data.ipAddress,
-          netmask: data.netMask
-        }
-      ],
-      networkType: '',
-      volumes: [],
-      nodeAffinity: [],
-      restartPolicy: data.restartPolicy,
-      capability: data.capability
-    };
-    switch (data.networkName) {
-      case 'hostNetwork':
-        podRequest.networkType = 'host';
-        podRequest.networks = [];
-        break;
-      case 'clusterNetwork':
-        podRequest.networkType = 'cluster';
-        podRequest.networks = [];
-        break;
-      default:
-        podRequest.networkType = 'custom';
-    }
-    if (data.hasOwnProperty('VLANTag')) {
-      podRequest.networks[0].vlan = data.VLANTag;
-    }
+  protected handleSubmit = (podRequest: PodModel.PodRequest) => {
     this.props.addPod(podRequest);
     this.setState({ visibleModal: false });
   };

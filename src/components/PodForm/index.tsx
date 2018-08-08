@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PodModel from '@/models/Pod';
+import { get, findIndex } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import {
   Form,
@@ -9,20 +11,23 @@ import {
   InputNumber,
   Row,
   Col,
-  Checkbox
+  Checkbox,
+  Tabs,
+  Collapse
 } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import * as Network from '@/models/Network';
 import EditableTagGroup from '@/components/EditableTagGroup';
 
 const FormItem = Form.Item;
+const TabPane = Tabs.TabPane;
+const Option = Select.Option;
+const Panel = Collapse.Panel;
 
 const formItemLayout = {
-  labelCol: { span: 6 },
+  labelCol: { span: 8 },
   wrapperCol: { span: 14 }
 };
-
-const Option = Select.Option;
 
 interface PodFormProps extends FormComponentProps {
   networks: Array<Network.Network>;
@@ -39,28 +44,127 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
     super(props);
     this.labelKey = React.createRef();
     this.labelValue = React.createRef();
+    const key = Math.random()
+      .toString(36)
+      .substring(7);
     this.state = {
-      commands: {
-        value: []
-      },
       labels: new Map(),
-      networkName: '',
-      netMask: '',
-      ipAddress: '',
-      interfaceName: '',
-      image: '',
-      podName: '',
-      containerName: '',
-      restartPolicy: '',
-      capability: false
+      containerKey: key,
+      networkKey: key,
+      containers: [
+        {
+          key,
+          name: '',
+          image: '',
+          command: []
+        }
+      ],
+      networks: [
+        {
+          key,
+          name: '',
+          ifName: '',
+          ipAddress: '',
+          netmask: '',
+          routes: [
+            {
+              dstCIDR: '',
+              gateway: ''
+            }
+          ]
+        }
+      ]
     };
   }
+
+  protected handleSubmit = () => {
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        const containers: Array<PodModel.PodContainerRequest> = [];
+        this.state.containers.map((container: PodModel.PodContainerRequest) => {
+          containers.push({
+            name: values[`container-${container.key}-name`],
+            image: values[`container-${container.key}-image`],
+            command: container.command
+          });
+        });
+        const networks: Array<PodModel.PodNetworkRequest> = [];
+        if (values.networkType === 'custom') {
+          this.state.networks.map((network: PodModel.PodNetworkRequest) => {
+            networks.push({
+              name: values[`network-${network.key}-name`],
+              ifName: values[`network-${network.key}-ifName`],
+              ipAddress: values[`network-${network.key}-ipAddress`],
+              netmask: values[`network-${network.key}-netmask`],
+              vlan: values[`network-${network.key}-vlan`],
+              routes: [
+                {
+                  dstCIDR: values[`network-${network.key}-dstCIDR`],
+                  gateway: values[`network-${network.key}-gateway`]
+                }
+              ]
+            });
+          });
+        }
+        const podRequest: PodModel.PodRequest = {
+          name: values.name,
+          namespace: 'default',
+          labels: values.labels,
+          containers,
+          networks,
+          networkType: values.networkType,
+          restartPolicy: values.restartPolicy,
+          capability: values.capability,
+          volumes: [],
+          nodeAffinity: []
+        };
+        this.props.onSubmit(podRequest);
+      }
+    });
+  };
 
   protected checkCommand = (value: number | string) => {
     return true;
   };
 
-  protected newLabel = () => {
+  protected checkCIDR = (rule: any, value: string, callback: any) => {
+    const re = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(3[0-2]|[1-2][0-9]|[0-9]))$/;
+    if (re.test(value)) {
+      callback();
+      return;
+    }
+    callback(`Invalid CIDR! For Example: "192.168.0.1/24", "10.1.14.32/24"`);
+  };
+
+  protected checkIPAddress = (rule: any, value: string, callback: any) => {
+    const re = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
+    if (re.test(value)) {
+      callback();
+      return;
+    }
+    callback(`Invalid Address! For Example: "192.168.0.1", "8.8.8.8"`);
+  };
+
+  protected checkName = (rule: any, value: string, callback: any) => {
+    const str = value.toLowerCase();
+    const re = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
+    if (re.test(value)) {
+      callback();
+      return;
+    }
+    callback(
+      `Invalid Name! Must consist of lower case alphanumeric characters, '-' or '.'`
+    );
+  };
+
+  protected handleCommandChange = (index: number, value: any) => {
+    const { containers } = this.state;
+    const newContainers = [...containers];
+    newContainers[index].command = value;
+    this.setState({ containers: newContainers });
+  };
+
+  protected addLabel = () => {
     if (this.labelKey.current != null && this.labelValue.current != null) {
       const { labels } = this.state;
       const newLabels = new Map(labels);
@@ -71,6 +175,11 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
       this.labelKey.current.input.value = '';
       this.labelValue.current.input.value = '';
       this.setState({ labels: newLabels });
+
+      const { setFieldsValue } = this.props.form;
+      setFieldsValue({
+        labels: newLabels
+      });
     }
   };
 
@@ -79,48 +188,120 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
     const newLabels = new Map(labels);
     newLabels.delete(key);
     this.setState({ labels: newLabels });
+
+    const { setFieldsValue } = this.props.form;
+    setFieldsValue({
+      labels: newLabels
+    });
   };
 
-  protected handleRawFieldChange = (
-    field: string,
-    e: React.FormEvent<HTMLInputElement>
-  ) => {
-    const { value } = e.currentTarget;
-    const changed = {};
-    changed[field] = value;
-    this.setState(changed);
+  protected addNetwork = () => {
+    const { networks } = this.state;
+    const newNetworks = [...networks];
+    const key = Math.random()
+      .toString(36)
+      .substring(7);
+    newNetworks.push({
+      key,
+      name: '',
+      ifName: '',
+      ipAddress: '',
+      netmask: '',
+      routes: [
+        {
+          dstCIDR: '',
+          gateway: ''
+        }
+      ]
+    });
+    this.setState({ networks: newNetworks, networkKey: key });
   };
 
-  protected handleCheckboxChange = (
-    field: string,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.target.checked;
-    const changed = {};
-    changed[field] = value;
-    this.setState(changed);
+  protected addContainer = () => {
+    const { containers } = this.state;
+    const newContainers = [...containers];
+    const key = Math.random()
+      .toString(36)
+      .substring(7);
+    newContainers.push({
+      key,
+      name: '',
+      image: '',
+      command: []
+    });
+    this.setState({ containers: newContainers, containerKey: key });
   };
 
-  protected handleCommandChange = (field: string, value: any) => {
-    const changed = {};
-    changed[field] = { ...this.state[field], value };
-    this.setState(changed);
+  protected deleteNetwork = (targetKey: string) => {
+    const { networks } = this.state;
+    const newNetworks = [...networks];
+
+    let key: string;
+    const index = findIndex(
+      newNetworks,
+      (network: PodModel.PodNetworkRequest) => {
+        return network.key === targetKey;
+      }
+    );
+    if (index === newNetworks.length - 1) {
+      key = newNetworks[index - 1].key;
+    } else {
+      key = newNetworks[index + 1].key;
+    }
+    newNetworks.splice(index, 1);
+
+    this.setState({ networks: newNetworks, networkKey: key });
   };
 
-  protected handleChange = (field: string, value: any) => {
-    const changed = {};
-    changed[field] = value;
-    this.setState(changed);
+  protected deleteContainer = (targetKey: string) => {
+    const { containers } = this.state;
+    const newContainers = [...containers];
+
+    let key: string;
+    const index = findIndex(
+      newContainers,
+      (container: PodModel.PodContainerRequest) => {
+        return container.key === targetKey;
+      }
+    );
+    if (index === newContainers.length - 1) {
+      key = newContainers[index - 1].key;
+    } else {
+      key = newContainers[index + 1].key;
+    }
+    newContainers.splice(index, 1);
+
+    this.setState({ containers: newContainers, containerKey: key });
+  };
+
+  protected onChangeNetwork = (networkKey: string) => {
+    this.setState({ networkKey });
+  };
+
+  protected onChangeContainer = (containerKey: string) => {
+    this.setState({ containerKey });
+  };
+
+  protected onEditNetwork = (targetKey: string, action: string) => {
+    if (action === 'remove') {
+      this.deleteNetwork(targetKey);
+    }
+  };
+
+  protected onEditContainer = (targetKey: string, action: string) => {
+    if (action === 'remove') {
+      this.deleteContainer(targetKey);
+    }
   };
 
   public render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
     return (
       <Modal
         style={{ top: 20 }}
         visible={this.props.visible}
         title={<FormattedMessage id="pod.add" />}
-        onOk={() => this.props.onSubmit(this.state)}
+        onOk={this.handleSubmit}
         onCancel={this.props.onCancel}
       >
         <Form>
@@ -129,18 +310,35 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
             {...formItemLayout}
             label={<FormattedMessage id="pod.name" />}
           >
-            {getFieldDecorator('podName', {
+            {getFieldDecorator('name', {
               rules: [
                 {
                   required: true,
-                  message: 'Please input your pod name'
+                  validator: this.checkName
+                }
+              ]
+            })(<Input placeholder="Give a unique pod name" />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label={<FormattedMessage id="pod.restartPolicy" />}
+          >
+            {getFieldDecorator('restartPolicy', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Please select your restart policy'
                 }
               ]
             })(
-              <Input
-                onChange={this.handleRawFieldChange.bind(this, 'podName')}
-                placeholder="Give a unique pod name"
-              />
+              <Select
+                placeholder="Select a restart policy"
+                style={{ width: 200 }}
+              >
+                <Option value="Always">Always</Option>
+                <Option value="OnFailure">OnFailure</Option>
+                <Option value="Never">Never</Option>
+              </Select>
             )}
           </FormItem>
           <FormItem
@@ -150,8 +348,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
             {getFieldDecorator('labels', {
               rules: [
                 {
-                  required: true,
-                  message: 'Please input your labels'
+                  required: false
                 }
               ]
             })(
@@ -189,7 +386,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                     style={{ marginLeft: 12 }}
                     shape="circle"
                     icon="enter"
-                    onClick={this.newLabel}
+                    onClick={this.addLabel}
                   />
                 </Row>
               </div>
@@ -197,196 +394,263 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label={<FormattedMessage id="pod.restartPolicy" />}
-          >
-            {getFieldDecorator('restartPolicy', {
-              rules: [
-                {
-                  required: true,
-                  message: 'Please select your restart policy'
-                }
-              ]
-            })(
-              <Select
-                onChange={this.handleChange.bind(this, 'restartPolicy')}
-                placeholder="Select a restart policy"
-                style={{ width: 200 }}
-              >
-                <Option value="Always">Always</Option>
-                <Option value="OnFailure">OnFailure</Option>
-                <Option value="Never">Never</Option>
-              </Select>
-            )}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
             label={<FormattedMessage id="pod.capability" />}
           >
-            <Checkbox
-              onChange={this.handleCheckboxChange.bind(this, 'capability')}
-            />
-          </FormItem>
-          <h2>Container</h2>
-          <FormItem
-            {...formItemLayout}
-            label={<FormattedMessage id="container.detail.name" />}
-          >
-            {getFieldDecorator('containerName', {
+            {getFieldDecorator('capability', {
               rules: [
                 {
-                  required: true,
-                  message: 'Please input your container name'
+                  required: false
                 }
-              ]
-            })(
-              <Input
-                onChange={this.handleRawFieldChange.bind(this, 'containerName')}
-                placeholder="Give a unique container name"
-              />
-            )}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label={<FormattedMessage id="container.detail.image" />}
-          >
-            {getFieldDecorator('image', {
-              rules: [
-                {
-                  required: true,
-                  message: 'Please input your image'
-                }
-              ]
-            })(
-              <Input
-                onChange={this.handleRawFieldChange.bind(this, 'image')}
-                placeholder="Input a image name"
-              />
-            )}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label={<FormattedMessage id="container.detail.command" />}
-          >
-            <EditableTagGroup
-              tags={this.state.commands.value}
-              canRemoveAll={true}
-              onChange={this.handleCommandChange.bind(this, 'commands')}
-              validator={this.checkCommand}
-              addMessage={<FormattedMessage id="container.detail.newCommand" />}
-            />
+              ],
+              initialValue: false
+            })(<Checkbox />)}
           </FormItem>
           <h2>Network</h2>
           <FormItem
             {...formItemLayout}
-            label={<FormattedMessage id="network.name" />}
+            label={<FormattedMessage id="network.selectType" />}
           >
-            {getFieldDecorator('networkName', {
+            {getFieldDecorator('networkType', {
               rules: [
                 {
                   required: true,
-                  message: 'Please select your network'
+                  message: 'Please select your network type'
                 }
               ]
             })(
               <Select
-                onChange={this.handleChange.bind(this, 'networkName')}
-                placeholder="Select a network"
+                placeholder="Select a network type"
                 style={{ width: 200 }}
               >
-                <Option value="hostNetwork">Host Network</Option>
-                <Option value="clusterNetwork">Cluster Network</Option>
-                {this.props.networks.map(network => {
-                  return (
-                    <Option key={network.id} value={network.name}>
-                      {network.name}
-                    </Option>
-                  );
-                })}
+                <Option value="host">Host Network</Option>
+                <Option value="cluster">Cluster Network</Option>
+                <Option
+                  value="custom"
+                  disabled={!(this.props.networks.length > 0)}
+                >
+                  Custom Network
+                </Option>
               </Select>
             )}
           </FormItem>
-          {this.state.networkName !== 'hostNetwork' &&
-            this.state.networkName !== 'clusterNetwork' &&
-            this.state.networkName !== '' && (
-              <FormItem
-                {...formItemLayout}
-                label={<FormattedMessage id="network.interfaceName" />}
-              >
-                {getFieldDecorator('interfaceName', {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Please input your interface name'
-                    }
-                  ]
-                })(
-                  <Input
-                    onChange={this.handleRawFieldChange.bind(
-                      this,
-                      'interfaceName'
-                    )}
-                    placeholder="Interface Name"
-                  />
-                )}
-              </FormItem>
+          {getFieldValue('networkType') === 'custom' && (
+            <Tabs
+              hideAdd={true}
+              type={
+                this.state.networks.length > 1 ? 'editable-card' : undefined
+              }
+              tabPosition="top"
+              activeKey={this.state.networkKey}
+              onChange={this.onChangeNetwork}
+              onEdit={this.onEditNetwork}
+              tabBarExtraContent={
+                <Button shape="circle" icon="plus" onClick={this.addNetwork} />
+              }
+            >
+              {this.state.networks.map(
+                (network: PodModel.PodNetworkRequest, index: number) => {
+                  return (
+                    <TabPane tab={'Network' + index} key={network.key}>
+                      <FormItem
+                        {...formItemLayout}
+                        label={<FormattedMessage id="network.name" />}
+                      >
+                        {getFieldDecorator(`network-${network.key}-name`, {
+                          rules: [
+                            {
+                              required: true,
+                              message: 'Please select your network name'
+                            }
+                          ]
+                        })(
+                          <Select
+                            placeholder="Select a network"
+                            style={{ width: 200 }}
+                          >
+                            {this.props.networks.map(n => {
+                              return (
+                                <Option key={n.id} value={n.name}>
+                                  {n.name}
+                                </Option>
+                              );
+                            })}
+                          </Select>
+                        )}
+                      </FormItem>
+                      <FormItem
+                        {...formItemLayout}
+                        label={<FormattedMessage id="network.interfaceName" />}
+                      >
+                        {getFieldDecorator(`network-${network.key}-ifName`, {
+                          rules: [
+                            {
+                              required: true,
+                              validator: this.checkName
+                            }
+                          ]
+                        })(<Input placeholder="Interface Name" />)}
+                      </FormItem>
+                      <FormItem
+                        {...formItemLayout}
+                        label={<FormattedMessage id="network.ipAddress" />}
+                      >
+                        {getFieldDecorator(`network-${network.key}-ipAddress`, {
+                          rules: [
+                            {
+                              required: true,
+                              validator: this.checkIPAddress
+                            }
+                          ],
+                          initialValue: ''
+                        })(<Input placeholder="IP Address" />)}
+                      </FormItem>
+                      <FormItem
+                        {...formItemLayout}
+                        label={<FormattedMessage id="network.netmask" />}
+                      >
+                        {getFieldDecorator(`network-${network.key}-netmask`, {
+                          rules: [
+                            {
+                              required: true,
+                              validator: this.checkIPAddress
+                            }
+                          ],
+                          initialValue: ''
+                        })(<Input placeholder="Mask" />)}
+                      </FormItem>
+                      <FormItem
+                        {...formItemLayout}
+                        label={<FormattedMessage id="network.VLANTag" />}
+                      >
+                        {getFieldDecorator(`network-${network.key}-vlan`, {
+                          rules: [
+                            {
+                              required: false
+                            }
+                          ]
+                        })(
+                          <InputNumber
+                            min={0}
+                            max={4095}
+                            placeholder="VLAN Tag"
+                          />
+                        )}
+                      </FormItem>
+                      <Collapse bordered={false}>
+                        <Panel header="Routes" key="1">
+                          <FormItem
+                            {...formItemLayout}
+                            label={<FormattedMessage id="network.dstCIDR" />}
+                          >
+                            {getFieldDecorator(
+                              `network-${network.key}-routes-dstCIDR`,
+                              {
+                                rules: [
+                                  {
+                                    required: false,
+                                    validator: this.checkCIDR
+                                  }
+                                ],
+                                initialValue: ''
+                              }
+                            )(<Input placeholder="Destination CIDR" />)}
+                          </FormItem>
+                          <FormItem
+                            {...formItemLayout}
+                            label={<FormattedMessage id="network.gateway" />}
+                          >
+                            {getFieldDecorator(
+                              `network-${network.key}-routes-gateway`,
+                              {
+                                rules: [
+                                  {
+                                    required: false,
+                                    validator: this.checkIPAddress
+                                  }
+                                ],
+                                initialValue: ''
+                              }
+                            )(<Input placeholder="Gateway" />)}
+                          </FormItem>
+                        </Panel>
+                      </Collapse>
+                    </TabPane>
+                  );
+                }
+              )}
+            </Tabs>
+          )}
+          <h2>Container</h2>
+          <Tabs
+            hideAdd={true}
+            type={
+              this.state.containers.length > 1 ? 'editable-card' : undefined
+            }
+            tabPosition="top"
+            activeKey={this.state.containerKey}
+            onChange={this.onChangeContainer}
+            onEdit={this.onEditContainer}
+            tabBarExtraContent={
+              <Button shape="circle" icon="plus" onClick={this.addContainer} />
+            }
+          >
+            {this.state.containers.map(
+              (container: PodModel.PodContainerRequest, index: number) => {
+                return (
+                  <TabPane tab={'Container' + index} key={container.key}>
+                    <FormItem
+                      {...formItemLayout}
+                      label={<FormattedMessage id="container.detail.name" />}
+                    >
+                      {getFieldDecorator(`container-${container.key}-name`, {
+                        rules: [
+                          {
+                            required: true,
+                            validator: this.checkName
+                          }
+                        ]
+                      })(<Input placeholder="Give a unique container name" />)}
+                    </FormItem>
+                    <FormItem
+                      {...formItemLayout}
+                      label={<FormattedMessage id="container.detail.image" />}
+                    >
+                      {getFieldDecorator(`container-${container.key}-image`, {
+                        rules: [
+                          {
+                            required: true,
+                            message: 'Please input your image'
+                          }
+                        ]
+                      })(<Input placeholder="Input a image name" />)}
+                    </FormItem>
+                    <FormItem
+                      {...formItemLayout}
+                      label={<FormattedMessage id="container.detail.command" />}
+                    >
+                      {getFieldDecorator(`container-${container.key}-command`, {
+                        rules: [
+                          {
+                            required: false
+                          }
+                        ]
+                      })(
+                        <EditableTagGroup
+                          tags={this.state.containers[index].command}
+                          canRemoveAll={true}
+                          onChange={this.handleCommandChange.bind(this, index)}
+                          validator={this.checkCommand}
+                          addMessage={
+                            <FormattedMessage id="container.detail.newCommand" />
+                          }
+                        />
+                      )}
+                    </FormItem>
+                  </TabPane>
+                );
+              }
             )}
-          {this.state.networkName !== 'hostNetwork' &&
-            this.state.networkName !== 'clusterNetwork' &&
-            this.state.networkName !== '' && (
-              <FormItem
-                {...formItemLayout}
-                label={<FormattedMessage id="network.VLANTag" />}
-              >
-                <InputNumber
-                  onChange={this.handleChange.bind(this, 'VLANTag')}
-                  placeholder="VLAN Tag"
-                />
-              </FormItem>
-            )}
-          {this.state.networkName !== 'hostNetwork' &&
-            this.state.networkName !== 'clusterNetwork' &&
-            this.state.networkName !== '' && (
-              <FormItem
-                {...formItemLayout}
-                label={<FormattedMessage id="network.ipAddress" />}
-              >
-                {getFieldDecorator('ipAddress', {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Please input your ip address'
-                    }
-                  ]
-                })(
-                  <Input
-                    onChange={this.handleRawFieldChange.bind(this, 'ipAddress')}
-                    placeholder="IP Address"
-                  />
-                )}
-              </FormItem>
-            )}
-          {this.state.networkName !== 'hostNetwork' &&
-            this.state.networkName !== 'clusterNetwork' &&
-            this.state.networkName !== '' && (
-              <FormItem
-                {...formItemLayout}
-                label={<FormattedMessage id="network.netmask" />}
-              >
-                {getFieldDecorator('netMask', {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Please input your mask'
-                    }
-                  ]
-                })(
-                  <Input
-                    onChange={this.handleRawFieldChange.bind(this, 'netMask')}
-                    placeholder="Mask"
-                  />
-                )}
-              </FormItem>
-            )}
+          </Tabs>
         </Form>
       </Modal>
     );
