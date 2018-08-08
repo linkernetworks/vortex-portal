@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
-import { Card, Form, Input, Button, notification, Table } from 'antd';
+import { Card, Form, Input, Button, notification, Table, Spin } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import { ColumnProps } from 'antd/lib/table';
 import { Dispatch } from 'redux';
@@ -32,7 +32,11 @@ interface HubProps extends FormComponentProps, InjectedIntlProps {
   resetError: () => any;
 }
 
-class ImageHub extends React.PureComponent<HubProps, object> {
+interface HubState {
+  isFirstCheck: boolean;
+}
+
+class ImageHub extends React.PureComponent<HubProps, HubState> {
   private columns: Array<ColumnProps<Image>> = [
     {
       title: this.props.intl.formatMessage({ id: 'hub.image' }),
@@ -47,13 +51,19 @@ class ImageHub extends React.PureComponent<HubProps, object> {
   ];
   constructor(props: HubProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      isFirstCheck: false
+    };
   }
 
   public componentDidMount() {
     const token = localStorage.getItem(REGISTRY_TOKEN);
     if (token) {
-      this.props.authRegistry(basicTokenToData(token));
+      this.props
+        .authRegistry(basicTokenToData(token))
+        .then(() => this.setState({ isFirstCheck: true }));
+    } else {
+      this.setState({ isFirstCheck: true });
     }
   }
 
@@ -118,16 +128,22 @@ class ImageHub extends React.PureComponent<HubProps, object> {
     const { isAuth, isLoading, images } = this.props;
     return (
       <React.Fragment>
-        {isAuth ? (
-          <Card title={<FormattedMessage id="hub.imageHub" />}>
-            <Table
-              dataSource={images}
-              columns={this.columns}
-              loading={isLoading}
-            />
-          </Card>
+        {this.state.isFirstCheck ? (
+          isAuth ? (
+            <Card title={<FormattedMessage id="hub.imageHub" />}>
+              <Table
+                dataSource={images}
+                columns={this.columns}
+                loading={isLoading}
+              />
+            </Card>
+          ) : (
+            this.renderLoginForm()
+          )
         ) : (
-          this.renderLoginForm()
+          <div className={styles.spinContainer}>
+            <Spin size="large" />
+          </div>
         )}
       </React.Fragment>
     );
