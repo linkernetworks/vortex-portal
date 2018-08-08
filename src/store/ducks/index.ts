@@ -26,11 +26,14 @@ import {
   ClusterStateType
 } from '@/store/ducks/cluster';
 
+import { default as hub, HubActionType, HubStateType } from '@/store/ducks/hub';
+
 export interface RootState {
   router: RouterState;
   intl: IntlStateType;
   cluster: ClusterStateType;
   network: NetworkStateType;
+  hub: HubStateType;
 }
 
 type ReactRouterAction = RouterAction | LocationChangeAction;
@@ -38,7 +41,8 @@ export type RootAction =
   | ReactRouterAction
   | IntlActionType
   | ClusterActionType
-  | NetworkActionType;
+  | NetworkActionType
+  | HubActionType;
 
 // Redux Thunk
 export type RTDispatch = ThunkDispatch<RootState, undefined, RootAction>;
@@ -50,5 +54,6 @@ export default combineReducers<RootState>({
   router: routerReducer,
   intl,
   cluster,
-  network
+  network,
+  hub
 });

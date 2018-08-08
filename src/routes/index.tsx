@@ -11,6 +11,7 @@ import Service from '@/routes/Service';
 import Storage from '@/routes/Storage';
 import Network from '@/routes/Network';
 import Login from '@/routes/Login';
+import ImageHub from '@/routes/ImageHub';
 import NotFound from '@/routes/Exception/404';
 
 interface RouteWithLayoutProps extends RouteProps {
@@ -56,6 +57,11 @@ const appRoutes = (
     <RouteWithLayout layout={MainLayout} component={Network} path="/network" />
     <RouteWithLayout layout={MainLayout} component={Service} path="/service" />
     <RouteWithLayout layout={MainLayout} component={Storage} path="/storage" />
+    <RouteWithLayout
+      layout={MainLayout}
+      component={ImageHub}
+      path="/imagehub"
+    />
     <Route component={NotFound} />
   </Switch>
 );
