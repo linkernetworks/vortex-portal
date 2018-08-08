@@ -106,6 +106,46 @@ class Node extends React.Component<NodeProps, NodeState> {
     return (
       <div>
         <Row>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.resource.capacityCPU`} />,
+              this.props.nodes[node].resource.capacityCPU
+            )}
+          </Col>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.resource.capacityPods`} />,
+              this.props.nodes[node].resource.capacityPods
+            )}
+          </Col>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.resource.capacityMemory`} />,
+              this.props.nodes[node].resource.capacityMemory
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.resource.allocatableCPU`} />,
+              this.props.nodes[node].resource.allocatableCPU
+            )}
+          </Col>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.resource.allocatableMemory`} />,
+              this.props.nodes[node].resource.allocatableMemory
+            )}
+          </Col>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.resource.allocatablePods`} />,
+              this.props.nodes[node].resource.allocatablePods
+            )}
+          </Col>
+        </Row>
+        <Row>
           <Col span={12}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.cpuRequests`} />,
@@ -114,70 +154,22 @@ class Node extends React.Component<NodeProps, NodeState> {
           </Col>
           <Col span={12}>
             {this.renderListItemContent(
-              <FormattedMessage id={`node.resource.cpuLimits`} />,
-              this.props.nodes[node].resource.cpuLimits
-            )}
-          </Col>
-        </Row>
-        <Row>
-          <Col span={6}>
-            {this.renderListItemContent(
               <FormattedMessage id={`node.resource.memoryRequests`} />,
               this.props.nodes[node].resource.memoryRequests
-            )}
-          </Col>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage id={`node.resource.memoryLimits`} />,
-              this.props.nodes[node].resource.memoryLimits
-            )}
-          </Col>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage id={`node.resource.allocatableCPU`} />,
-              this.props.nodes[node].resource.allocatableCPU
-            )}
-          </Col>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage id={`node.resource.allocatableMemory`} />,
-              this.props.nodes[node].resource.allocatableMemory
             )}
           </Col>
         </Row>
         <Row>
           <Col span={12}>
             {this.renderListItemContent(
-              <FormattedMessage id={`node.resource.allocatablePods`} />,
-              this.props.nodes[node].resource.allocatablePods
+              <FormattedMessage id={`node.resource.cpuLimits`} />,
+              this.props.nodes[node].resource.cpuLimits
             )}
           </Col>
-        </Row>
-        <Row>
-          <Col span={6}>
+          <Col span={12}>
             {this.renderListItemContent(
-              <FormattedMessage id={`node.resource.capacityCPU`} />,
-              this.props.nodes[node].resource.capacityCPU
-            )}
-          </Col>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage id={`node.resource.capacityPods`} />,
-              this.props.nodes[node].resource.capacityPods
-            )}
-          </Col>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage id={`node.resource.capacityMemory`} />,
-              this.props.nodes[node].resource.capacityMemory
-            )}
-          </Col>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage
-                id={`node.resource.capacityEphemeralStorage`}
-              />,
-              this.props.nodes[node].resource.capacityEphemeralStorage
+              <FormattedMessage id={`node.resource.memoryLimits`} />,
+              this.props.nodes[node].resource.memoryLimits
             )}
           </Col>
         </Row>
