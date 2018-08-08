@@ -1,7 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
-import { Card, Form, Input, Button, notification, Table, Spin } from 'antd';
+import {
+  Card,
+  Form,
+  Input,
+  Button,
+  notification,
+  Table,
+  Spin,
+  Tag
+} from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import { ColumnProps } from 'antd/lib/table';
 import { Dispatch } from 'redux';
@@ -46,7 +55,10 @@ class ImageHub extends React.PureComponent<HubProps, HubState> {
     {
       title: this.props.intl.formatMessage({ id: 'hub.tags' }),
       dataIndex: 'tags',
-      key: 'tags'
+      key: 'tags',
+      render: (tags: Array<string>) => (
+        <div>{tags.map(text => <Tag key={text}>{text}</Tag>)}</div>
+      )
     }
   ];
   constructor(props: HubProps) {
