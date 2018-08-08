@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as PodModel from '@/models/Pod';
-import { get, findIndex } from 'lodash';
+import { findIndex } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import {
   Form,
