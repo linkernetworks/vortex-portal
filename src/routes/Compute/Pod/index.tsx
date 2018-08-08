@@ -3,7 +3,7 @@ import * as PodModel from '@/models/Pod';
 import * as ContainerModel from '@/models/Container';
 import * as NetworkModel from '@/models/Network';
 import { connect } from 'react-redux';
-import { Row, Col, Tag, Drawer, Button, Icon } from 'antd';
+import { Row, Col, Tag, Drawer, Button, Icon, Tabs } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
 import { Dispatch } from 'redux';
@@ -18,6 +18,8 @@ import { Card } from 'antd';
 import { TimelineChart } from 'ant-design-pro/lib/Charts';
 
 import PodForm from '@/components/PodForm';
+
+const TabPane = Tabs.TabPane;
 
 interface PodState {
   visibleDrawer: boolean;
@@ -165,10 +167,10 @@ class Pod extends React.Component<PodProps, PodState> {
 
   protected renderInterface = (nics: PodModel.NICS) => {
     return (
-      <div>
+      <Tabs>
         {Object.keys(nics).map(name => {
           return (
-            <div key={name}>
+            <TabPane tab={name} key={name}>
               <div>{name}</div>
               <Row>
                 <Col span={24}>
@@ -198,10 +200,10 @@ class Pod extends React.Component<PodProps, PodState> {
                   )}
                 </Col>
               </Row>
-            </div>
+            </TabPane>
           );
         })}
-      </div>
+      </Tabs>
     );
   };
 
