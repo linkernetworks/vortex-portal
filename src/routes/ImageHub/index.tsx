@@ -89,13 +89,12 @@ class ImageHub extends React.PureComponent<HubProps, HubState> {
         }),
         onClose: this.props.resetError()
       });
+      localStorage.removeItem(REGISTRY_TOKEN);
     }
 
     if (!prevProps.isAuth && this.props.isAuth) {
       localStorage.setItem(REGISTRY_TOKEN, this.props.token);
       this.props.fetchImagesData();
-    } else {
-      localStorage.removeItem(REGISTRY_TOKEN);
     }
   }
 
