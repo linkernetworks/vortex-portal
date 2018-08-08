@@ -9,10 +9,12 @@ import { Dispatch } from 'redux';
 import { RootState, RTDispatch, RootAction } from '@/store/ducks';
 import { hubOperations, hubActions } from '@/store/ducks/hub';
 import { Login } from '@/models/Query';
+import { basicTokenToData } from '@/utils/auth';
 
 import * as styles from './styles.module.scss';
 
 const FormItem = Form.Item;
+const REGISTRY_TOKEN = 'REGISTRY_TOKEN';
 
 interface Image {
   key: number;
@@ -23,6 +25,7 @@ interface HubProps extends FormComponentProps, InjectedIntlProps {
   isAuth: boolean;
   isError: boolean;
   isLoading: boolean;
+  token: string;
   images: Array<Image>;
   authRegistry: (data: Login) => any;
   fetchImagesData: () => any;
@@ -47,6 +50,13 @@ class ImageHub extends React.PureComponent<HubProps, object> {
     this.state = {};
   }
 
+  public componentDidMount() {
+    const token = localStorage.getItem(REGISTRY_TOKEN);
+    if (token) {
+      this.props.authRegistry(basicTokenToData(token));
+    }
+  }
+
   public componentDidUpdate(prevProps: HubProps) {
     const { formatMessage } = this.props.intl;
     if (!prevProps.isError && this.props.isError) {
@@ -60,6 +70,7 @@ class ImageHub extends React.PureComponent<HubProps, object> {
     }
 
     if (!prevProps.isAuth && this.props.isAuth) {
+      localStorage.setItem(REGISTRY_TOKEN, this.props.token);
       this.props.fetchImagesData();
     }
   }
