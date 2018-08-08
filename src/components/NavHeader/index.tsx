@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { Avatar, Icon, Dropdown, Menu, Tooltip } from 'antd';
 import * as styles from './styles.module.scss';
@@ -55,9 +56,9 @@ class NavHeader extends React.Component<NavHeaderProps> {
       <div className={styles.header}>
         <div className={styles.actions}>
           <Tooltip title={<FormattedMessage id="nav.imagehub" />}>
-            <a className={styles.action} target="_blank" href="#">
+            <Link className={styles.action} to="/imagehub">
               <Icon type="appstore-o" />
-            </a>
+            </Link>
           </Tooltip>
           <Dropdown overlay={langs}>
             <span className={styles.action}>
