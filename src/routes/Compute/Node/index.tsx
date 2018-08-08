@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as NodeModel from '@/models/Node';
 import { connect } from 'react-redux';
-import { Row, Col, Tag, Drawer } from 'antd';
+import { Row, Col, Tag, Drawer, Tabs } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
 import { Dispatch } from 'redux';
@@ -11,6 +11,8 @@ import { clusterOperations } from '@/store/ducks/cluster';
 import * as styles from './styles.module.scss';
 import { Card } from 'antd';
 import { TimelineChart } from 'ant-design-pro/lib/Charts';
+
+const TabPane = Tabs.TabPane;
 
 interface NodeState {
   visible: boolean;
@@ -212,29 +214,23 @@ class Node extends React.Component<NodeProps, NodeState> {
 
   protected renderInterface = (node: string) => {
     return (
-      <div>
+      <Tabs>
         {Object.keys(this.props.nodes[node].nics).map(name => {
           return (
-            <div key={name}>
-              <Col span={6}>
-                {this.renderListItemContent(
-                  <FormattedMessage id={`node.nics.name`} />,
-                  name
-                )}
-              </Col>
-              <Col span={6}>
+            <TabPane tab={name} key={name}>
+              <Col span={8}>
                 {this.renderListItemContent(
                   <FormattedMessage id={`node.nics.type`} />,
                   this.props.nodes[node].nics[name].type
                 )}
               </Col>
-              <Col span={6}>
+              <Col span={8}>
                 {this.renderListItemContent(
                   <FormattedMessage id={`node.nics.ip`} />,
                   this.props.nodes[node].nics[name].ip
                 )}
               </Col>
-              <Col span={6}>
+              <Col span={8}>
                 {this.renderListItemContent(
                   <FormattedMessage id={`node.nics.pciID`} />,
                   this.props.nodes[node].nics[name].pciID
@@ -266,10 +262,10 @@ class Node extends React.Component<NodeProps, NodeState> {
                   </div>
                 )}
               </div>
-            </div>
+            </TabPane>
           );
         })}
-      </div>
+      </Tabs>
     );
   };
 

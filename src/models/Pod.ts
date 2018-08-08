@@ -15,7 +15,7 @@ export interface Pod {
 
 export interface PodRouteRequest {
   dstCIDR: string;
-  gateway: string;
+  gateway?: string;
 }
 
 export interface PodContainerRequest {
@@ -38,7 +38,7 @@ export interface PodNetworkRequest {
 export interface PodRequest {
   name: string;
   namespace: string;
-  labels: Map<string, string>;
+  labels: any;
   containers: Array<PodContainerRequest>;
   networks: Array<PodNetworkRequest>;
   volumes: Array<string>;

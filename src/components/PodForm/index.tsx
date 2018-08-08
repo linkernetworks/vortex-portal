@@ -80,6 +80,12 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
   protected handleSubmit = () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        const labels = {};
+        if (values.labels) {
+          Array.from(values.labels.keys()).map((key: string) => {
+            labels[key] = values.labels.get(key);
+          });
+        }
         const containers: Array<PodModel.PodContainerRequest> = [];
         this.state.containers.map((container: PodModel.PodContainerRequest) => {
           containers.push({
@@ -91,25 +97,35 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
         const networks: Array<PodModel.PodNetworkRequest> = [];
         if (values.networkType === 'custom') {
           this.state.networks.map((network: PodModel.PodNetworkRequest) => {
+            const routes = [];
+            const dstCIDR = values[`network-${network.key}-routes-dstCIDR`];
+            const gateway = values[`network-${network.key}-routes-gateway`];
+            if (dstCIDR !== '') {
+              if (gateway !== '') {
+                routes.push({
+                  dstCIDR,
+                  gateway
+                });
+              } else {
+                routes.push({
+                  dstCIDR
+                });
+              }
+            }
             networks.push({
               name: values[`network-${network.key}-name`],
               ifName: values[`network-${network.key}-ifName`],
               ipAddress: values[`network-${network.key}-ipAddress`],
               netmask: values[`network-${network.key}-netmask`],
               vlan: values[`network-${network.key}-vlan`],
-              routes: [
-                {
-                  dstCIDR: values[`network-${network.key}-dstCIDR`],
-                  gateway: values[`network-${network.key}-gateway`]
-                }
-              ]
+              routes
             });
           });
         }
         const podRequest: PodModel.PodRequest = {
           name: values.name,
           namespace: 'default',
-          labels: values.labels,
+          labels,
           containers,
           networks,
           networkType: values.networkType,
@@ -118,6 +134,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
           volumes: [],
           nodeAffinity: []
         };
+        console.log(podRequest);
         this.props.onSubmit(podRequest);
       }
     });
@@ -129,11 +146,20 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
 
   protected checkCIDR = (rule: any, value: string, callback: any) => {
     const re = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(3[0-2]|[1-2][0-9]|[0-9]))$/;
-    if (re.test(value)) {
+    if (value === '' || re.test(value)) {
       callback();
       return;
     }
     callback(`Invalid CIDR! For Example: "192.168.0.1/24", "10.1.14.32/24"`);
+  };
+
+  protected checkGateway = (rule: any, value: string, callback: any) => {
+    const re = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
+    if (value === '' || re.test(value)) {
+      callback();
+      return;
+    }
+    callback(`Invalid Address! For Example: "192.168.0.1", "8.8.8.8"`);
   };
 
   protected checkIPAddress = (rule: any, value: string, callback: any) => {
@@ -146,7 +172,6 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
   };
 
   protected checkName = (rule: any, value: string, callback: any) => {
-    const str = value.toLowerCase();
     const re = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
     if (re.test(value)) {
       callback();
@@ -565,7 +590,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                                 rules: [
                                   {
                                     required: false,
-                                    validator: this.checkIPAddress
+                                    validator: this.checkGateway
                                   }
                                 ],
                                 initialValue: ''
