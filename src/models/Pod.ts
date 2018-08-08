@@ -13,18 +13,26 @@ export interface Pod {
   nics: NICS;
 }
 
+export interface PodRouteRequest {
+  dstCIDR: string;
+  gateway: string;
+}
+
 export interface PodContainerRequest {
+  key?: string;
   name: string;
   image: string;
   command: Array<string>;
 }
 
 export interface PodNetworkRequest {
+  key?: string;
   name: string;
   ifName: string;
-  vlan?: number;
+  vlan: number;
   ipAddress: string;
   netmask: string;
+  routes: Array<PodRouteRequest>;
 }
 
 export interface PodRequest {
