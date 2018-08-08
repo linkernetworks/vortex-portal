@@ -44,6 +44,7 @@ export const menuData: Array<MenuItem> = [
   },
   {
     name: 'storage',
+    icon: 'hdd',
     path: 'storage'
   },
   {

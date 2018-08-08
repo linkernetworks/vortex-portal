@@ -321,6 +321,13 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
 
   public render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
+    const customPanelStyle = {
+      background: '#f7f7f7',
+      borderRadius: 4,
+      marginBottom: 24,
+      border: 0,
+      overflow: 'hidden'
+    };
     return (
       <Modal
         style={{ top: 20 }}
@@ -562,7 +569,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                         )}
                       </FormItem>
                       <Collapse bordered={false}>
-                        <Panel header="Routes" key="1">
+                        <Panel style={customPanelStyle} header="Routes" key="1">
                           <FormItem
                             {...formItemLayout}
                             label={<FormattedMessage id="network.dstCIDR" />}
