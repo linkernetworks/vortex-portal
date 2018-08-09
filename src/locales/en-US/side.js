@@ -1,13 +1,14 @@
 export default {
+  'side.overview': 'Overview',
+  'side.cluster': 'Cluster',
   'side.node': 'Node',
+  'side.network': 'Network',
+  'side.application': 'Application',
+  'side.namespace': 'Namespace',
+  'side.deployment': 'Deployment',
+  'side.service': 'Service',
   'side.pod': 'Pod',
   'side.container': 'Container',
-  'side.network': 'Network',
-  'side.ovs': 'OVS',
-  'side.dpdk': 'DPDK',
-  'side.service': 'Service',
   'side.user': 'Users',
-  'side.compute': 'Compute',
-  'side.overview': 'Overview',
   'side.storage': 'Storage'
 };

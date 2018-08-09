@@ -13,7 +13,7 @@ import { getMenuData } from '@/routes/menu';
 import * as metaAPI from '@/services/meta';
 
 import * as styles from './styles.module.scss';
-import logo from '@/assets/logo.svg';
+import logo from '@/assets/logo.png';
 
 const { Content, Header, Footer } = Layout;
 

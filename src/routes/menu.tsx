@@ -11,9 +11,9 @@ export interface MenuItem {
 
 export const menuData: Array<MenuItem> = [
   {
-    name: 'compute',
-    path: 'compute',
-    icon: 'api',
+    name: 'cluster',
+    path: 'cluster',
+    icon: 'hdd',
     children: [
       {
         name: 'overview',
@@ -24,24 +24,37 @@ export const menuData: Array<MenuItem> = [
         path: 'node'
       },
       {
-        name: 'pod',
-        path: 'pod'
-      },
-      {
-        name: 'container',
-        path: 'container'
+        name: 'network',
+        path: 'network'
       }
     ]
   },
   {
-    name: 'network',
-    path: 'network',
-    icon: 'share-alt'
-  },
-  {
-    name: 'service',
-    icon: 'flag',
-    path: 'service'
+    name: 'application',
+    path: 'application',
+    icon: 'api',
+    children: [
+      {
+        name: 'overview',
+        path: 'overview'
+      },
+      {
+        name: 'namespace',
+        path: 'namespace'
+      },
+      {
+        name: 'deployment',
+        path: 'deployment'
+      },
+      {
+        name: 'service',
+        path: 'service'
+      },
+      {
+        name: 'pod',
+        path: 'pod'
+      }
+    ]
   },
   {
     name: 'storage',

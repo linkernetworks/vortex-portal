@@ -1,0 +1,16 @@
+module.exports = {
+  "primary-color": "#ac2ed1",
+  "link-color": "#ac2ed1",
+  "layout-trigger-background": "#41075e",
+  "layout-header-background": "#250338",
+  "primary-color-1": "#fef0ff",
+  "primary-color-2": "#fbdbff",
+  "primary-color-3": "#edadf7",
+  "primary-color-4": "#d97feb",
+  "primary-color-5": "#c254de",
+  "primary-color-6": "#ac2ed1",
+  "primary-color-7": "#851dab",
+  "primary-color-8": "#621085",
+  "primary-color-9": "#41075e",
+  "primary-color-10": "#250338",
+};

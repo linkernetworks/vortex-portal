@@ -3,13 +3,13 @@ import { Switch, Redirect, Route, RouteProps } from 'react-router-dom';
 
 import MainLayout from '@/layouts/MainLayout';
 import UserLayout from '@/layouts/UserLayout';
-import Node from '@/routes/Compute/Node';
-import Pod from '@/routes/Compute/Pod';
-import Container from '@/routes/Compute/Container';
-import Overview from '@/routes/Compute/Overview';
-import Service from '@/routes/Service';
+import Overview from '@/routes/Cluster/Overview';
+import Node from '@/routes/Cluster/Node';
+import Network from '@/routes/Cluster/Network';
+import Pod from '@/routes/Application/Pod';
+import Container from '@/routes/Application/Container';
+import Service from '@/routes//Application/Service';
 import Storage from '@/routes/Storage';
-import Network from '@/routes/Network';
 import Login from '@/routes/Login';
 import ImageHub from '@/routes/ImageHub';
 import NotFound from '@/routes/Exception/404';
@@ -36,26 +36,38 @@ const appRoutes = (
   <Switch>
     <RouteWithLayout layout={UserLayout} component={Login} path="/signin" />
     <RouteWithLayout layout={UserLayout} component={Login} path="/signup" />
-    <Redirect exact={true} from="/" to="/compute/overview" />
-    <Redirect exact={true} from="/compute" to="/compute/overview" />
+    <Redirect exact={true} from="/" to="/cluster/overview" />
+    <Redirect exact={true} from="/cluster" to="/cluster/overview" />
     <RouteWithLayout
       layout={MainLayout}
       component={Overview}
-      path="/compute/overview"
+      path="/cluster/overview"
     />
     <RouteWithLayout
       layout={MainLayout}
       component={Node}
-      path="/compute/node"
+      path="/cluster/node"
     />
-    <RouteWithLayout layout={MainLayout} component={Pod} path="/compute/pod" />
+    <RouteWithLayout
+      layout={MainLayout}
+      component={Network}
+      path="/cluster/network"
+    />
+    <RouteWithLayout
+      layout={MainLayout}
+      component={Pod}
+      path="/application/pod"
+    />
     <RouteWithLayout
       layout={MainLayout}
       component={Container}
-      path="/compute/container"
+      path="/application/container"
     />
-    <RouteWithLayout layout={MainLayout} component={Network} path="/network" />
-    <RouteWithLayout layout={MainLayout} component={Service} path="/service" />
+    <RouteWithLayout
+      layout={MainLayout}
+      component={Service}
+      path="/application/service"
+    />
     <RouteWithLayout layout={MainLayout} component={Storage} path="/storage" />
     <RouteWithLayout
       layout={MainLayout}
