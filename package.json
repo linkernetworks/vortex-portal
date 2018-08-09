@@ -1,6 +1,6 @@
 {
   "name": "vortex-portal",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
@@ -75,7 +75,7 @@
   },
   "proxy": {
     "v1": {
-      "target": "http://172.17.8.100:32326",
+      "target": "http://172.17.8.100:7890",
       "ws": true
     },
     "registry": {
