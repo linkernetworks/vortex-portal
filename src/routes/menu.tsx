@@ -62,9 +62,9 @@ export const menuData: Array<MenuItem> = [
     path: 'storage'
   },
   {
-    name: 'user',
+    name: 'users',
     icon: 'team',
-    path: 'user',
+    path: 'users',
     authority: UserType.Admin
   }
 ];

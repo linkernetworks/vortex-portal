@@ -9,6 +9,6 @@ export default {
   'side.service': 'Service',
   'side.pod': 'Pod',
   'side.container': 'Container',
-  'side.user': 'Users',
+  'side.users': 'Users',
   'side.storage': 'Storage'
 };
