@@ -79,6 +79,43 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
     };
   }
 
+  public handleClose = () => {
+    const key = Math.random()
+      .toString(36)
+      .substring(7);
+    const state = {
+      labels: new Map(),
+      containerKey: key,
+      networkKey: key,
+      containers: [
+        {
+          key,
+          name: '',
+          image: '',
+          command: []
+        }
+      ],
+      networks: [
+        {
+          key,
+          name: '',
+          ifName: '',
+          ipAddress: '',
+          netmask: '',
+          routes: [
+            {
+              dstCIDR: '',
+              gateway: ''
+            }
+          ]
+        }
+      ]
+    };
+    this.setState(state);
+    this.props.form.resetFields();
+    this.props.onCancel();
+  };
+
   protected handleSubmit = () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -380,7 +417,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
         visible={this.props.visible}
         title={<FormattedMessage id="pod.add" />}
         onOk={this.handleSubmit}
-        onCancel={this.props.onCancel}
+        onCancel={this.handleClose}
       >
         <Form>
           <h2>Pod</h2>
