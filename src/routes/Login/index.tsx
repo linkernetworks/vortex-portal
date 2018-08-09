@@ -6,7 +6,7 @@ import { Form, Input, Icon, Button, Divider, Row, Col } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
 import * as styles from './styles.module.scss';
-import logo from '@/assets/logo.svg';
+import logo from '@/assets/logo.png';
 
 import { RootState, RootAction } from '@/store/ducks';
 import { intlActions, intlModels } from '@/store/ducks/intl';

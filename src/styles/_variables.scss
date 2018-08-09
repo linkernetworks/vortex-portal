@@ -4,16 +4,17 @@ $blue-6: #1890ff;
 $green-6: #52c41a;
 $red-6: #f5222d;
 $gold-6: #faad14;
-$purple-6: #722ed1;
+$purple-6: #ac2ed1;
 $yellow-6: #fadb14;
 
 $red-4: #ff7875;
 
-$purple-8: #391085;
-$purple-10: #120338;
+$purple-8: #621085;
+$purple-9: #41075e;
+$purple-10: #250338;
 
 // -------- Colors -----------
-$primary-color          : $blue-6;
+$primary-color          : $purple-6;
 $info-color             : $blue-6;
 $success-color          : $green-6;
 $processing-color       : $primary-color;
@@ -151,7 +152,7 @@ $layout-header-padding          : 0 50px;
 $layout-footer-padding          : 24px 50px;
 $layout-sider-background        : $layout-header-background;
 $layout-trigger-height          : 48px;
-$layout-trigger-background      : #002140;
+$layout-trigger-background      : $purple-9;
 $layout-trigger-color           : #fff;
 $layout-zero-trigger-width      : 36px;
 $layout-zero-trigger-height     : 42px;

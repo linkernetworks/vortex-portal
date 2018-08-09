@@ -15,6 +15,7 @@
   "rulesDirectory": ["tslint-plugin-prettier"],
   "linterOptions": {
     "exclude": [
+      "theme.js",
       "config-overrides.js",
       "config/**/*.js",
       "src/locales/**/*.js",

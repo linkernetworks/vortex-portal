@@ -5,19 +5,10 @@
   box-shadow: $shadow-1-right;
   position: relative;
   z-index: 10;
-  &.light {
-    background-color: white;
-    .logo {
-      background: white;
-      h1 {
-        color: #002140;
-      }
-    }
-  }
 }
 
 .logo {
-  $height: $layout-header-height / 2;
+  $height: ($layout-header-height + 10px) / 2;
 
   height: $layout-header-height;
   position: relative;
