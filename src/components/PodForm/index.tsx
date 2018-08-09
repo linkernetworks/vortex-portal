@@ -30,6 +30,8 @@ const formItemLayout = {
 };
 
 interface PodFormProps extends FormComponentProps {
+  allPods: Array<string>;
+  pods: PodModel.Pods;
   networks: Array<Network.Network>;
   visible: boolean;
   onCancel: () => void;
@@ -171,7 +173,51 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
     callback(`Invalid Address! For Example: "192.168.0.1", "8.8.8.8"`);
   };
 
-  protected checkName = (rule: any, value: string, callback: any) => {
+  protected checkInterfaceName = (rule: any, value: string, callback: any) => {
+    if (value === 'eth0') {
+      callback(`Invalid Name! "eth0" is already used by system`);
+      return;
+    }
+
+    const re = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
+    if (re.test(value)) {
+      callback();
+      return;
+    }
+    callback(
+      `Invalid Name! Must consist of lower case alphanumeric characters, '-' or '.'`
+    );
+  };
+
+  protected checkPodName = (rule: any, value: string, callback: any) => {
+    this.props.allPods.map(name => {
+      if (this.props.pods[name].podName === value) {
+        callback(`Invalid Name! "${value}" is already exist`);
+        return;
+      }
+    });
+    const re = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
+    if (re.test(value)) {
+      callback();
+      return;
+    }
+    callback(
+      `Invalid Name! Must consist of lower case alphanumeric characters, '-' or '.'`
+    );
+  };
+
+  protected checkContainerName = (rule: any, value: string, callback: any) => {
+    let count = 0;
+    const { getFieldValue } = this.props.form;
+    this.state.containers.map((container: PodModel.PodContainerRequest) => {
+      if (getFieldValue(`container-${container.key}-name`) === value) {
+        count++;
+      }
+      if (count === 2) {
+        callback(`Invalid Name! "${value}" is already exist`);
+        return;
+      }
+    });
     const re = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
     if (re.test(value)) {
       callback();
@@ -346,7 +392,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
               rules: [
                 {
                   required: true,
-                  validator: this.checkName
+                  validator: this.checkPodName
                 }
               ]
             })(<Input placeholder="Give a unique pod name" />)}
@@ -517,7 +563,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                           rules: [
                             {
                               required: true,
-                              validator: this.checkName
+                              validator: this.checkInterfaceName
                             }
                           ]
                         })(<Input placeholder="Interface Name" />)}
@@ -638,7 +684,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                         rules: [
                           {
                             required: true,
-                            validator: this.checkName
+                            validator: this.checkContainerName
                           }
                         ]
                       })(<Input placeholder="Give a unique container name" />)}

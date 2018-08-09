@@ -297,6 +297,8 @@ class Pod extends React.Component<PodProps, PodState> {
           <Icon type="plus" /> <FormattedMessage id="pod.add" />
         </Button>
         <PodForm
+          allPods={this.props.allPods}
+          pods={this.props.pods}
           networks={this.state.networks}
           visible={this.state.visibleModal}
           onCancel={this.hideCreate}
