@@ -58,6 +58,7 @@ module.exports = function override(config, env) {
   // Customize Antd Theme
   config = rewireLess.withLoaderOptions({
     modifyVars: theme,
+    javascriptEnabled: true
   })(config, env);
 
   // CSS Modules
