@@ -12,6 +12,8 @@ import * as styles from './styles.module.scss';
 import { Card } from 'antd';
 import { TimelineChart } from 'ant-design-pro/lib/Charts';
 
+import { formatBytes } from '@/utils/bytes';
+
 const TabPane = Tabs.TabPane;
 
 interface NodeState {
@@ -121,7 +123,7 @@ class Node extends React.Component<NodeProps, NodeState> {
           <Col span={8}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.capacityMemory`} />,
-              this.props.nodes[node].resource.capacityMemory
+              formatBytes(this.props.nodes[node].resource.capacityMemory)
             )}
           </Col>
         </Row>
@@ -135,7 +137,7 @@ class Node extends React.Component<NodeProps, NodeState> {
           <Col span={8}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.allocatableMemory`} />,
-              this.props.nodes[node].resource.allocatableMemory
+              formatBytes(this.props.nodes[node].resource.allocatableMemory)
             )}
           </Col>
           <Col span={8}>
@@ -155,7 +157,7 @@ class Node extends React.Component<NodeProps, NodeState> {
           <Col span={12}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.memoryRequests`} />,
-              this.props.nodes[node].resource.memoryRequests
+              formatBytes(this.props.nodes[node].resource.memoryRequests)
             )}
           </Col>
         </Row>
@@ -169,7 +171,7 @@ class Node extends React.Component<NodeProps, NodeState> {
           <Col span={12}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.memoryLimits`} />,
-              this.props.nodes[node].resource.memoryLimits
+              formatBytes(this.props.nodes[node].resource.memoryLimits)
             )}
           </Col>
         </Row>
