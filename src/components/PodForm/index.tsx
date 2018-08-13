@@ -173,7 +173,6 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
           volumes: [],
           nodeAffinity: []
         };
-        console.log(podRequest);
         this.props.onSubmit(podRequest);
       }
     });

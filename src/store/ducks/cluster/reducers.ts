@@ -2,6 +2,7 @@ import { ActionType, StateType, getType } from 'typesafe-actions';
 import * as Cluster from './actions';
 import * as Node from '@/models/Node';
 import * as Pod from '@/models/Pod';
+import * as Service from '@/models/Service';
 
 export type ClusterStateType = StateType<typeof clusterReducer>;
 export type ClusterActionType = ActionType<typeof Cluster>;
@@ -10,6 +11,7 @@ const initialState: {
   nodes: Node.Nodes;
   pods: Pod.Pods;
   containers: {};
+  services: Array<Service.Service>;
   allNodes: Array<string>;
   allPods: Array<string>;
   allContainers: Array<string>;
@@ -19,6 +21,7 @@ const initialState: {
   nodes: {},
   pods: {},
   containers: {},
+  services: [],
   allNodes: [],
   allPods: [],
   allContainers: [],
@@ -41,6 +44,7 @@ export function clusterReducer(
     case getType(Cluster.fetchPod.request):
     case getType(Cluster.fetchContainers.request):
     case getType(Cluster.fetchContainer.request):
+    case getType(Cluster.fetchServices.request):
     case getType(Cluster.addPod.request):
       return { ...state, isLoading: true };
     case getType(Cluster.fetchNodes.success):
@@ -88,6 +92,12 @@ export function clusterReducer(
     case getType(Cluster.addPod.success):
       return {
         ...state,
+        isLoading: false
+      };
+    case getType(Cluster.fetchServices.success):
+      return {
+        ...state,
+        services: action.payload,
         isLoading: false
       };
     default:

@@ -1,0 +1,16 @@
+export interface Service {
+  id?: string;
+  name: string;
+  namespace: string;
+  type: string;
+  selector: any;
+  ports: Array<ServicePort>;
+}
+
+export interface ServicePort {
+  key?: string;
+  name: string;
+  port: number;
+  targetPort: number;
+  nodePort: number;
+}

@@ -2,6 +2,7 @@ import { createAsyncAction } from 'typesafe-actions';
 import * as Node from '@/models/Node';
 import * as Pod from '@/models/Pod';
 import * as Container from '@/models/Container';
+import * as Service from '@/models/Service';
 
 export const fetchNodes = createAsyncAction(
   'FETCH_NODES_REQUEST',
@@ -50,3 +51,9 @@ export const addPod = createAsyncAction(
   'ADD_Pod_SUCCESS',
   'ADD_Pod_FAILURE'
 )<void, Pod.PodRequest, Error>();
+
+export const fetchServices = createAsyncAction(
+  'FETCH_SERVICES_REQUEST',
+  'FETCH_SERVICES_SUCCESS',
+  'FETCH_SERVICES_FAILURE'
+)<void, Array<Service.Service>, Error>();

@@ -10,6 +10,7 @@ import node from './node';
 import pod from './pod';
 import container from './container';
 import hub from './hub';
+import service from './service';
 
 export default {
   'parentLocale': 'en',
@@ -25,5 +26,6 @@ export default {
   ...node,
   ...pod,
   ...container,
-  ...hub
+  ...hub,
+  ...service
 };

@@ -4,6 +4,7 @@ import * as PodModel from '@/models/Pod';
 import * as nodeAPI from '@/services/node';
 import * as podAPI from '@/services/pod';
 import * as containerAPI from '@/services/container';
+import * as serviceAPI from '@/services/service';
 
 export const fetchNodes = (): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
@@ -105,6 +106,18 @@ export const addPod = (
       return dispatch(clusterActions.addPod.success(res.data));
     } catch (e) {
       return dispatch(clusterActions.addPod.failure(e));
+    }
+  };
+};
+
+export const fetchServices = (): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.fetchServices.request());
+    try {
+      const res = await serviceAPI.getServices();
+      return dispatch(clusterActions.fetchServices.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.fetchServices.failure(e));
     }
   };
 };
