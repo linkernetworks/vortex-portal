@@ -7,6 +7,8 @@ export default {
   'dpdk': 'dpdk',
   'service': 'service',
   'user': 'user',
-  'compute': 'compute',
-  'overview': 'overview'
+  'storage': 'storage',
+  'volume': 'volume',
+  'overview': 'overview',
+  'createdAt': 'created at'
 };

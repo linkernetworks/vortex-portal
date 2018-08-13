@@ -1,4 +1,5 @@
 export default {
+  'action': 'action',
   'action.edit': 'edit',
   'action.delete': 'delete',
   'action.save': 'save',
