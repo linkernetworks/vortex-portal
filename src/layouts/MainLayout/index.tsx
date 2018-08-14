@@ -8,6 +8,7 @@ import { intlActions, intlModels } from '@/store/ducks/intl';
 import { RootState, RootAction } from '@/store/ducks';
 import SiderMenu from '@/components/SiderMenu';
 import NavHeader from '@/components/NavHeader';
+import BaseFooter from '@/components/BaseFooter';
 import { UserType } from '@/models/User';
 import { getMenuData } from '@/routes/menu';
 import * as metaAPI from '@/services/meta';
@@ -77,12 +78,12 @@ class MainLayout extends React.PureComponent<MainLayoutProps, MainLayoutState> {
             </Header>
             <Content className={styles.content}>{this.props.children}</Content>
             <Footer className={styles.footer}>
-              <span className={styles.version}>
-                Backend: {this.state.version}
-              </span>
-              <span className={styles.version}>
-                Portal: v{process.env.REACT_APP_PORTAL_VERSION}
-              </span>
+              <BaseFooter
+                version={{
+                  backend: this.state.version,
+                  portal: `v${process.env.REACT_APP_PORTAL_VERSION}`
+                }}
+              />
             </Footer>
           </Layout>
         </Layout>
