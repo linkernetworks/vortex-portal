@@ -6,7 +6,7 @@ import {
   Form,
   Button,
   Modal,
-  Select,
+  Radio,
   Input,
   InputNumber,
   Row,
@@ -17,7 +17,8 @@ import { FormComponentProps } from 'antd/lib/form';
 
 const FormItem = Form.Item;
 const TabPane = Tabs.TabPane;
-const Option = Select.Option;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -195,6 +196,23 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
   };
 
   protected handleClose = () => {
+    const key = Math.random()
+      .toString(36)
+      .substring(7);
+    const state = {
+      selectors: new Map(),
+      portKey: key,
+      ports: [
+        {
+          key,
+          name: '',
+          port: 0,
+          targetPort: 0,
+          nodePort: 0
+        }
+      ]
+    };
+    this.setState(state);
     this.props.form.resetFields();
     this.props.onCancel();
   };
@@ -244,12 +262,10 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
                 }
               ]
             })(
-              <Select placeholder="Select a type" style={{ width: 200 }}>
-                <Option value="ClusterIP">Cluster IP</Option>
-                <Option value="NodePort">Node Port</Option>
-                <Option value="LoadBalancer">Load Balancer</Option>
-                <Option value="ExternalName">External Name</Option>
-              </Select>
+              <RadioGroup buttonStyle="solid">
+                <RadioButton value="ClusterIP">Cluster IP</RadioButton>
+                <RadioButton value="NodePort">Node Port</RadioButton>
+              </RadioGroup>
             )}
           </FormItem>
           <FormItem
@@ -259,8 +275,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
             {getFieldDecorator('selectors', {
               rules: [
                 {
-                  required: true,
-                  message: 'Please input your selectors'
+                  required: false
                 }
               ]
             })(

@@ -47,9 +47,9 @@ export const fetchContainer = createAsyncAction(
 )<void, Container.Container, Error>();
 
 export const addPod = createAsyncAction(
-  'ADD_Pod_REQUEST',
-  'ADD_Pod_SUCCESS',
-  'ADD_Pod_FAILURE'
+  'ADD_POD_REQUEST',
+  'ADD_POD_SUCCESS',
+  'ADD_POD_FAILURE'
 )<void, Pod.PodRequest, Error>();
 
 export const fetchServices = createAsyncAction(
@@ -57,3 +57,15 @@ export const fetchServices = createAsyncAction(
   'FETCH_SERVICES_SUCCESS',
   'FETCH_SERVICES_FAILURE'
 )<void, Array<Service.Service>, Error>();
+
+export const addService = createAsyncAction(
+  'ADD_SERVICE_REQUEST',
+  'ADD_SERVICE_SUCCESS',
+  'ADD_SERVICE_FAILURE'
+)<void, Service.Service, Error>();
+
+export const removeService = createAsyncAction(
+  'REMOVE_SERVICE_REQUEST',
+  'REMOVE_SERVICE_SUCCESS',
+  'REMOVE_SERVICE_FAILURE'
+)<void, { id: string }, Error>();

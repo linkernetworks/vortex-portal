@@ -1,6 +1,7 @@
 import { RTAction } from '../index';
 import { clusterActions, ClusterActionType } from './index';
 import * as PodModel from '@/models/Pod';
+import * as ServiceModel from '@/models/Service';
 import * as nodeAPI from '@/services/node';
 import * as podAPI from '@/services/pod';
 import * as containerAPI from '@/services/container';
@@ -118,6 +119,38 @@ export const fetchServices = (): RTAction<Promise<ClusterActionType>> => {
       return dispatch(clusterActions.fetchServices.success(res.data));
     } catch (e) {
       return dispatch(clusterActions.fetchServices.failure(e));
+    }
+  };
+};
+
+export const addService = (
+  data: ServiceModel.Service
+): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.addService.request);
+    try {
+      const res = await serviceAPI.createService(data);
+      return dispatch(clusterActions.addService.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.addService.failure(e));
+    }
+  };
+};
+
+export const removeService = (
+  id: string
+): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.removeService.request());
+    try {
+      const res = await serviceAPI.deleteService(id);
+      if (!res.data.error) {
+        return dispatch(clusterActions.removeService.success({ id }));
+      } else {
+        throw new Error(res.data.message);
+      }
+    } catch (e) {
+      return dispatch(clusterActions.removeService.failure(e));
     }
   };
 };

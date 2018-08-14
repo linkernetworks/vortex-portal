@@ -116,14 +116,14 @@ class Node extends React.Component<NodeProps, NodeState> {
           </Col>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id={`node.resource.capacityPods`} />,
-              this.props.nodes[node].resource.capacityPods
+              <FormattedMessage id={`node.resource.capacityMemory`} />,
+              formatBytes(this.props.nodes[node].resource.capacityMemory)
             )}
           </Col>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id={`node.resource.capacityMemory`} />,
-              formatBytes(this.props.nodes[node].resource.capacityMemory)
+              <FormattedMessage id={`node.resource.capacityPods`} />,
+              this.props.nodes[node].resource.capacityPods
             )}
           </Col>
         </Row>

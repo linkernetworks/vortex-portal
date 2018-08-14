@@ -46,6 +46,8 @@ export function clusterReducer(
     case getType(Cluster.fetchContainer.request):
     case getType(Cluster.fetchServices.request):
     case getType(Cluster.addPod.request):
+    case getType(Cluster.addService.request):
+    case getType(Cluster.removeService.request):
       return { ...state, isLoading: true };
     case getType(Cluster.fetchNodes.success):
       return {
@@ -99,6 +101,20 @@ export function clusterReducer(
         ...state,
         services: action.payload,
         isLoading: false
+      };
+    case getType(Cluster.addService.success):
+      return {
+        ...state,
+        isLoading: false,
+        services: [...state.services, action.payload]
+      };
+    case getType(Cluster.removeService.success):
+      return {
+        ...state,
+        isLoading: false,
+        services: state.services.filter(
+          record => record.id !== action.payload.id
+        )
       };
     default:
       return state;
