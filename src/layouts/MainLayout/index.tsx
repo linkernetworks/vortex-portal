@@ -96,7 +96,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     locale: state.intl.locale,
     localeOptions: state.intl.options,
-    location: state.router.location
+    location: state.router.location as Location
   };
 };
 

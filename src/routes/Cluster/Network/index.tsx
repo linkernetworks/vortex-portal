@@ -31,7 +31,7 @@ interface NetworkProps {
   };
   networks: Array<networkModels.Network>;
   isLoading: boolean;
-  networkError?: Error;
+  networkError?: Error | null;
   fetchNodes: () => any;
   fetchNetworks: () => any;
   addNetwork: (data: networkModels.NetworkFields) => any;

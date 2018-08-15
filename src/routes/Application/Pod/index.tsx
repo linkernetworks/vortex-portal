@@ -7,8 +7,7 @@ import { Row, Col, Tag, Drawer, Button, Icon, Tabs } from 'antd';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 
-import { Dispatch } from 'redux';
-import { RootState, RootAction, RTDispatch } from '@/store/ducks';
+import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
 
 import * as containerAPI from '@/services/container';
@@ -345,7 +344,7 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
+const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchPods: () => dispatch(clusterOperations.fetchPods()),
   addPod: (data: PodModel.PodRequest) => {
     dispatch(clusterOperations.addPod(data));

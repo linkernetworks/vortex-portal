@@ -1,14 +1,11 @@
-import { ActionType, StateType, getType } from 'typesafe-actions';
+import { ActionType, getType } from 'typesafe-actions';
 import * as Cluster from './actions';
 import * as Node from '@/models/Node';
 import * as Pod from '@/models/Pod';
 import * as Service from '@/models/Service';
 import * as Namespace from '@/models/Namespace';
 
-export type ClusterStateType = StateType<typeof clusterReducer>;
-export type ClusterActionType = ActionType<typeof Cluster>;
-
-const initialState: {
+export interface ClusterStateType {
   nodes: Node.Nodes;
   pods: Pod.Pods;
   containers: {};
@@ -19,7 +16,11 @@ const initialState: {
   allContainers: Array<string>;
   nics: {};
   isLoading: boolean;
-} = {
+}
+
+export type ClusterActionType = ActionType<typeof Cluster>;
+
+const initialState: ClusterStateType = {
   nodes: {},
   pods: {},
   containers: {},
@@ -77,7 +78,7 @@ export function clusterReducer(
         ...state,
         pods: {
           ...state.pods,
-          ...action.payload
+          [action.payload.podName]: action.payload
         },
         isLoading: false
       };
@@ -93,7 +94,7 @@ export function clusterReducer(
         ...state,
         containers: {
           ...state.containers,
-          ...action.payload
+          [action.payload.detail.containerName]: action.payload
         },
         isLoading: false
       };

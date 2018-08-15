@@ -32,7 +32,7 @@ interface Image {
 }
 interface HubProps extends FormComponentProps, InjectedIntlProps {
   isAuth: boolean;
-  isError: boolean;
+  isError?: boolean;
   isLoading: boolean;
   token: string;
   images: Array<Image>;
@@ -57,7 +57,11 @@ class ImageHub extends React.PureComponent<HubProps, HubState> {
       dataIndex: 'tags',
       key: 'tags',
       render: (tags: Array<string>) => (
-        <div>{tags.map(text => <Tag key={text}>{text}</Tag>)}</div>
+        <div>
+          {tags.map(text => (
+            <Tag key={text}>{text}</Tag>
+          ))}
+        </div>
       )
     }
   ];
