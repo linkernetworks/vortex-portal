@@ -1,0 +1,48 @@
+@import '../../../styles/variables';
+
+$tag-gutter: 8px;
+
+.content {
+  flex-direction: column;
+  width: 100%;
+}
+
+.property {
+  display: flex;
+}
+
+
+.column {
+  :global {
+    .title {
+      color: $text-color-secondary;
+      font-size: $font-size-sm;
+    }
+
+    .content {
+      margin-bottom: 0;
+    }
+
+    .ant-tree > li:first-child {
+      padding-top: 0px;
+    }
+  }
+}
+
+
+.leading {
+  margin-bottom: 6px;
+  :global(.title) {
+    font-size: $font-size-lg;
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.add {
+  margin: 1em 0;
+  width: 100%;
+}
+

@@ -3,6 +3,7 @@ import * as Node from '@/models/Node';
 import * as Pod from '@/models/Pod';
 import * as Container from '@/models/Container';
 import * as Service from '@/models/Service';
+import * as Namespace from '@/models/Namespace';
 
 export const fetchNodes = createAsyncAction(
   'FETCH_NODES_REQUEST',
@@ -68,4 +69,22 @@ export const removeService = createAsyncAction(
   'REMOVE_SERVICE_REQUEST',
   'REMOVE_SERVICE_SUCCESS',
   'REMOVE_SERVICE_FAILURE'
+)<void, { id: string }, Error>();
+
+export const fetchNamespaces = createAsyncAction(
+  'FETCH_NAMESPACES_REQUEST',
+  'FETCH_NAMESPACES_SUCCESS',
+  'FETCH_NAMESPACES_FAILURE'
+)<void, Array<Namespace.Namespace>, Error>();
+
+export const addNamespace = createAsyncAction(
+  'ADD_NAMESPACE_REQUEST',
+  'ADD_NAMESPACE_SUCCESS',
+  'ADD_NAMESPACE_FAILURE'
+)<void, Namespace.Namespace, Error>();
+
+export const removeNamespace = createAsyncAction(
+  'REMOVE_NAMESPACE_REQUEST',
+  'REMOVE_NAMESPACE_SUCCESS',
+  'REMOVE_NAMESPACE_FAILURE'
 )<void, { id: string }, Error>();

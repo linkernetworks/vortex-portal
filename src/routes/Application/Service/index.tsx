@@ -157,7 +157,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
             <Icon type="plus" /> <FormattedMessage id="service.add" />
           </Button>
           <ServiceForm
-            services={this.props.services}
+            services={services}
             visible={this.state.visibleModal}
             onCancel={this.hideCreate}
             onSubmit={this.handleSubmit}

@@ -3,6 +3,7 @@ import * as Cluster from './actions';
 import * as Node from '@/models/Node';
 import * as Pod from '@/models/Pod';
 import * as Service from '@/models/Service';
+import * as Namespace from '@/models/Namespace';
 
 export type ClusterStateType = StateType<typeof clusterReducer>;
 export type ClusterActionType = ActionType<typeof Cluster>;
@@ -12,6 +13,7 @@ const initialState: {
   pods: Pod.Pods;
   containers: {};
   services: Array<Service.Service>;
+  namespaces: Array<Namespace.Namespace>;
   allNodes: Array<string>;
   allPods: Array<string>;
   allContainers: Array<string>;
@@ -22,6 +24,7 @@ const initialState: {
   pods: {},
   containers: {},
   services: [],
+  namespaces: [],
   allNodes: [],
   allPods: [],
   allContainers: [],
@@ -45,9 +48,12 @@ export function clusterReducer(
     case getType(Cluster.fetchContainers.request):
     case getType(Cluster.fetchContainer.request):
     case getType(Cluster.fetchServices.request):
+    case getType(Cluster.fetchNamespaces.request):
     case getType(Cluster.addPod.request):
     case getType(Cluster.addService.request):
+    case getType(Cluster.addNamespace.request):
     case getType(Cluster.removeService.request):
+    case getType(Cluster.removeNamespace.request):
       return { ...state, isLoading: true };
     case getType(Cluster.fetchNodes.success):
       return {
@@ -113,6 +119,20 @@ export function clusterReducer(
         ...state,
         isLoading: false,
         services: state.services.filter(
+          record => record.id !== action.payload.id
+        )
+      };
+    case getType(Cluster.addNamespace.success):
+      return {
+        ...state,
+        isLoading: false,
+        namespaces: [...state.namespaces, action.payload]
+      };
+    case getType(Cluster.removeNamespace.success):
+      return {
+        ...state,
+        isLoading: false,
+        namespaces: state.namespaces.filter(
           record => record.id !== action.payload.id
         )
       };

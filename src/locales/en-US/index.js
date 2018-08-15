@@ -11,6 +11,7 @@ import pod from './pod';
 import container from './container';
 import hub from './hub';
 import service from './service';
+import namespace from './namespace';
 
 export default {
   'parentLocale': 'en',
@@ -27,5 +28,6 @@ export default {
   ...pod,
   ...container,
   ...hub,
-  ...service
+  ...service,
+  ...namespace
 };

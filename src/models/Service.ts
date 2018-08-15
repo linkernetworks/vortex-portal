@@ -13,5 +13,5 @@ export interface ServicePort {
   name: string;
   port: number;
   targetPort: number;
-  nodePort: number;
+  nodePort?: number;
 }

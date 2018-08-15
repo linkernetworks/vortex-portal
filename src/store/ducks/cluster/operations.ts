@@ -2,10 +2,12 @@ import { RTAction } from '../index';
 import { clusterActions, ClusterActionType } from './index';
 import * as PodModel from '@/models/Pod';
 import * as ServiceModel from '@/models/Service';
+import * as NamespaceModel from '@/models/Namespace';
 import * as nodeAPI from '@/services/node';
 import * as podAPI from '@/services/pod';
 import * as containerAPI from '@/services/container';
 import * as serviceAPI from '@/services/service';
+import * as namespaceAPI from '@/services/namespace';
 
 export const fetchNodes = (): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
@@ -151,6 +153,50 @@ export const removeService = (
       }
     } catch (e) {
       return dispatch(clusterActions.removeService.failure(e));
+    }
+  };
+};
+
+export const fetchNamespaces = (): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.fetchNamespaces.request());
+    try {
+      const res = await namespaceAPI.getNamespaces();
+      return dispatch(clusterActions.fetchNamespaces.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.fetchNamespaces.failure(e));
+    }
+  };
+};
+
+export const addNamespace = (
+  data: NamespaceModel.Namespace
+): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.addNamespace.request);
+    try {
+      const res = await namespaceAPI.createNamespace(data);
+      return dispatch(clusterActions.addNamespace.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.addNamespace.failure(e));
+    }
+  };
+};
+
+export const removeNamespace = (
+  id: string
+): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.removeNamespace.request());
+    try {
+      const res = await namespaceAPI.deleteNamespace(id);
+      if (!res.data.error) {
+        return dispatch(clusterActions.removeNamespace.success({ id }));
+      } else {
+        throw new Error(res.data.message);
+      }
+    } catch (e) {
+      return dispatch(clusterActions.removeNamespace.failure(e));
     }
   };
 };

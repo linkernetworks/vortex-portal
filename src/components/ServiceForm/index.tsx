@@ -228,7 +228,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
   };
 
   public render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
     return (
       <Modal
         visible={this.props.visible}
@@ -260,7 +260,8 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
                   required: true,
                   message: 'Please select your type'
                 }
-              ]
+              ],
+              initialValue: 'ClusterIP'
             })(
               <RadioGroup buttonStyle="solid">
                 <RadioButton value="ClusterIP">Cluster IP</RadioButton>
@@ -275,7 +276,8 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
             {getFieldDecorator('selectors', {
               rules: [
                 {
-                  required: false
+                  required: true,
+                  message: 'Please input your selectors'
                 }
               ]
             })(
@@ -373,25 +375,27 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
                         ]
                       })(<InputNumber min={0} placeholder="Taget Port" />)}
                     </FormItem>
-                    <FormItem
-                      {...formItemLayout}
-                      label={<FormattedMessage id="service.ports.nodePort" />}
-                    >
-                      {getFieldDecorator(`port-${port.key}-nodePort`, {
-                        rules: [
-                          {
-                            required: true,
-                            message: 'Please input your node port'
-                          }
-                        ]
-                      })(
-                        <InputNumber
-                          min={30000}
-                          max={33000}
-                          placeholder="Node Port"
-                        />
-                      )}
-                    </FormItem>
+                    {getFieldValue('type') === 'NodePort' && (
+                      <FormItem
+                        {...formItemLayout}
+                        label={<FormattedMessage id="service.ports.nodePort" />}
+                      >
+                        {getFieldDecorator(`port-${port.key}-nodePort`, {
+                          rules: [
+                            {
+                              required: true,
+                              message: 'Please input your node port'
+                            }
+                          ]
+                        })(
+                          <InputNumber
+                            min={30000}
+                            max={33000}
+                            placeholder="Node Port"
+                          />
+                        )}
+                      </FormItem>
+                    )}
                   </TabPane>
                 );
               }
