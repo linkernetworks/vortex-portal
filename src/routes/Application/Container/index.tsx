@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ContainerModel from '@/models/Container';
 import { connect } from 'react-redux';
 import { Row, Col, Tag, Drawer } from 'antd';
+import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 
 import { Dispatch } from 'redux';
@@ -10,7 +11,15 @@ import { clusterOperations } from '@/store/ducks/cluster';
 
 import * as styles from './styles.module.scss';
 import { Card } from 'antd';
-import { TimelineChart } from 'ant-design-pro/lib/Charts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend
+} from 'recharts';
 
 interface ContainerState {
   visibleDrawer: boolean;
@@ -70,20 +79,33 @@ class Container extends React.Component<ContainerProps, ContainerState> {
   };
 
   protected renderChart(data: Array<{ timestamp: number; value: string }>) {
-    const chartData: Array<{ x: any; y1: string; y2: string }> = [];
+    const chartData: Array<{ x: string; y1: number }> = [];
     data.map(d => {
       chartData.push({
-        x: new Date(d.timestamp * 1000).getTime(),
-        y1: d.value,
-        y2: ''
+        x: moment(d.timestamp * 1000).calendar(),
+        y1: parseFloat(d.value)
       });
     });
     return (
-      <TimelineChart
+      <LineChart
+        width={600}
         height={300}
         data={chartData}
-        titleMap={{ y1: 'Usage', y2: '' }}
-      />
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+      >
+        <XAxis dataKey="x" />
+        <YAxis />
+        <CartesianGrid strokeDasharray="3 3" />
+        <Tooltip />
+        <Legend />
+        <Line
+          type="monotone"
+          name="Usage"
+          dataKey="y1"
+          stroke="#8884d8"
+          activeDot={{ r: 8 }}
+        />
+      </LineChart>
     );
   }
 
