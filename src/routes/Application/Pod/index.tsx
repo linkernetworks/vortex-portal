@@ -4,6 +4,7 @@ import * as ContainerModel from '@/models/Container';
 import * as NetworkModel from '@/models/Network';
 import { connect } from 'react-redux';
 import { Row, Col, Tag, Drawer, Button, Icon, Tabs } from 'antd';
+import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 
 import { Dispatch } from 'redux';
@@ -15,7 +16,15 @@ import * as networkAPI from '@/services/network';
 
 import * as styles from './styles.module.scss';
 import { Card } from 'antd';
-import { TimelineChart } from 'ant-design-pro/lib/Charts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend
+} from 'recharts';
 
 import PodForm from '@/components/PodForm';
 
@@ -148,20 +157,40 @@ class Pod extends React.Component<PodProps, PodState> {
     data1: Array<{ timestamp: number; value: string }>,
     data2: Array<{ timestamp: number; value: string }>
   ) {
-    const chartData: Array<{ x: any; y1: string; y2: string }> = [];
+    const chartData: Array<{ x: string; y1: number; y2: number }> = [];
     data1.map((d, i) => {
       chartData.push({
-        x: new Date(d.timestamp * 1000).getTime(),
-        y1: data1[i].value,
-        y2: data2[i].value
+        x: moment(d.timestamp * 1000).calendar(),
+        y1: parseFloat(data1[i].value),
+        y2: parseFloat(data2[i].value)
       });
     });
     return (
-      <TimelineChart
-        height={400}
+      <LineChart
+        width={600}
+        height={300}
         data={chartData}
-        titleMap={{ y1: 'Receive Usage', y2: 'Transmit Usage' }}
-      />
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+      >
+        <XAxis dataKey="x" />
+        <YAxis />
+        <CartesianGrid strokeDasharray="3 3" />
+        <Tooltip />
+        <Legend />
+        <Line
+          type="monotone"
+          name="Receive Usage"
+          dataKey="y1"
+          stroke="#8884d8"
+          activeDot={{ r: 8 }}
+        />
+        <Line
+          type="monotone"
+          name="Transmit Usage"
+          dataKey="y2"
+          stroke="#82ca9d"
+        />
+      </LineChart>
     );
   }
 
