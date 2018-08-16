@@ -272,7 +272,12 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
   };
 
   protected addLabel = () => {
-    if (this.labelKey.current != null && this.labelValue.current != null) {
+    if (
+      this.labelKey.current != null &&
+      this.labelValue.current != null &&
+      this.labelKey.current.input.value !== '' &&
+      this.labelValue.current.input.value !== ''
+    ) {
       const { labels } = this.state;
       const newLabels = new Map(labels);
       newLabels.set(
@@ -491,10 +496,18 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                 })}
                 <Row>
                   <Col span={10}>
-                    <Input ref={this.labelKey} placeholder="Key" />
+                    <Input
+                      ref={this.labelKey}
+                      placeholder="Key"
+                      onBlur={this.addLabel}
+                    />
                   </Col>
                   <Col span={10}>
-                    <Input ref={this.labelValue} placeholder="Value" />
+                    <Input
+                      ref={this.labelValue}
+                      placeholder="Value"
+                      onBlur={this.addLabel}
+                    />
                   </Col>
                   <Button
                     style={{ marginLeft: 12 }}

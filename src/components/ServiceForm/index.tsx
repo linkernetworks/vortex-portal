@@ -97,10 +97,19 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
     );
   };
 
+  protected checkSelectors = (rule: any, value: string, callback: any) => {
+    if (this.state.selectors.size <= 0) {
+      callback(`Please enter your selectors`);
+      return;
+    }
+  };
+
   protected addSelector = () => {
     if (
       this.selectorKey.current != null &&
-      this.selectorValue.current != null
+      this.selectorValue.current != null &&
+      this.selectorKey.current.input.value !== '' &&
+      this.selectorValue.current.input.value !== ''
     ) {
       const { selectors } = this.state;
       const newSelectors = new Map(selectors);
@@ -277,7 +286,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
               rules: [
                 {
                   required: true,
-                  message: 'Please input your selectors'
+                  validator: this.checkSelectors
                 }
               ]
             })(
@@ -306,10 +315,18 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
                 })}
                 <Row>
                   <Col span={10}>
-                    <Input ref={this.selectorKey} placeholder="Key" />
+                    <Input
+                      ref={this.selectorKey}
+                      placeholder="Key"
+                      onBlur={this.addSelector}
+                    />
                   </Col>
                   <Col span={10}>
-                    <Input ref={this.selectorValue} placeholder="Value" />
+                    <Input
+                      ref={this.selectorValue}
+                      placeholder="Value"
+                      onBlur={this.addSelector}
+                    />
                   </Col>
                   <Button
                     style={{ marginLeft: 12 }}
