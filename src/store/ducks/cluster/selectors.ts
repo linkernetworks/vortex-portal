@@ -7,7 +7,9 @@ export const getNodesWithPhysicalInterfaces = (duck: ClusterStateType) => {
     const node = nodes[nodeName];
     const nics = pickBy(
       node.nics,
-      (_, key) => node.nics[key].type === clusterModels.NICType.physical
+      (_, key) =>
+        node.nics[key].type === clusterModels.NICType.physical &&
+        !node.nics[key].default // default means used by cluster flannel network interface
     );
     return {
       ...filteredNodes,
