@@ -57,11 +57,7 @@ class ImageHub extends React.PureComponent<HubProps, HubState> {
       dataIndex: 'tags',
       key: 'tags',
       render: (tags: Array<string>) => (
-        <div>
-          {tags.map(text => (
-            <Tag key={text}>{text}</Tag>
-          ))}
-        </div>
+        <div>{tags.map(text => <Tag key={text}>{text}</Tag>)}</div>
       )
     }
   ];

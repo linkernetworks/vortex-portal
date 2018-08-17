@@ -2,9 +2,11 @@ import * as React from 'react';
 import * as PodModel from '@/models/Pod';
 import * as ContainerModel from '@/models/Container';
 import * as NetworkModel from '@/models/Network';
+import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
-import { Row, Col, Tag, Drawer, Button, Icon, Tabs } from 'antd';
+import { Row, Col, Tag, Drawer, Button, Icon, Tabs, Input, Select } from 'antd';
 import * as moment from 'moment';
+import { filter, includes } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 
 import { RootState, RTDispatch } from '@/store/ducks';
@@ -12,6 +14,7 @@ import { clusterOperations } from '@/store/ducks/cluster';
 
 import * as containerAPI from '@/services/container';
 import * as networkAPI from '@/services/network';
+import * as namespaceAPI from '@/services/namespace';
 
 import * as styles from './styles.module.scss';
 import { Card } from 'antd';
@@ -28,6 +31,9 @@ import {
 import PodForm from '@/components/PodForm';
 
 const TabPane = Tabs.TabPane;
+const InputGroup = Input.Group;
+const Search = Input.Search;
+const Option = Select.Option;
 
 interface PodState {
   visibleDrawer: boolean;
@@ -35,6 +41,9 @@ interface PodState {
   currentPod: string;
   containers: Array<ContainerModel.Container>;
   networks: Array<NetworkModel.Network>;
+  namespaces: Array<NamespaceModel.Namespace>;
+  searchType: string;
+  searchText: string;
 }
 
 interface PodProps {
@@ -52,7 +61,10 @@ class Pod extends React.Component<PodProps, PodState> {
       visibleModal: false,
       currentPod: '',
       containers: [],
-      networks: []
+      networks: [],
+      namespaces: [],
+      searchType: 'pod',
+      searchText: ''
     };
   }
 
@@ -64,6 +76,9 @@ class Pod extends React.Component<PodProps, PodState> {
     networkAPI.getNetworks().then(res => {
       this.setState({ networks: res.data });
     });
+    namespaceAPI.getNamespaces().then(res => {
+      this.setState({ namespaces: res.data });
+    });
     this.setState({ visibleModal: true });
   };
 
@@ -74,6 +89,14 @@ class Pod extends React.Component<PodProps, PodState> {
   protected handleSubmit = (podRequest: PodModel.PodRequest) => {
     this.props.addPod(podRequest);
     this.setState({ visibleModal: false });
+  };
+
+  protected handleChangeSearchType = (type: string) => {
+    this.setState({ searchType: type, searchText: '' });
+  };
+
+  protected handleSearch = (e: any) => {
+    this.setState({ searchText: e.target.value });
   };
 
   protected showMore = (pod: string) => {
@@ -287,11 +310,48 @@ class Pod extends React.Component<PodProps, PodState> {
   };
 
   public render() {
-    const { currentPod } = this.state;
+    const { currentPod, searchText } = this.state;
+    const filterPods = filter(this.props.allPods, name => {
+      switch (this.state.searchType) {
+        default:
+        case 'pod':
+          return includes(this.props.pods[name].podName, searchText);
+        case 'container':
+          for (const container of this.props.pods[name].containers) {
+            if (includes(container, searchText)) {
+              return true;
+            }
+          }
+          return false;
+        case 'node':
+          return includes(this.props.pods[name].node, searchText);
+        case 'namespace':
+          return includes(this.props.pods[name].namespace, searchText);
+      }
+    });
     return (
       <div>
+        <InputGroup compact={true}>
+          <Select
+            style={{ width: '15%' }}
+            defaultValue="Pod Name"
+            onChange={this.handleChangeSearchType}
+          >
+            <Option value="pod">Pod Name</Option>
+            <Option value="container">Container Name</Option>
+            <Option value="node">Node Name</Option>
+            <Option value="namespace">Namespace</Option>
+          </Select>
+          <Search
+            style={{ width: '20%' }}
+            placeholder="Input search text"
+            value={this.state.searchText}
+            onChange={this.handleSearch}
+          />
+        </InputGroup>
+        <br />
         <Row>
-          {this.props.allPods.map(pod => {
+          {filterPods.map(pod => {
             return (
               <Col key={this.props.pods[pod].podName} span={6}>
                 {this.renderCardItem(pod)}
@@ -328,6 +388,7 @@ class Pod extends React.Component<PodProps, PodState> {
           allPods={this.props.allPods}
           pods={this.props.pods}
           networks={this.state.networks}
+          namespaces={this.state.namespaces}
           visible={this.state.visibleModal}
           onCancel={this.hideCreate}
           onSubmit={this.handleSubmit}

@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as PodModel from '@/models/Pod';
+import * as NetworkModel from '@/models/Network';
+import * as NamespaceModel from '@/models/Namespace';
 import { findIndex } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import {
@@ -16,7 +18,6 @@ import {
   Collapse
 } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
-import * as Network from '@/models/Network';
 import EditableTagGroup from '@/components/EditableTagGroup';
 
 const FormItem = Form.Item;
@@ -32,7 +33,8 @@ const formItemLayout = {
 interface PodFormProps extends FormComponentProps {
   allPods: Array<string>;
   pods: PodModel.Pods;
-  networks: Array<Network.Network>;
+  networks: Array<NetworkModel.Network>;
+  namespaces: Array<NamespaceModel.Namespace>;
   visible: boolean;
   onCancel: () => void;
   onSubmit: (data: any) => void;

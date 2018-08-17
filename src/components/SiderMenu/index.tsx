@@ -106,7 +106,8 @@ class SiderMenu extends React.PureComponent<SiderMenuProps, SiderMenuState> {
   public getDefaultCollapsedSubMenus(props: SiderMenuProps) {
     const {
       location: { pathname }
-    } = props || this.props;
+    } =
+      props || this.props;
     return getMenuMatchKeys(this.flatMenuKeys, urlToList(pathname));
   }
 
