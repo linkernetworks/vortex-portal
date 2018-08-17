@@ -121,10 +121,12 @@ class Service extends React.Component<ServiceProps, ServiceState> {
                       icon={<Icon type="tag-o" />}
                       title={`Port: ${port.port}`}
                     />
-                    <TreeNode
-                      icon={<Icon type="tag-o" />}
-                      title={`Node Port: ${port.nodePort}`}
-                    />
+                    {item.type === 'NodePort' && (
+                      <TreeNode
+                        icon={<Icon type="tag-o" />}
+                        title={`Node Port: ${port.nodePort}`}
+                      />
+                    )}
                   </TreeNode>
                 ))}
               </Tree>

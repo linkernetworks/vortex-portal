@@ -102,6 +102,8 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
       callback(`Please enter your selectors`);
       return;
     }
+    callback();
+    return;
   };
 
   protected addSelector = () => {
@@ -188,9 +190,12 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
           ports.push({
             name: values[`port-${port.key}-name`],
             port: values[`port-${port.key}-port`],
-            targetPort: values[`port-${port.key}-targetPort`],
-            nodePort: values[`port-${port.key}-nodePort`]
+            targetPort: values[`port-${port.key}-targetPort`]
           });
+          if (values.type === 'NodePort') {
+            ports[ports.length - 1].nodePort =
+              values[`port-${port.key}-nodePort`];
+          }
         });
         const service: ServiceModel.Service = {
           name: values.name,

@@ -123,6 +123,12 @@ export function clusterReducer(
           record => record.id !== action.payload.id
         )
       };
+    case getType(Cluster.fetchNamespaces.success):
+      return {
+        ...state,
+        namespaces: action.payload,
+        isLoading: false
+      };
     case getType(Cluster.addNamespace.success):
       return {
         ...state,
