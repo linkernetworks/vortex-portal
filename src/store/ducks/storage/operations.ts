@@ -27,7 +27,7 @@ export const fetchVolumes = (): RTAction<Promise<StorageActionType>> => {
 };
 
 export const addStorage = (
-  data: storageModels.Storage
+  data: storageModels.StorageFields
 ): RTAction<Promise<StorageActionType>> => {
   return async dispatch => {
     dispatch(storageActions.addStorage.request());
@@ -35,7 +35,7 @@ export const addStorage = (
       const res = await storageAPI.createStorage(data);
       return dispatch(storageActions.addStorage.success(res.data));
     } catch (e) {
-      return dispatch(storageActions.addStorage.failure(e));
+      return dispatch(storageActions.addStorage.failure(e.response.data));
     }
   };
 };

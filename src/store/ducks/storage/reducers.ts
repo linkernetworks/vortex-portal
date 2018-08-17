@@ -1,32 +1,72 @@
-import { ActionType, getType } from 'typesafe-actions';
+import { combineReducers } from 'redux';
+import { ActionType, StateType, getType } from 'typesafe-actions';
 import * as Storage from './actions';
+import { Storage as storageModel, Volume as volumeModel } from './models';
 
-export type StorageStateType = Readonly<{
-  storages: Array<any>;
-  volumes: Array<any>;
-}>;
+export type StorageStateType = StateType<typeof storageReducer>;
 
 export type StorageActionType = ActionType<typeof Storage>;
 
-const inititalState: StorageStateType = {
-  storages: [],
-  volumes: []
-};
-
-export function storageReducer(
-  state = inititalState,
-  action: StorageActionType
-) {
-  if (state === undefined) {
-    return inititalState;
-  }
-
+function isLoading(state = false, action: StorageActionType) {
   switch (action.type) {
+    case getType(Storage.fetchStorages.request):
+    case getType(Storage.addStorage.request):
+    case getType(Storage.removeStorage.request):
+      return true;
     case getType(Storage.fetchStorages.success):
-      return { ...state, storages: action.payload };
-    case getType(Storage.fetchVolumes.success):
-      return { ...state, volumes: action.payload };
+    case getType(Storage.addStorage.success):
+    case getType(Storage.removeStorage.success):
+    case getType(Storage.fetchStorages.failure):
+    case getType(Storage.addStorage.failure):
+    case getType(Storage.removeStorage.failure):
+      return false;
     default:
       return state;
   }
 }
+
+function hasError(state = null, action: StorageActionType) {
+  switch (action.type) {
+    case getType(Storage.fetchStorages.failure):
+    case getType(Storage.addStorage.failure):
+    case getType(Storage.removeStorage.failure):
+      return action.payload;
+    case getType(Storage.clearStorageError):
+      return null;
+    default:
+      return state;
+  }
+}
+
+function storages(state: Array<storageModel> = [], action: StorageActionType) {
+  switch (action.type) {
+    case getType(Storage.fetchStorages.success):
+      return action.payload;
+    case getType(Storage.addStorage.success):
+      return [...state, action.payload];
+    case getType(Storage.removeStorage.success):
+      return state.filter(storage => storage.id !== action.payload.id);
+    default:
+      return state;
+  }
+}
+
+function volumes(state: Array<volumeModel> = [], action: StorageActionType) {
+  switch (action.type) {
+    case getType(Storage.fetchVolumes.success):
+      return action.payload;
+    case getType(Storage.addVolume.success):
+      return [...state, action.payload];
+    case getType(Storage.removeVolume.success):
+      return state.filter(volume => volume.id !== action.payload.id);
+    default:
+      return state;
+  }
+}
+
+export const storageReducer = combineReducers({
+  storages,
+  volumes,
+  isLoading,
+  error: hasError
+});

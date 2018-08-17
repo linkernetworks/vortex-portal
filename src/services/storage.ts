@@ -1,15 +1,12 @@
 import axios, { AxiosPromise } from 'axios';
 import { Response } from '@/models/Query';
-import { Storage, Volume } from '@/models/Storage';
-import { Omit } from '@/utils/types';
+import { Storage, StorageFields, Volume, VolumeFields } from '@/models/Storage';
 
 export const getStorages = (): AxiosPromise<Array<Storage>> => {
   return axios.get('/v1/storage');
 };
 
-export const createStorage = (
-  data: Omit<Storage, 'id' | 'storageClassName' | 'createdAt'>
-) => {
+export const createStorage = (data: StorageFields) => {
   return axios.post('/v1/storage', data);
 };
 
@@ -21,7 +18,7 @@ export const getVolumes = (): AxiosPromise<Array<Volume>> => {
   return axios.get('/v1/volume');
 };
 
-export const createVolume = (data: Omit<Volume, 'id' | 'createdAt'>) => {
+export const createVolume = (data: VolumeFields) => {
   return axios.post('/v1/volume', data);
 };
 

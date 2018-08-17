@@ -30,7 +30,7 @@ interface Image {
   name: string;
   tags: Array<string>;
 }
-interface HubProps extends FormComponentProps, InjectedIntlProps {
+interface HubProps extends FormComponentProps {
   isAuth: boolean;
   isError?: boolean;
   isLoading: boolean;
@@ -45,7 +45,10 @@ interface HubState {
   isFirstCheck: boolean;
 }
 
-class ImageHub extends React.PureComponent<HubProps, HubState> {
+class ImageHub extends React.PureComponent<
+  HubProps & InjectedIntlProps,
+  HubState
+> {
   private columns: Array<ColumnProps<Image>> = [
     {
       title: this.props.intl.formatMessage({ id: 'hub.image' }),
@@ -65,7 +68,7 @@ class ImageHub extends React.PureComponent<HubProps, HubState> {
       )
     }
   ];
-  constructor(props: HubProps) {
+  constructor(props: HubProps & InjectedIntlProps) {
     super(props);
     this.state = {
       isFirstCheck: false

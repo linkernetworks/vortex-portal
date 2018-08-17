@@ -1,4 +1,4 @@
-import { createAsyncAction } from 'typesafe-actions';
+import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import * as Storage from '@/models/Storage';
 
 export const fetchStorages = createAsyncAction(
@@ -36,3 +36,7 @@ export const removeVolume = createAsyncAction(
   'REMOVE_VOLUME_SUCCESS',
   'REMOVE_VOLUME_FAILURE'
 )<void, { id: string }, Error>();
+
+export const clearStorageError = createStandardAction('CLEAR_STORAGE_ERROR')<
+  void
+>();
