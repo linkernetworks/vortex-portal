@@ -347,7 +347,7 @@ const mapStateToProps = (state: RootState) => {
   // Remove virtual interface
   Object.keys(state.cluster.nodes).map(key => {
     Object.keys(state.cluster.nodes[key].nics).map(name => {
-      if (state.cluster.nodes[key].nics[name].type === 'virtual') {
+      if (state.cluster.nodes[key].nics[name].type !== 'physical') {
         delete state.cluster.nodes[key].nics[name];
       } else if (state.cluster.nodes[key].nics[name].dpdk === true) {
         delete state.cluster.nodes[key].nics[name];
