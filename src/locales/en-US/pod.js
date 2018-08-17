@@ -8,6 +8,7 @@ export default {
   'pod.createByName': 'Created By Name',
   'pod.ip': 'IP',
   'pod.labels': 'Labels',
+  'pod.envVars': 'Env Vars',
   'pod.addLabel': 'New Label',
   'pod.restartCount': 'Restart Count',
   'pod.containers': 'Containers',

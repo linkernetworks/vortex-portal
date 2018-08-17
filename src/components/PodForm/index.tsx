@@ -43,16 +43,21 @@ interface PodFormProps extends FormComponentProps {
 class PodForm extends React.PureComponent<PodFormProps, any> {
   private labelKey: React.RefObject<Input>;
   private labelValue: React.RefObject<Input>;
+  private envVarsKey: React.RefObject<Input>;
+  private envVarsValue: React.RefObject<Input>;
 
   constructor(props: PodFormProps) {
     super(props);
     this.labelKey = React.createRef();
     this.labelValue = React.createRef();
+    this.envVarsKey = React.createRef();
+    this.envVarsValue = React.createRef();
     const key = Math.random()
       .toString(36)
       .substring(7);
     this.state = {
       labels: new Map(),
+      envVars: new Map(),
       containerKey: key,
       networkKey: key,
       containers: [
@@ -87,6 +92,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
       .substring(7);
     const state = {
       labels: new Map(),
+      envVars: new Map(),
       containerKey: key,
       networkKey: key,
       containers: [
@@ -125,6 +131,12 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
         if (values.labels) {
           Array.from(values.labels.keys()).map((key: string) => {
             labels[key] = values.labels.get(key);
+          });
+        }
+        const envVars = {};
+        if (values.envVars) {
+          Array.from(values.envVars.keys()).map((key: string) => {
+            envVars[key] = values.envVars.get(key);
           });
         }
         const containers: Array<PodModel.PodContainerRequest> = [];
@@ -167,6 +179,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
           name: values.name,
           namespace: 'default',
           labels,
+          envVars,
           containers,
           networks,
           networkType: values.networkType,
@@ -306,6 +319,42 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
     const { setFieldsValue } = this.props.form;
     setFieldsValue({
       labels: newLabels
+    });
+  };
+
+  protected addEnvVars = () => {
+    if (
+      this.envVarsKey.current != null &&
+      this.envVarsValue.current != null &&
+      this.envVarsKey.current.input.value !== '' &&
+      this.envVarsValue.current.input.value !== ''
+    ) {
+      const { envVars } = this.state;
+      const newEnvVars = new Map(envVars);
+      newEnvVars.set(
+        this.envVarsKey.current.input.value,
+        this.envVarsValue.current.input.value
+      );
+      this.envVarsKey.current.input.value = '';
+      this.envVarsValue.current.input.value = '';
+      this.setState({ envVars: newEnvVars });
+
+      const { setFieldsValue } = this.props.form;
+      setFieldsValue({
+        envVars: newEnvVars
+      });
+    }
+  };
+
+  protected deleteEnvVars = (key: string) => {
+    const { envVars } = this.state;
+    const newEnvVars = new Map(envVars);
+    newEnvVars.delete(key);
+    this.setState({ envVars: newEnvVars });
+
+    const { setFieldsValue } = this.props.form;
+    setFieldsValue({
+      envVars: newEnvVars
     });
   };
 
@@ -516,6 +565,65 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                     shape="circle"
                     icon="enter"
                     onClick={this.addLabel}
+                  />
+                </Row>
+              </div>
+            )}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label={<FormattedMessage id="pod.envVars" />}
+          >
+            {getFieldDecorator('envVars', {
+              rules: [
+                {
+                  required: false
+                }
+              ]
+            })(
+              <div>
+                {Array.from(this.state.envVars.keys()).map((key: string) => {
+                  return (
+                    <Row key={key}>
+                      <Col span={10}>
+                        <Input disabled={true} value={key} placeholder="Key" />
+                      </Col>
+                      <Col span={10}>
+                        <Input
+                          disabled={true}
+                          value={this.state.envVars.get(key)}
+                          placeholder="Value"
+                        />
+                      </Col>
+                      <Button
+                        style={{ marginLeft: 12 }}
+                        shape="circle"
+                        icon="close"
+                        onClick={() => this.deleteEnvVars(key)}
+                      />
+                    </Row>
+                  );
+                })}
+                <Row>
+                  <Col span={10}>
+                    <Input
+                      ref={this.envVarsKey}
+                      placeholder="Key"
+                      onBlur={this.addEnvVars}
+                    />
+                  </Col>
+                  <Col span={10}>
+                    <Input
+                      ref={this.envVarsValue}
+                      placeholder="Value"
+                      onBlur={this.addEnvVars}
+                    />
+                  </Col>
+                  <Button
+                    style={{ marginLeft: 12 }}
+                    shape="circle"
+                    icon="enter"
+                    onClick={this.addEnvVars}
                   />
                 </Row>
               </div>

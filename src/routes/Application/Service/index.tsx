@@ -98,11 +98,11 @@ class Service extends React.Component<ServiceProps, ServiceState> {
             )}
             {this.renderListItemContent(
               <FormattedMessage id={`service.selectors`} />,
-              <Tree showIcon={true} selectable={false}>
+              <div>
                 {Object.keys(item.selector).map((key: string) => (
                   <Tag key={key}>{`${key} : ${item.selector[key]}`}</Tag>
                 ))}
-              </Tree>
+              </div>
             )}
             {this.renderListItemContent(
               <FormattedMessage id={`service.ports`} />,

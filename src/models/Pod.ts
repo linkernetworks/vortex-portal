@@ -39,6 +39,7 @@ export interface PodRequest {
   name: string;
   namespace: string;
   labels: any;
+  envVars: any;
   containers: Array<PodContainerRequest>;
   networks: Array<PodNetworkRequest>;
   volumes: Array<string>;
