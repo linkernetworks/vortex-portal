@@ -14,18 +14,6 @@ export const fetchStorage = (): RTAction<Promise<StorageActionType>> => {
   };
 };
 
-export const fetchVolumes = (): RTAction<Promise<StorageActionType>> => {
-  return async dispatch => {
-    dispatch(storageActions.fetchVolumes.request());
-    try {
-      const res = await storageAPI.getVolumes();
-      return dispatch(storageActions.fetchVolumes.success(res.data));
-    } catch (e) {
-      return dispatch(storageActions.fetchVolumes.failure(e));
-    }
-  };
-};
-
 export const addStorage = (
   data: storageModels.StorageFields
 ): RTAction<Promise<StorageActionType>> => {

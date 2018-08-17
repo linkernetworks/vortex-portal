@@ -1,10 +1,9 @@
 import { combineReducers } from 'redux';
 import { ActionType, StateType, getType } from 'typesafe-actions';
 import * as Storage from './actions';
-import { Storage as storageModel, Volume as volumeModel } from './models';
+import { Storage as storageModel } from './models';
 
 export type StorageStateType = StateType<typeof storageReducer>;
-
 export type StorageActionType = ActionType<typeof Storage>;
 
 function isLoading(state = false, action: StorageActionType) {
@@ -51,22 +50,8 @@ function storages(state: Array<storageModel> = [], action: StorageActionType) {
   }
 }
 
-function volumes(state: Array<volumeModel> = [], action: StorageActionType) {
-  switch (action.type) {
-    case getType(Storage.fetchVolumes.success):
-      return action.payload;
-    case getType(Storage.addVolume.success):
-      return [...state, action.payload];
-    case getType(Storage.removeVolume.success):
-      return state.filter(volume => volume.id !== action.payload.id);
-    default:
-      return state;
-  }
-}
-
 export const storageReducer = combineReducers({
   storages,
-  volumes,
   isLoading,
   error: hasError
 });

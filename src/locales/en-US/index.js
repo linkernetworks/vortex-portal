@@ -13,6 +13,7 @@ import hub from './hub';
 import service from './service';
 import namespace from './namespace';
 import storage from './storage';
+import volume from './volume';
 
 export default {
   'parentLocale': 'en',
@@ -32,4 +33,5 @@ export default {
   ...service,
   ...namespace,
   ...storage,
+  ...volume,
 };
