@@ -1,17 +1,16 @@
 import * as React from 'react';
-import * as NodeModel from '@/models/Node';
 import { connect } from 'react-redux';
-import { Row, Col, Tag, Drawer, Tabs } from 'antd';
+import { Row, Col, Tag, Drawer, Tabs, Table } from 'antd';
+import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 
 import { Dispatch } from 'redux';
+import * as NodeModel from '@/models/Node';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
 
 import * as styles from './styles.module.scss';
-import { Card } from 'antd';
-import { Table, Divider } from 'antd';
 
 import {
   LineChart,
@@ -36,6 +35,16 @@ interface NodeProps {
   nodes: NodeModel.Nodes;
   allNodes: Array<string>;
   fetchNodes: () => any;
+}
+
+interface NodeInfo {
+  name: string;
+  status: string;
+  cpuRequests: string;
+  cpiLimits: string;
+  memoryRequests: string;
+  memoryLimits: string;
+  age: string;
 }
 
 class Node extends React.Component<NodeProps, NodeState> {
@@ -63,7 +72,7 @@ class Node extends React.Component<NodeProps, NodeState> {
     return (
       <div className={styles.labels}>
         {Object.keys(labels).map(key => (
-          <Tag className={styles.label} key={key}>
+          <Tag color="blue" className={styles.label} key={key}>
             {key} : {labels[key]}
           </Tag>
         ))}
@@ -87,30 +96,48 @@ class Node extends React.Component<NodeProps, NodeState> {
     const time = new Date(this.props.nodes[node].detail.createAt * 1000);
     return (
       <div>
-        {this.renderListItemContent(
-          <FormattedMessage id={`node.detail.createdAt`} />,
-          time.toISOString()
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`node.detail.status`} />,
-          this.props.nodes[node].detail.status
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`node.detail.os`} />,
-          this.props.nodes[node].detail.os
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`node.detail.kernelVersion`} />,
-          this.props.nodes[node].detail.kernelVersion
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`node.detail.kubeproxyVersion`} />,
-          this.props.nodes[node].detail.kubeproxyVersion
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`node.detail.kubernetesVersion`} />,
-          this.props.nodes[node].detail.kubernetesVersion
-        )}
+        <Row>
+          <Col span={12}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.detail.createdAt`} />,
+              time.toISOString()
+            )}
+          </Col>
+          <Col span={12}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.detail.kernelVersion`} />,
+              this.props.nodes[node].detail.kernelVersion
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.detail.status`} />,
+              this.props.nodes[node].detail.status
+            )}
+          </Col>
+          <Col span={12}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.detail.dockerVersion`} />,
+              this.props.nodes[node].detail.dockerVersion
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.detail.os`} />,
+              this.props.nodes[node].detail.os
+            )}
+          </Col>
+          <Col span={12}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.detail.kubernetesVersion`} />,
+              this.props.nodes[node].detail.kubernetesVersion
+            )}
+          </Col>
+        </Row>
       </div>
     );
   };
@@ -159,30 +186,42 @@ class Node extends React.Component<NodeProps, NodeState> {
           </Col>
         </Row>
         <Row>
-          <Col span={12}>
+          <Col span={8}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.cpuRequests`} />,
               this.props.nodes[node].resource.cpuRequests
             )}
           </Col>
-          <Col span={12}>
+          <Col span={8}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.memoryRequests`} />,
               formatBytes(this.props.nodes[node].resource.memoryRequests)
             )}
           </Col>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.resource.memoryTotalHugepages`} />,
+              formatBytes(this.props.nodes[node].resource.memoryTotalHugepages)
+            )}
+          </Col>
         </Row>
         <Row>
-          <Col span={12}>
+          <Col span={8}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.cpuLimits`} />,
               this.props.nodes[node].resource.cpuLimits
             )}
           </Col>
-          <Col span={12}>
+          <Col span={8}>
             {this.renderListItemContent(
               <FormattedMessage id={`node.resource.memoryLimits`} />,
               formatBytes(this.props.nodes[node].resource.memoryLimits)
+            )}
+          </Col>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`node.resource.memoryFreeHugepages`} />,
+              formatBytes(this.props.nodes[node].resource.memoryFreeHugepages)
             )}
           </Col>
         </Row>
@@ -294,21 +333,10 @@ class Node extends React.Component<NodeProps, NodeState> {
     );
   };
 
-  protected renderCardItem = (node: string) => {
-    return (
-      <Card
-        title={this.props.nodes[node].detail.hostname}
-        extra={<a onClick={() => this.showMore(node)}>More</a>}
-      >
-        {this.renderDetail(node)}
-      </Card>
-    );
-  };
-
   protected calculatePercent = (numerator: number, denominator: number) => {
     return (
       numerator.toString() +
-      '(' +
+      ' (' +
       ((numerator / denominator) * 100).toFixed(2).toString() +
       '%)'
     );
@@ -317,102 +345,84 @@ class Node extends React.Component<NodeProps, NodeState> {
   protected calculatePercentByte = (numerator: number, denominator: number) => {
     return (
       formatBytes(numerator) +
-      '(' +
+      ' (' +
       ((numerator / denominator) * 100).toFixed(2).toString() +
       '%)'
     );
   };
 
-  protected renderTableItem = (nodes: Array<string>) => {
-    const nodeData: Array<{
-      name: string;
-      status: string;
-      cpuRequests: string;
-      cpiLimits: string;
-      memoryRequests: string;
-      memoryLimits: string;
-      age: string;
-    }> = [];
-    {
-      nodes.map(node => {
-        nodeData.push({
-          name: this.props.nodes[node].detail.hostname,
-          status: this.props.nodes[node].detail.status,
-          cpuRequests: this.calculatePercent(
-            this.props.nodes[node].resource.cpuRequests,
-            this.props.nodes[node].resource.capacityCPU
-          ),
-          cpiLimits: this.calculatePercent(
-            this.props.nodes[node].resource.cpuLimits,
-            this.props.nodes[node].resource.capacityCPU
-          ),
-          memoryRequests: this.calculatePercentByte(
-            this.props.nodes[node].resource.memoryRequests,
-            this.props.nodes[node].resource.capacityMemory
-          ),
-          memoryLimits: this.calculatePercentByte(
-            this.props.nodes[node].resource.memoryLimits,
-            this.props.nodes[node].resource.capacityMemory
-          ),
-          age: moment(
-            new Date(this.props.nodes[node].detail.createAt * 1000)
-          ).fromNow()
-        });
-      });
-    }
-    return nodeData;
+  protected getNodeInfo = (nodes: Array<string>) => {
+    return nodes.map(node => ({
+      name: this.props.nodes[node].detail.hostname,
+      status: this.props.nodes[node].detail.status,
+      cpuRequests: this.calculatePercent(
+        this.props.nodes[node].resource.cpuRequests,
+        this.props.nodes[node].resource.capacityCPU
+      ),
+      cpiLimits: this.calculatePercent(
+        this.props.nodes[node].resource.cpuLimits,
+        this.props.nodes[node].resource.capacityCPU
+      ),
+      memoryRequests: this.calculatePercentByte(
+        this.props.nodes[node].resource.memoryRequests,
+        this.props.nodes[node].resource.capacityMemory
+      ),
+      memoryLimits: this.calculatePercentByte(
+        this.props.nodes[node].resource.memoryLimits,
+        this.props.nodes[node].resource.capacityMemory
+      ),
+      age: moment(
+        new Date(this.props.nodes[node].detail.createAt * 1000)
+      ).fromNow()
+    }));
   };
 
   public render() {
     const { currentNode } = this.state;
-    const columns = [
+    const columns: Array<ColumnProps<NodeInfo>> = [
       {
-        title: 'Name',
+        title: <FormattedMessage id={`node.detail.name`} />,
         dataIndex: 'name'
       },
       {
-        title: 'Status',
+        title: <FormattedMessage id={`node.detail.status`} />,
         dataIndex: 'status'
       },
       {
-        title: 'CPU Requests (Core)',
+        title: <FormattedMessage id={`node.resource.cpuRequests`} />,
         dataIndex: 'cpuRequests'
       },
       {
-        title: 'CPU Limits (Core)',
+        title: <FormattedMessage id={`node.resource.cpuLimits`} />,
         dataIndex: 'cpiLimits'
       },
       {
-        title: 'Memory Requests',
+        title: <FormattedMessage id={`node.resource.memoryRequests`} />,
         dataIndex: 'memoryRequests'
       },
       {
-        title: 'Memory Limits',
+        title: <FormattedMessage id={`node.resource.memoryLimits`} />,
         dataIndex: 'memoryLimits'
       },
       {
-        title: 'Age',
+        title: <FormattedMessage id={`node.detail.age`} />,
         dataIndex: 'age'
+      },
+      {
+        title: 'Action',
+        render: (_, record) => (
+          <a onClick={() => this.showMore(record.name)}>More</a>
+        )
       }
     ];
     return (
       <div>
-        <Row>
-          <Table
-            columns={columns}
-            dataSource={this.renderTableItem(this.props.allNodes)}
-            size="middle"
-          />
-        </Row>
-        <Row>
-          {this.props.allNodes.map(node => {
-            return (
-              <Col key={node} span={12}>
-                {this.renderCardItem(node)}
-              </Col>
-            );
-          })}
-        </Row>
+        <Table
+          className={styles.tabel}
+          columns={columns}
+          dataSource={this.getNodeInfo(this.props.allNodes)}
+          size="middle"
+        />
         {this.props.nodes.hasOwnProperty(currentNode) && (
           <Drawer
             title={this.props.nodes[currentNode].detail.hostname}
@@ -422,17 +432,28 @@ class Node extends React.Component<NodeProps, NodeState> {
             onClose={this.hideMore}
             visible={this.state.visible}
           >
-            <h2>Labels</h2>
-            {this.renderListItemContent(
-              <FormattedMessage id={`node.detail.labels`} />,
-              this.renderLabels(this.props.nodes[currentNode].detail.labels)
-            )}
+            <div className={styles.nodeContentSection}>
+              <h2>Details</h2>
+              {this.renderDetail(currentNode)}
+            </div>
 
-            <h2>Resources</h2>
-            {this.renderResource(currentNode)}
+            <div className={styles.nodeContentSection}>
+              <h2>Labels</h2>
+              {this.renderListItemContent(
+                <FormattedMessage id={`node.detail.labels`} />,
+                this.renderLabels(this.props.nodes[currentNode].detail.labels)
+              )}
+            </div>
 
-            <h2>Interfaces</h2>
-            {this.renderInterface(currentNode)}
+            <div className={styles.nodeContentSection}>
+              <h2>Resources</h2>
+              {this.renderResource(currentNode)}
+            </div>
+
+            <div className={styles.nodeContentSection}>
+              <h2>Interfaces</h2>
+              {this.renderInterface(currentNode)}
+            </div>
           </Drawer>
         )}
       </div>
