@@ -168,7 +168,7 @@ class Storage extends React.PureComponent<
         value: ''
       },
       accessMode: {
-        value: AccessMode.ReadOnlyMany
+        value: AccessMode.ReadWriteMany
       },
       capacity: {
         value: '300Gi'

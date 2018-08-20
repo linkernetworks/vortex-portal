@@ -109,7 +109,7 @@ class VolumeForm extends React.PureComponent<
                   <Option
                     key={mode}
                     value={mode}
-                    disabled={mode !== AccessMode.ReadOnlyMany}
+                    disabled={mode !== AccessMode.ReadWriteMany}
                   >
                     {mode.replace(/([A-Z])/g, ' $1').trim()}
                   </Option>
