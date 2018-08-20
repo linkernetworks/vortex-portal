@@ -28,8 +28,18 @@ $tag-gutter: 8px;
   }
 }
 
+.nodeContentSection{
+  padding-bottom: $padding-md;;
+}
+
 .labels {
   margin-bottom: -$tag-gutter;
+}
+
+.table {
+  background-color: #fafafa;
+  padding-left: $padding-md;;
+  padding-right: $padding-md;;
 }
 
 .label {

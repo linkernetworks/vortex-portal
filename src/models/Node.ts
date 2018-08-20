@@ -14,7 +14,7 @@ export interface Detail {
   status: string;
   os: string;
   kernelVersion: string;
-  kubeproxyVersion: string;
+  dockerVersion: string;
   kubernetesVersion: string;
   labels: Map<string, string>;
 }
@@ -31,6 +31,8 @@ export interface Resource {
   capacityPods: number;
   capacityMemory: number;
   capacityEphemeralStorage: number;
+  memoryTotalHugepages: number;
+  memoryFreeHugepages: number;
 }
 
 export interface NetworkInterfaceController {
