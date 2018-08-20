@@ -4,6 +4,7 @@ import * as ContainerModel from '@/models/Container';
 import * as NetworkModel from '@/models/Network';
 import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
+
 import {
   Row,
   Col,
@@ -14,9 +15,9 @@ import {
   Tabs,
   Input,
   Select,
-  Card,
   Table
 } from 'antd';
+import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { filter, includes } from 'lodash';
 import { FormattedMessage } from 'react-intl';
@@ -29,6 +30,7 @@ import * as networkAPI from '@/services/network';
 import * as namespaceAPI from '@/services/namespace';
 
 import * as styles from './styles.module.scss';
+
 import {
   LineChart,
   Line,
@@ -64,6 +66,14 @@ interface PodProps {
   allPods: Array<string>;
   fetchPods: () => any;
   addPod: (data: PodModel.PodRequest) => any;
+}
+
+interface PodInfo {
+  name: string;
+  status: string;
+  node: string;
+  restarts: number;
+  age: string;
 }
 
 class Pod extends React.Component<PodProps, PodState> {
@@ -144,7 +154,7 @@ class Pod extends React.Component<PodProps, PodState> {
     return (
       <div className={styles.labels}>
         {Object.keys(labels).map(key => (
-          <Tag className={styles.label} key={key}>
+          <Tag color="blue" className={styles.label} key={key}>
             {key} : {labels[key]}
           </Tag>
         ))}
@@ -423,51 +433,73 @@ class Pod extends React.Component<PodProps, PodState> {
   protected renderDetail = (pod: string) => {
     return (
       <div>
-        {this.renderListItemContent(
-          <FormattedMessage id={`pod.status`} />,
-          this.props.pods[pod].status
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`pod.namespace`} />,
-          this.props.pods[pod].namespace
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`pod.ip`} />,
-          this.props.pods[pod].ip
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`pod.node`} />,
-          this.props.pods[pod].node
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`pod.createAt`} />,
-          moment(this.props.pods[pod].createAt * 1000).calendar()
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`pod.createByName`} />,
-          this.props.pods[pod].createByName
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`pod.createByKind`} />,
-          this.props.pods[pod].createByKind
-        )}
-        {this.renderListItemContent(
-          <FormattedMessage id={`pod.restartCount`} />,
-          this.props.pods[pod].restartCount
-        )}
+        <Row>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id="pod.status" />,
+              this.props.pods[pod].status
+            )}
+          </Col>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id="pod.createAt" />,
+              moment(this.props.pods[pod].createAt * 1000).calendar()
+            )}
+          </Col>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id="pod.ip" />,
+              this.props.pods[pod].ip
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id="pod.namespace" />,
+              this.props.pods[pod].namespace
+            )}
+          </Col>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id="pod.createByName" />,
+              this.props.pods[pod].createByName
+            )}
+          </Col>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id="pod.restartCount" />,
+              this.props.pods[pod].restartCount
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id="pod.node" />,
+              this.props.pods[pod].node
+            )}
+          </Col>
+          <Col span={8}>
+            {this.renderListItemContent(
+              <FormattedMessage id="pod.createByKind" />,
+              this.props.pods[pod].createByKind
+            )}
+          </Col>
+        </Row>
       </div>
     );
   };
 
-  protected renderCardItem = (pod: string) => {
-    return (
-      <Card
-        title={this.props.pods[pod].podName}
-        extra={<a onClick={() => this.showMorePod(pod)}>More</a>}
-      >
-        {this.renderDetail(pod)}
-      </Card>
-    );
+  protected getPodInfo = (pods: Array<string>) => {
+    return pods.map(pod => ({
+      name: this.props.pods[pod].podName,
+      namespace: this.props.pods[pod].namespace,
+      node: this.props.pods[pod].node,
+      status: this.props.pods[pod].status,
+      restarts: this.props.pods[pod].restartCount,
+      age: moment(this.props.pods[pod].createAt * 1000).fromNow()
+    }));
   };
 
   public render() {
@@ -490,6 +522,35 @@ class Pod extends React.Component<PodProps, PodState> {
           return includes(this.props.pods[name].namespace, searchText);
       }
     });
+    const columns: Array<ColumnProps<PodInfo>> = [
+      {
+        title: <FormattedMessage id={`pod.name`} />,
+        dataIndex: 'name',
+        width: 300
+      },
+      {
+        title: <FormattedMessage id={`pod.namespace`} />,
+        dataIndex: 'namespace'
+      },
+      {
+        title: <FormattedMessage id={`pod.node`} />,
+        dataIndex: 'node'
+      },
+      {
+        title: <FormattedMessage id={`pod.status`} />,
+        dataIndex: 'status'
+      },
+      {
+        title: <FormattedMessage id={`pod.age`} />,
+        dataIndex: 'age'
+      },
+      {
+        title: 'Action',
+        render: (_, record) => (
+          <a onClick={() => this.showMorePod(record.name)}>More</a>
+        )
+      }
+    ];
     return (
       <div>
         <InputGroup compact={true}>
@@ -511,15 +572,12 @@ class Pod extends React.Component<PodProps, PodState> {
           />
         </InputGroup>
         <br />
-        <Row>
-          {filterPods.map(pod => {
-            return (
-              <Col key={this.props.pods[pod].podName} span={6}>
-                {this.renderCardItem(pod)}
-              </Col>
-            );
-          })}
-        </Row>
+        <Table
+          className={styles.table}
+          columns={columns}
+          dataSource={this.getPodInfo(filterPods)}
+          size="middle"
+        />
         {this.props.pods.hasOwnProperty(currentPod) && (
           <Drawer
             title={this.props.pods[currentPod].podName}
@@ -528,14 +586,23 @@ class Pod extends React.Component<PodProps, PodState> {
             onClose={this.hideMorePod}
             visible={this.state.visiblePodDrawer}
           >
-            <h2>Labels</h2>
-            {this.renderListItemContent(
-              <FormattedMessage id={`pod.labels`} />,
-              this.renderLabels(this.props.pods[currentPod].labels)
-            )}
+            <div className={styles.podContentSection}>
+              <h2>Details</h2>
+              {this.renderDetail(currentPod)}
+            </div>
 
-            <h2>Containers</h2>
-            {this.renderContainer()}
+            <div className={styles.podContentSection}>
+              <h2>Labels</h2>
+              {this.renderListItemContent(
+                <FormattedMessage id={`pod.labels`} />,
+                this.renderLabels(this.props.pods[currentPod].labels)
+              )}
+            </div>
+
+            <div className={styles.podContentSection}>
+              <h2>Containers</h2>
+              {this.renderContainer()}
+            </div>
 
             <h2>Interface</h2>
             {this.renderInterface(this.props.pods[currentPod].nics)}
