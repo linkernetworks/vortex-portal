@@ -29,7 +29,7 @@ $tag-gutter: 8px;
 }
 
 .nodeContentSection{
-  margin-bottom: 16px;
+  padding-bottom: $padding-md;;
 }
 
 .labels {
@@ -38,8 +38,8 @@ $tag-gutter: 8px;
 
 .tabel {
   background-color: #fafafa;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: $padding-md;;
+  padding-right: $padding-md;;
 }
 
 .label {
