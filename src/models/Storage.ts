@@ -19,8 +19,14 @@ export interface Volume {
   storageName: string;
   name: string;
   accessMode: string;
-  capcity: string;
+  capacity: string;
   createdAt: Date;
 }
 
 export type VolumeFields = Omit<Volume, 'id' | 'createdAt'>;
+
+export enum AccessMode {
+  ReadWriteOnce = 'ReadWriteOnce',
+  ReadOnlyMany = 'ReadOnlyMany',
+  ReadWriteMany = 'ReadWriteMany'
+}

@@ -34,7 +34,7 @@ export const removeVolume = (
   return async dispatch => {
     dispatch(volumeActions.removeVolume.request());
     try {
-      const res = await storageAPI.deleteStorage(id);
+      const res = await storageAPI.deleteVolume(id);
       if (!res.data.error) {
         return dispatch(volumeActions.removeVolume.success({ id }));
       } else {

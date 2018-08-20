@@ -9,6 +9,7 @@ import { Dispatch } from 'redux';
 
 import * as styles from './styles.module.scss';
 import StorageForm from '@/components/StorageForm';
+import VolumeForm from '@/components/VolumeForm';
 import { RootState, RTDispatch, RootAction } from '@/store/ducks';
 import { storageOperations, storageActions } from '@/store/ducks/storage';
 import { volumeOperations, volumeActions } from '@/store/ducks/volume';
@@ -16,7 +17,8 @@ import {
   Storage as StorageModel,
   StorageFields,
   Volume as VolumeModel,
-  VolumeFields
+  VolumeFields,
+  AccessMode
 } from '@/models/Storage';
 import { FormField } from '@/utils/types';
 
@@ -34,9 +36,11 @@ interface StorageProps {
   fetchStorages: () => any;
   fetchVolumes: () => any;
   addStorage: (data: StorageFields) => any;
+  addVolume: (data: VolumeFields) => any;
   removeStorage: (id: string) => any;
   removeVolume: (id: string) => any;
   clearStorageError: () => any;
+  clearVolumeError: () => any;
 }
 
 interface StorageState {
@@ -62,6 +66,22 @@ class Storage extends React.PureComponent<
   StorageProps & InjectedIntlProps,
   StorageState
 > {
+  private actionColumn: ColumnProps<StorageModel | VolumeModel> = {
+    title: this.props.intl.formatMessage({ id: 'action' }),
+    render: (_, record) => {
+      return (
+        <Popconfirm
+          title={<FormattedMessage id="action.confirmToDelete" />}
+          onConfirm={this.handleItemDelete.bind(this, record.id)}
+        >
+          <a href="javascript:;">
+            <FormattedMessage id="action.delete" />
+          </a>
+        </Popconfirm>
+      );
+    }
+  };
+
   private storageColumns: Array<ColumnProps<StorageModel>> = [
     {
       title: this.props.intl.formatMessage({ id: 'storage.name' }),
@@ -94,21 +114,7 @@ class Storage extends React.PureComponent<
       key: 'createdAt',
       render: text => moment(text).calendar()
     },
-    {
-      title: this.props.intl.formatMessage({ id: 'action' }),
-      render: (_, record) => {
-        return (
-          <Popconfirm
-            title={<FormattedMessage id="action.confirmToDelete" />}
-            onConfirm={this.handleItemDelete.bind(this, record.id)}
-          >
-            <a href="javascript:;">
-              <FormattedMessage id="action.delete" />
-            </a>
-          </Popconfirm>
-        );
-      }
-    }
+    this.actionColumn
   ];
 
   private volumeColumns: Array<ColumnProps<VolumeModel>> = [
@@ -133,21 +139,7 @@ class Storage extends React.PureComponent<
       key: 'createdAt',
       render: text => moment(text).calendar()
     },
-    {
-      title: this.props.intl.formatMessage({ id: 'action' }),
-      render: (_, record) => {
-        return (
-          <Popconfirm title={<FormattedMessage id="action.confirmToDelete" />}>
-            <a
-              href="javascript:;"
-              onClick={this.handleItemDelete.bind(this, record.id)}
-            >
-              <FormattedMessage id="action.delete" />
-            </a>
-          </Popconfirm>
-        );
-      }
-    }
+    this.actionColumn
   ];
 
   private storageFactory = () => {
@@ -176,10 +168,10 @@ class Storage extends React.PureComponent<
         value: ''
       },
       accessMode: {
-        value: ''
+        value: AccessMode.ReadOnlyMany
       },
-      capcity: {
-        value: '300'
+      capacity: {
+        value: '300Gi'
       }
     };
   };
@@ -214,9 +206,22 @@ class Storage extends React.PureComponent<
     }
   };
 
-  protected handleAddStorage = () => {
-    this.setState({
-      isCreatingStorage: true
+  protected handleAddItem = () => {
+    this.setState(prevState => {
+      switch (prevState.tabKey) {
+        case 'storage':
+          return {
+            ...prevState,
+            isCreatingStorage: true
+          };
+        case 'volume':
+          return {
+            ...prevState,
+            isCreatingVolume: true
+          };
+        default:
+          return prevState;
+      }
     });
   };
 
@@ -234,44 +239,75 @@ class Storage extends React.PureComponent<
 
   protected handleFormClose = () => {
     this.props.clearStorageError();
+    this.props.clearVolumeError();
     this.setState({
       isCreatingStorage: false,
+      isCreatingVolume: false,
       storageFields: this.storageFactory(),
       volumeFields: this.volumeFactory()
     });
   };
 
   protected handleStorageSubmit = () => {
-    this.props.clearStorageError();
-    this.props
-      .addStorage(this.getFlatFormFieldValue('storageFields') as StorageFields)
-      .then(() => {
-        if (!this.props.storages.error) {
-          this.setState({
-            isCreatingStorage: false,
-            storageFields: this.storageFactory()
+    const { tabKey } = this.state;
+
+    switch (tabKey) {
+      case 'storage':
+        this.props.clearStorageError();
+        this.props
+          .addStorage(this.getFlatFormFieldValue(
+            'storageFields'
+          ) as StorageFields)
+          .then(() => {
+            if (!this.props.storages.error) {
+              this.setState({
+                isCreatingStorage: false,
+                storageFields: this.storageFactory()
+              });
+            }
           });
-        }
-      });
+      case 'volume':
+        this.props.clearVolumeError();
+        this.props
+          .addVolume(this.getFlatFormFieldValue('volumeFields') as VolumeFields)
+          .then(() => {
+            if (!this.props.volumes.error) {
+              this.setState({
+                isCreatingVolume: false,
+                volumeFields: this.volumeFactory()
+              });
+            }
+          });
+    }
   };
 
   public renderTableFooter = () => {
     const { tabKey } = this.state;
     return (
-      <Button
-        type="dashed"
-        className={styles.add}
-        onClick={this.handleAddStorage}
-      >
+      <Button type="dashed" className={styles.add} onClick={this.handleAddItem}>
         <Icon type="plus" /> <FormattedMessage id={`${tabKey}.add`} />
       </Button>
     );
   };
 
   public renderTabContent = () => {
-    const { storages, volumes, clearStorageError } = this.props;
+    const {
+      storages,
+      volumes,
+      clearStorageError,
+      clearVolumeError
+    } = this.props;
 
-    const { tabKey, storageFields, isCreatingStorage } = this.state;
+    const {
+      tabKey,
+      storageFields,
+      volumeFields,
+      isCreatingStorage,
+      isCreatingVolume
+    } = this.state;
+
+    const storageOptions = storages.data.map(storage => storage.name);
+
     switch (tabKey) {
       case 'storage':
         return (
@@ -302,6 +338,17 @@ class Storage extends React.PureComponent<
               columns={this.volumeColumns}
               dataSource={volumes.data}
               footer={this.renderTableFooter}
+            />
+            <VolumeForm
+              {...volumeFields}
+              visiable={isCreatingVolume}
+              isLoading={volumes.isLoading}
+              error={volumes.error}
+              storageNameOptions={storageOptions}
+              onCancel={this.handleFormClose}
+              onChange={this.handleFormChange('volumeFields')}
+              onSubmit={this.handleStorageSubmit}
+              onCloseError={clearVolumeError}
             />
           </React.Fragment>
         );
@@ -350,7 +397,9 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
   fetchVolumes: () => dispatch(volumeOperations.fetchVolumes()),
   addStorage: (data: StorageFields) =>
     dispatch(storageOperations.addStorage(data)),
+  addVolume: (data: VolumeFields) => dispatch(volumeOperations.addVolume(data)),
   removeStorage: (id: string) => dispatch(storageOperations.removeStorage(id)),
+  removeVolume: (id: string) => dispatch(volumeOperations.removeVolume(id)),
   clearStorageError: () => dispatch(storageActions.clearStorageError()),
   clearVolumeError: () => dispatch(volumeActions.clearVolumeError())
 });
