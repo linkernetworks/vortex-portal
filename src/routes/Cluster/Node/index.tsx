@@ -11,6 +11,8 @@ import { clusterOperations } from '@/store/ducks/cluster';
 
 import * as styles from './styles.module.scss';
 import { Card } from 'antd';
+import { Table, Divider } from 'antd';
+
 import {
   LineChart,
   Line,
@@ -303,10 +305,105 @@ class Node extends React.Component<NodeProps, NodeState> {
     );
   };
 
+  protected calculatePercent = (numerator: number, denominator: number) => {
+    return (
+      numerator.toString() +
+      '(' +
+      ((numerator / denominator) * 100).toFixed(2).toString() +
+      '%)'
+    );
+  };
+
+  protected calculatePercentByte = (numerator: number, denominator: number) => {
+    return (
+      formatBytes(numerator) +
+      '(' +
+      ((numerator / denominator) * 100).toFixed(2).toString() +
+      '%)'
+    );
+  };
+
+  protected renderTableItem = (nodes: Array<string>) => {
+    const nodeData: Array<{
+      name: string;
+      status: string;
+      cpuRequests: string;
+      cpiLimits: string;
+      memoryRequests: string;
+      memoryLimits: string;
+      age: string;
+    }> = [];
+    {
+      nodes.map(node => {
+        nodeData.push({
+          name: this.props.nodes[node].detail.hostname,
+          status: this.props.nodes[node].detail.status,
+          cpuRequests: this.calculatePercent(
+            this.props.nodes[node].resource.cpuRequests,
+            this.props.nodes[node].resource.capacityCPU
+          ),
+          cpiLimits: this.calculatePercent(
+            this.props.nodes[node].resource.cpuLimits,
+            this.props.nodes[node].resource.capacityCPU
+          ),
+          memoryRequests: this.calculatePercentByte(
+            this.props.nodes[node].resource.memoryRequests,
+            this.props.nodes[node].resource.capacityMemory
+          ),
+          memoryLimits: this.calculatePercentByte(
+            this.props.nodes[node].resource.memoryLimits,
+            this.props.nodes[node].resource.capacityMemory
+          ),
+          age: moment(
+            new Date(this.props.nodes[node].detail.createAt * 1000)
+          ).fromNow()
+        });
+      });
+    }
+    return nodeData;
+  };
+
   public render() {
     const { currentNode } = this.state;
+    const columns = [
+      {
+        title: 'Name',
+        dataIndex: 'name'
+      },
+      {
+        title: 'Status',
+        dataIndex: 'status'
+      },
+      {
+        title: 'CPU Requests (Core)',
+        dataIndex: 'cpuRequests'
+      },
+      {
+        title: 'CPU Limits (Core)',
+        dataIndex: 'cpiLimits'
+      },
+      {
+        title: 'Memory Requests',
+        dataIndex: 'memoryRequests'
+      },
+      {
+        title: 'Memory Limits',
+        dataIndex: 'memoryLimits'
+      },
+      {
+        title: 'Age',
+        dataIndex: 'age'
+      }
+    ];
     return (
       <div>
+        <Row>
+          <Table
+            columns={columns}
+            dataSource={this.renderTableItem(this.props.allNodes)}
+            size="middle"
+          />
+        </Row>
         <Row>
           {this.props.allNodes.map(node => {
             return (
