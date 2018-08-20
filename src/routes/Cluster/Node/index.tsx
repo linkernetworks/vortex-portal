@@ -410,7 +410,7 @@ class Node extends React.Component<NodeProps, NodeState> {
     return (
       <div>
         <Table
-          className={styles.tabel}
+          className={styles.table}
           columns={columns}
           dataSource={this.getNodeInfo(this.props.allNodes)}
           size="middle"
