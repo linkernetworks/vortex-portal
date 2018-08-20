@@ -139,7 +139,6 @@ class Container extends React.Component<ContainerProps, ContainerState> {
   };
 
   protected renderStatus = (container: string) => {
-    return <div />;
     return (
       <div>
         <Row>
