@@ -28,12 +28,26 @@ import {
 
 import { default as hub, HubActionType, HubStateType } from '@/store/ducks/hub';
 
+import {
+  default as storage,
+  StorageActionType,
+  StorageStateType
+} from '@/store/ducks/storage';
+
+import {
+  default as volume,
+  VolumeActionType,
+  VolumeStateType
+} from '@/store/ducks/volume';
+
 export interface RootState {
   router: RouterState;
   intl: IntlStateType;
   cluster: ClusterStateType;
   network: NetworkStateType;
   hub: HubStateType;
+  storage: StorageStateType;
+  volume: VolumeStateType;
 }
 
 type ReactRouterAction = RouterAction | LocationChangeAction;
@@ -42,7 +56,9 @@ export type RootAction =
   | IntlActionType
   | ClusterActionType
   | NetworkActionType
-  | HubActionType;
+  | HubActionType
+  | StorageActionType
+  | VolumeActionType;
 
 // Redux Thunk
 export type RTDispatch = ThunkDispatch<RootState, undefined, RootAction>;
@@ -55,5 +71,7 @@ export default combineReducers<RootState>({
   intl,
   cluster,
   network,
-  hub
+  hub,
+  storage,
+  volume
 });
