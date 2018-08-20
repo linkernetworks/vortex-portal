@@ -4,7 +4,6 @@ import * as ContainerModel from '@/models/Container';
 import * as NetworkModel from '@/models/Network';
 import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
-
 import {
   Row,
   Col,
@@ -30,7 +29,6 @@ import * as networkAPI from '@/services/network';
 import * as namespaceAPI from '@/services/namespace';
 
 import * as styles from './styles.module.scss';
-
 import {
   LineChart,
   Line,
@@ -43,7 +41,6 @@ import {
 
 import PodForm from '@/components/PodForm';
 
-const TabPane = Tabs.TabPane;
 const InputGroup = Input.Group;
 const Search = Input.Search;
 const Option = Select.Option;
@@ -75,6 +72,8 @@ interface PodInfo {
   restarts: number;
   age: string;
 }
+
+const TabPane = Tabs.TabPane;
 
 class Pod extends React.Component<PodProps, PodState> {
   constructor(props: PodProps) {
@@ -398,9 +397,7 @@ class Pod extends React.Component<PodProps, PodState> {
               <Row>
                 <Col span={24}>
                   {this.renderListItemContent(
-                    <FormattedMessage
-                      id={`pod.nicNetworkTraffic.TXRXBytesTotal`}
-                    />,
+                    <FormattedMessage id="pod.nicNetworkTraffic.TXRXBytesTotal" />,
                     <div>
                       {this.renderPodChart(
                         nics[name].nicNetworkTraffic.receiveBytesTotal,
@@ -411,9 +408,7 @@ class Pod extends React.Component<PodProps, PodState> {
                 </Col>
                 <Col span={24}>
                   {this.renderListItemContent(
-                    <FormattedMessage
-                      id={`pod.nicNetworkTraffic.TXRXPacketsTotal`}
-                    />,
+                    <FormattedMessage id="pod.nicNetworkTraffic.TXRXPacketsTotal" />,
                     <div>
                       {this.renderPodChart(
                         nics[name].nicNetworkTraffic.receivePacketsTotal,
@@ -524,24 +519,24 @@ class Pod extends React.Component<PodProps, PodState> {
     });
     const columns: Array<ColumnProps<PodInfo>> = [
       {
-        title: <FormattedMessage id={`pod.name`} />,
+        title: <FormattedMessage id="pod.name" />,
         dataIndex: 'name',
         width: 300
       },
       {
-        title: <FormattedMessage id={`pod.namespace`} />,
+        title: <FormattedMessage id="pod.namespace" />,
         dataIndex: 'namespace'
       },
       {
-        title: <FormattedMessage id={`pod.node`} />,
+        title: <FormattedMessage id="pod.node" />,
         dataIndex: 'node'
       },
       {
-        title: <FormattedMessage id={`pod.status`} />,
+        title: <FormattedMessage id="pod.status" />,
         dataIndex: 'status'
       },
       {
-        title: <FormattedMessage id={`pod.age`} />,
+        title: <FormattedMessage id="pod.age" />,
         dataIndex: 'age'
       },
       {
@@ -594,7 +589,7 @@ class Pod extends React.Component<PodProps, PodState> {
             <div className={styles.podContentSection}>
               <h2>Labels</h2>
               {this.renderListItemContent(
-                <FormattedMessage id={`pod.labels`} />,
+                <FormattedMessage id="pod.labels" />,
                 this.renderLabels(this.props.pods[currentPod].labels)
               )}
             </div>
