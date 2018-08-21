@@ -5,6 +5,5 @@ export default {
   'user.username': 'Username',
   'user.password': 'Password',
   'user.dont_have_hint': 'don\'t have a account?',
-  'user.forget': 'Forget your Password?',
-  'user.signin.hint': 'to acccess your service',
+  'user.forget': 'Forget your Password?'
 };

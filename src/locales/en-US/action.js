@@ -8,5 +8,8 @@ export default {
   'action.cancel': 'cancel',
   'action.create': 'create',
   'action.removeAll': 'remove all',
+  'action.next': 'next',
+  'action.previous': 'previous',
+  'action.done': 'done',
   'action.confirmToDelete': 'Are you sure delete this?',
 }
