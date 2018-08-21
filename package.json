@@ -11,7 +11,6 @@
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "history": "^4.7.2",
-    "less-loader": "^4.1.0",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "path-to-regexp": "^2.2.1",
@@ -23,14 +22,12 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
-    "react-scripts-ts": "^2.16.0",
     "recharts": "^1.1.0",
     "redux": "^4.0.0",
     "redux-observable": "^1.0.0",
     "redux-thunk": "^2.3.0",
     "rxjs": "^6.2.2",
     "sass-mq": "^5.0.0",
-    "tslint-react": "^3.6.0",
     "typesafe-actions": "^2.0.4"
   },
   "scripts": {
@@ -38,12 +35,20 @@
     "build": "react-app-rewired build --scripts-version react-scripts-ts",
     "test": "react-app-rewired test --scripts-version react-scripts-ts --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "lint": "tslint -c tslint.prod.json -p tsconfig.prod.json -t stylish",
-    "lint:fix": "tslint --fix -c tslint.prod.json -p tsconfig.prod.json -t stylish"
+    "typescript": "tsc --project tsconfig.prod.json --noEmit",
+    "lint": "tslint -c tslint.json -p tsconfig.prod.json -t stylish",
+    "lint:fix": "tslint --fix -c tslint.json -p tsconfig.prod.json -t stylish"
   },
-  "precommit": [
-    "lint"
-  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run typescript && npx lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "tslint -c tslint.json -p tsconfig.prod.json -t stylish"
+    ]
+  },
   "devDependencies": {
     "@types/classnames": "^2.2.4",
     "@types/history": "^4.6.2",
@@ -60,19 +65,23 @@
     "@types/recharts": "^1.0.26",
     "@types/redux-logger": "^3.0.6",
     "@types/webpack-env": "^1.13.6",
+    "husky": "1.0.0-rc.13",
+    "less-loader": "^4.1.0",
+    "lint-staged": "^7.2.2",
     "node-sass": "^4.9.0",
-    "pre-commit": "^1.2.2",
     "prettier": "^1.14.2",
     "react-app-rewire-css-modules": "codebandits/react-app-rewire-css-modules",
     "react-app-rewire-less": "^2.1.1",
     "react-app-rewired": "^1.5.2",
     "react-hot-loader": "^4.3.3",
+    "react-scripts-ts": "^2.16.0",
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",
     "sass-loader": "^7.0.1",
     "ts-import-plugin": "^1.5.3",
     "tslint": "^5.11.0",
     "tslint-plugin-prettier": "^1.3.0",
+    "tslint-react": "^3.6.0",
     "typescript": "^3.0.1"
   },
   "proxy": {

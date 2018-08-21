@@ -15,7 +15,7 @@ import Pod from '@/routes/Application/Pod';
 import Container from '@/routes/Application/Container';
 import Service from '@/routes//Application/Service';
 import Storage from '@/routes/Storage';
-import Login from '@/routes/Login';
+import Auth from '@/routes/Auth';
 import ImageHub from '@/routes/ImageHub';
 import Users from '@/routes/Users';
 import NotFound from '@/routes/Exception/404';
@@ -40,8 +40,8 @@ export function RouteWithLayout({
 
 const appRoutes = (
   <Switch>
-    <RouteWithLayout layout={UserLayout} component={Login} path="/signin" />
-    <RouteWithLayout layout={UserLayout} component={Login} path="/signup" />
+    <RouteWithLayout layout={UserLayout} component={Auth} path="/signin" />
+    <RouteWithLayout layout={UserLayout} component={Auth} path="/signup" />
     <Redirect exact={true} from="/" to="/cluster/overview" />
     <Redirect exact={true} from="/cluster" to="/cluster/overview" />
     <RouteWithLayout
