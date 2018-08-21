@@ -6087,7 +6087,7 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-prettier@^1.13.7:
+prettier@^1.14.2:
   version "1.14.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.2.tgz#0ac1c6e1a90baa22a62925f41963c841983282f9"
 
@@ -6768,9 +6768,9 @@ react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
-react-particles-js@^2.2.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/react-particles-js/-/react-particles-js-2.3.0.tgz#2670181eff14f97479b4ae75601f51d9d6c082d7"
+react-particles-js@2.4.0-beta.5:
+  version "2.4.0-beta.5"
+  resolved "https://registry.yarnpkg.com/react-particles-js/-/react-particles-js-2.4.0-beta.5.tgz#403b530bdeed949e66b207b1daabe4196690e3e3"
   dependencies:
     lodash.clonedeep "^4.5.0"
 
