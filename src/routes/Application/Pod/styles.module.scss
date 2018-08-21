@@ -36,6 +36,16 @@ $tag-gutter: 8px;
   margin-bottom: $tag-gutter;
 }
 
+.table {
+  background-color: #fafafa;
+  padding-left: $padding-md;
+  padding-right: $padding-md;
+}
+
+.podContentSection{
+   padding-bottom: $padding-md;
+ }
+
 .add {
   margin: 1em 0;
   width: 100%;

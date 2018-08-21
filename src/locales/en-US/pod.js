@@ -4,6 +4,7 @@ export default {
   'pod.node': 'Node',
   'pod.status': 'Status',
   'pod.createAt': 'Created At',
+  'pod.age': 'Age',
   'pod.createByKind': 'Created By Kind',
   'pod.createByName': 'Created By Name',
   'pod.ip': 'IP',
