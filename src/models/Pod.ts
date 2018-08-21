@@ -13,9 +13,14 @@ export interface Pod {
   nics: NICS;
 }
 
-export interface PodRouteRequest {
+export interface PodRouteGwRequest {
+  key?: string;
   dstCIDR: string;
-  gateway?: string;
+  gateway: string;
+}
+
+export interface PodRouteIntfRequest {
+  dstCIDR: string;
 }
 
 export interface PodContainerRequest {
@@ -32,7 +37,8 @@ export interface PodNetworkRequest {
   vlan: number;
   ipAddress: string;
   netmask: string;
-  routes: Array<PodRouteRequest>;
+  routesGw: Array<PodRouteGwRequest>;
+  routesIntf?: Array<PodRouteIntfRequest>;
 }
 
 export interface PodRequest {

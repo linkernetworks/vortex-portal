@@ -60,6 +60,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
       envVars: new Map(),
       containerKey: key,
       networkKey: key,
+      routeKey: key,
       containers: [
         {
           key,
@@ -75,8 +76,9 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
           ifName: '',
           ipAddress: '',
           netmask: '',
-          routes: [
+          routesGw: [
             {
+              key,
               dstCIDR: '',
               gateway: ''
             }
@@ -95,6 +97,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
       envVars: new Map(),
       containerKey: key,
       networkKey: key,
+      routekKey: key,
       containers: [
         {
           key,
@@ -110,8 +113,9 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
           ifName: '',
           ipAddress: '',
           netmask: '',
-          routes: [
+          routesGw: [
             {
+              key,
               dstCIDR: '',
               gateway: ''
             }
@@ -150,28 +154,34 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
         const networks: Array<PodModel.PodNetworkRequest> = [];
         if (values.networkType === 'custom') {
           this.state.networks.map((network: PodModel.PodNetworkRequest) => {
-            const routes = [];
-            const dstCIDR = values[`network-${network.key}-routes-dstCIDR`];
-            const gateway = values[`network-${network.key}-routes-gateway`];
-            if (dstCIDR !== '') {
-              if (gateway !== '') {
-                routes.push({
-                  dstCIDR,
-                  gateway
-                });
-              } else {
-                routes.push({
-                  dstCIDR
-                });
+            const routesGw: Array<PodModel.PodRouteGwRequest> = [];
+            const routesIntf: Array<PodModel.PodRouteIntfRequest> = [];
+            network.routesGw.map((route: PodModel.PodRouteGwRequest) => {
+              const dstCIDR =
+                values[`network-${network.key}-route-${route.key}-dstCIDR`];
+              const gateway =
+                values[`network-${network.key}-route-${route.key}-gateway`];
+              if (dstCIDR !== '') {
+                if (gateway !== '') {
+                  routesGw.push({
+                    dstCIDR,
+                    gateway
+                  });
+                } else {
+                  routesIntf.push({
+                    dstCIDR
+                  });
+                }
               }
-            }
+            });
             networks.push({
               name: values[`network-${network.key}-name`],
               ifName: values[`network-${network.key}-ifName`],
               ipAddress: values[`network-${network.key}-ipAddress`],
               netmask: values[`network-${network.key}-netmask`],
               vlan: values[`network-${network.key}-vlan`],
-              routes
+              routesGw,
+              routesIntf
             });
           });
         }
@@ -370,14 +380,29 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
       ifName: '',
       ipAddress: '',
       netmask: '',
-      routes: [
+      routesGw: [
         {
+          key,
           dstCIDR: '',
           gateway: ''
         }
       ]
     });
-    this.setState({ networks: newNetworks, networkKey: key });
+    this.setState({ networks: newNetworks, networkKey: key, routeKey: key });
+  };
+
+  protected addRoute = (networkIndex: number) => {
+    const { networks } = this.state;
+    const newNetworks = [...networks];
+    const key = Math.random()
+      .toString(36)
+      .substring(7);
+    newNetworks[networkIndex].routesGw.push({
+      key,
+      dstCIDR: '',
+      gateway: ''
+    });
+    this.setState({ networks: newNetworks, routeKey: key });
   };
 
   protected addContainer = () => {
@@ -399,7 +424,8 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
     const { networks } = this.state;
     const newNetworks = [...networks];
 
-    let key: string;
+    let networkKey: string;
+    let routeKey: string;
     const index = findIndex(
       newNetworks,
       (network: PodModel.PodNetworkRequest) => {
@@ -407,13 +433,44 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
       }
     );
     if (index === newNetworks.length - 1) {
-      key = newNetworks[index - 1].key;
+      networkKey = newNetworks[index - 1].key;
+      routeKey = newNetworks[index - 1].routesGw[0].key;
     } else {
-      key = newNetworks[index + 1].key;
+      networkKey = newNetworks[index + 1].key;
+      routeKey = newNetworks[index + 1].routesGw[0].key;
     }
     newNetworks.splice(index, 1);
 
-    this.setState({ networks: newNetworks, networkKey: key });
+    this.setState({ networks: newNetworks, networkKey, routeKey });
+  };
+
+  protected deleteRoute = (targetKey: string) => {
+    const { networks } = this.state;
+    const newNetworks = [...networks];
+
+    let key: string;
+    let routeIndex: number = 0;
+    const networkIndex = findIndex(
+      newNetworks,
+      (network: PodModel.PodNetworkRequest) => {
+        for (const route of network.routesGw) {
+          const result = route.key === targetKey;
+          if (result) {
+            return true;
+          }
+          routeIndex++;
+        }
+        return false;
+      }
+    );
+    if (routeIndex === newNetworks[networkIndex].routesGw.length - 1) {
+      key = newNetworks[networkIndex].routesGw[routeIndex - 1].key;
+    } else {
+      key = newNetworks[networkIndex].routesGw[routeIndex + 1].key;
+    }
+    newNetworks[networkIndex].routesGw.splice(routeIndex, 1);
+
+    this.setState({ networks: newNetworks, routeKey: key });
   };
 
   protected deleteContainer = (targetKey: string) => {
@@ -438,7 +495,18 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
   };
 
   protected onChangeNetwork = (networkKey: string) => {
-    this.setState({ networkKey });
+    let routeKey: string = '';
+    for (const network of this.state.networks) {
+      if (network.key === networkKey) {
+        routeKey = network.routesGw[0].key;
+        break;
+      }
+    }
+    this.setState({ networkKey, routeKey });
+  };
+
+  protected onChangeRoute = (routeKey: string) => {
+    this.setState({ routeKey });
   };
 
   protected onChangeContainer = (containerKey: string) => {
@@ -448,6 +516,12 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
   protected onEditNetwork = (targetKey: string, action: string) => {
     if (action === 'remove') {
       this.deleteNetwork(targetKey);
+    }
+  };
+
+  protected onEditRoute = (targetKey: string, action: string) => {
+    if (action === 'remove') {
+      this.deleteRoute(targetKey);
     }
   };
 
@@ -775,40 +849,84 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                       </FormItem>
                       <Collapse bordered={false}>
                         <Panel style={customPanelStyle} header="Routes" key="1">
-                          <FormItem
-                            {...formItemLayout}
-                            label={<FormattedMessage id="network.dstCIDR" />}
+                          <Tabs
+                            hideAdd={true}
+                            type={
+                              this.state.networks[index].routesGw.length > 1
+                                ? 'editable-card'
+                                : undefined
+                            }
+                            tabPosition="top"
+                            activeKey={this.state.routeKey}
+                            onChange={this.onChangeRoute}
+                            onEdit={this.onEditRoute}
+                            tabBarExtraContent={
+                              <Button
+                                shape="circle"
+                                icon="plus"
+                                onClick={() => this.addRoute(index)}
+                              />
+                            }
                           >
-                            {getFieldDecorator(
-                              `network-${network.key}-routes-dstCIDR`,
-                              {
-                                rules: [
-                                  {
-                                    required: false,
-                                    validator: this.checkCIDR
-                                  }
-                                ],
-                                initialValue: ''
+                            {this.state.networks[index].routesGw.map(
+                              (
+                                route: PodModel.PodRouteGwRequest,
+                                routeIndex: number
+                              ) => {
+                                return (
+                                  <TabPane
+                                    key={route.key}
+                                    tab={'Route' + (routeIndex + 1)}
+                                  >
+                                    <FormItem
+                                      {...formItemLayout}
+                                      label={
+                                        <FormattedMessage id="network.dstCIDR" />
+                                      }
+                                    >
+                                      {getFieldDecorator(
+                                        `network-${network.key}-route-${
+                                          route.key
+                                        }-dstCIDR`,
+                                        {
+                                          rules: [
+                                            {
+                                              required: false,
+                                              validator: this.checkCIDR
+                                            }
+                                          ],
+                                          initialValue: ''
+                                        }
+                                      )(
+                                        <Input placeholder="Destination CIDR" />
+                                      )}
+                                    </FormItem>
+                                    <FormItem
+                                      {...formItemLayout}
+                                      label={
+                                        <FormattedMessage id="network.gateway" />
+                                      }
+                                    >
+                                      {getFieldDecorator(
+                                        `network-${network.key}-route-${
+                                          route.key
+                                        }-gateway`,
+                                        {
+                                          rules: [
+                                            {
+                                              required: false,
+                                              validator: this.checkGateway
+                                            }
+                                          ],
+                                          initialValue: ''
+                                        }
+                                      )(<Input placeholder="Gateway" />)}
+                                    </FormItem>
+                                  </TabPane>
+                                );
                               }
-                            )(<Input placeholder="Destination CIDR" />)}
-                          </FormItem>
-                          <FormItem
-                            {...formItemLayout}
-                            label={<FormattedMessage id="network.gateway" />}
-                          >
-                            {getFieldDecorator(
-                              `network-${network.key}-routes-gateway`,
-                              {
-                                rules: [
-                                  {
-                                    required: false,
-                                    validator: this.checkGateway
-                                  }
-                                ],
-                                initialValue: ''
-                              }
-                            )(<Input placeholder="Gateway" />)}
-                          </FormItem>
+                            )}
+                          </Tabs>
                         </Panel>
                       </Collapse>
                     </TabPane>

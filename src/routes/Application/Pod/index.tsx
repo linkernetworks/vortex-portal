@@ -74,7 +74,27 @@ class Pod extends React.Component<PodProps, PodState> {
       visibleContainerDrawer: false,
       visibleModal: false,
       currentPod: '',
-      currentContainer: {} as ContainerModel.Container,
+      currentContainer: {
+        detail: {
+          containerName: '',
+          createAt: 0,
+          pod: '',
+          namespace: '',
+          node: '',
+          image: '',
+          command: []
+        },
+        status: {
+          status: '',
+          waitingReason: '',
+          terminatedReason: '',
+          restartTime: ''
+        },
+        resource: {
+          cpuUsagePercentage: [],
+          memoryUsageBytes: []
+        }
+      } as ContainerModel.Container,
       containers: [],
       networks: [],
       namespaces: [],
@@ -540,30 +560,28 @@ class Pod extends React.Component<PodProps, PodState> {
             <h2>Interface</h2>
             {this.renderInterface(this.props.pods[currentPod].nics)}
 
-            {currentContainer.hasOwnProperty('detail') && (
-              <Drawer
-                title={currentContainer.detail.containerName}
-                width={720}
-                closable={false}
-                onClose={this.hideMoreContainer}
-                visible={this.state.visibleContainerDrawer}
-              >
-                <h2>Detail</h2>
-                {this.renderContainerDetail(currentContainer.detail)}
+            <Drawer
+              title={currentContainer.detail.containerName}
+              width={720}
+              closable={false}
+              onClose={this.hideMoreContainer}
+              visible={this.state.visibleContainerDrawer}
+            >
+              <h2>Detail</h2>
+              {this.renderContainerDetail(currentContainer.detail)}
 
-                <h2>Commands</h2>
-                {this.renderListItemContent(
-                  <FormattedMessage id={`container.detail.command`} />,
-                  this.renderCommands(currentContainer.detail.command)
-                )}
+              <h2>Commands</h2>
+              {this.renderListItemContent(
+                <FormattedMessage id={`container.detail.command`} />,
+                this.renderCommands(currentContainer.detail.command)
+              )}
 
-                <h2>Status</h2>
-                {this.renderStatus(currentContainer.status)}
+              <h2>Status</h2>
+              {this.renderStatus(currentContainer.status)}
 
-                <h2>Resource</h2>
-                {this.renderResource(currentContainer.resource)}
-              </Drawer>
-            )}
+              <h2>Resource</h2>
+              {this.renderResource(currentContainer.resource)}
+            </Drawer>
           </Drawer>
         )}
 
