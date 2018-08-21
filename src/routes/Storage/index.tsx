@@ -201,8 +201,10 @@ class Storage extends React.PureComponent<
     switch (tabKey) {
       case 'storage':
         this.props.removeStorage(id);
+        break;
       case 'volume':
         this.props.removeVolume(id);
+        break;
     }
   };
 
@@ -266,6 +268,7 @@ class Storage extends React.PureComponent<
               });
             }
           });
+        break;
       case 'volume':
         this.props.clearVolumeError();
         this.props
@@ -278,6 +281,7 @@ class Storage extends React.PureComponent<
               });
             }
           });
+        break;
     }
   };
 
