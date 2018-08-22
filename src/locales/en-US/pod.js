@@ -14,7 +14,6 @@ export default {
   'pod.restartCount': 'Restart Count',
   'pod.containers': 'Containers',
   'pod.add': 'Create New Pod',
-  'pod.delete': 'Delete the Pod',
   'pod.restartPolicy': 'Restart Policy',
   'pod.capability': 'Capability',
 

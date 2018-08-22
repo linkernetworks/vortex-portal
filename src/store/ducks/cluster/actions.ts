@@ -35,18 +35,6 @@ export const fetchPods = createAsyncAction(
   'FETCH_PODS_FAILURE'
 )<void, Pod.Pods, Error>();
 
-export const fetchPodFromMongo = createAsyncAction(
-  'FETCH_PODS_FROM_MONGO_REQUEST',
-  'FETCH_PODS_FROM_MONGO_SUCCESS',
-  'FETCH_PODS_FROM_MONGO_FAILURE'
-)<void, Pod.PodFromMongo, Error>();
-
-export const fetchPodsFromMongo = createAsyncAction(
-  'FETCH_PODS_FROM_MONGO_REQUEST',
-  'FETCH_PODS_FROM_MONGO_SUCCESS',
-  'FETCH_PODS_FROM_MONGO_FAILURE'
-)<void, Array<Pod.Pods>, Error>();
-
 export const fetchContainers = createAsyncAction(
   'FETCH_CONTAINERS_REQUEST',
   'FETCH_CONTAINERS_SUCCESS',
@@ -64,12 +52,6 @@ export const addPod = createAsyncAction(
   'ADD_POD_SUCCESS',
   'ADD_POD_FAILURE'
 )<void, Pod.PodRequest, Error>();
-
-export const removePod = createAsyncAction(
-  'REMOVE_POD_REQUEST',
-  'REMOVE_POD_SUCCESS',
-  'REMOVE_POD_FAILURE'
-)<void, { id: string }, Error>();
 
 export const fetchServices = createAsyncAction(
   'FETCH_SERVICES_REQUEST',

@@ -73,20 +73,6 @@ export const fetchPod = (pod: string): RTAction<Promise<ClusterActionType>> => {
   };
 };
 
-export const fetchPodFromMongo = (
-  id: string
-): RTAction<Promise<ClusterActionType>> => {
-  return async dispatch => {
-    dispatch(clusterActions.fetchPodFromMongo.request);
-    try {
-      const res = await podAPI.getPodFromMongo(id);
-      return dispatch(clusterActions.fetchPodFromMongo.success(res.data));
-    } catch (e) {
-      return dispatch(clusterActions.fetchPodFromMongo.failure(e));
-    }
-  };
-};
-
 export const fetchContainers = (): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
     dispatch(clusterActions.fetchContainers.request);
@@ -123,22 +109,6 @@ export const addPod = (
       return dispatch(clusterActions.addPod.success(res.data));
     } catch (e) {
       return dispatch(clusterActions.addPod.failure(e));
-    }
-  };
-};
-
-export const removePod = (id: string): RTAction<Promise<ClusterActionType>> => {
-  return async dispatch => {
-    dispatch(clusterActions.removePod.request());
-    try {
-      const res = await podAPI.deletePod(id);
-      if (!res.data.error) {
-        return dispatch(clusterActions.removePod.success({ id }));
-      } else {
-        throw new Error(res.data.message);
-      }
-    } catch (e) {
-      return dispatch(clusterActions.removePod.failure(e));
     }
   };
 };

@@ -55,11 +55,6 @@ export interface PodRequest {
   restartPolicy: string;
 }
 
-export interface PodFromMongo {
-  id: string;
-  name: string;
-}
-
 export interface Pods {
   [name: string]: Pod;
 }
