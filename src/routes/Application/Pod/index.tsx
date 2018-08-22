@@ -14,7 +14,8 @@ import {
   Tabs,
   Input,
   Select,
-  Table
+  Table,
+  Popconfirm
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
@@ -60,9 +61,12 @@ interface PodState {
 
 interface PodProps {
   pods: PodModel.Pods;
+  podsFromMongo: Array<PodModel.PodFromMongo>;
   allPods: Array<string>;
   fetchPods: () => any;
+  fetchPodsFromMongo: () => any;
   addPod: (data: PodModel.PodRequest) => any;
+  removePod: (id: string) => any;
 }
 
 interface PodInfo {
@@ -114,6 +118,7 @@ class Pod extends React.Component<PodProps, PodState> {
 
   public componentDidMount() {
     this.props.fetchPods();
+    this.props.fetchPodsFromMongo();
   }
 
   protected showCreate = () => {
@@ -197,7 +202,6 @@ class Pod extends React.Component<PodProps, PodState> {
     const columns = [
       {
         title: 'Name',
-        dataIndex: 'detail.containerName',
         key: 'name'
       },
       {
@@ -445,6 +449,20 @@ class Pod extends React.Component<PodProps, PodState> {
     );
   };
 
+  protected renderAction = (podName: string | undefined) => {
+    return [
+      <Popconfirm
+        key="action.delete"
+        title={<FormattedMessage id="action.confirmToDelete" />}
+        onConfirm={this.props.removePod.bind(this, this.getPodId(podName))}
+      >
+        <Button>
+          <Icon type="delete" /> <FormattedMessage id="pod.delete" />
+        </Button>
+      </Popconfirm>
+    ];
+  };
+
   protected renderDetail = (pod: string) => {
     return (
       <div>
@@ -504,6 +522,17 @@ class Pod extends React.Component<PodProps, PodState> {
         </Row>
       </div>
     );
+  };
+
+  protected getPodId = (podName: any) => {
+    const pod = this.props.podsFromMongo.filter(
+      record => record.name === podName
+    );
+    if (pod.length === 1) {
+      return pod[0].id;
+    } else {
+      return 'none';
+    }
   };
 
   protected getPodInfo = (pods: Array<string>) => {
@@ -644,6 +673,9 @@ class Pod extends React.Component<PodProps, PodState> {
               <h2>Resource</h2>
               {this.renderResource(currentContainer.resource)}
             </Drawer>
+            <div className={styles.drawerBottom}>
+              {this.renderAction(this.props.pods[currentPod].podName)}
+            </div>
           </Drawer>
         )}
 
@@ -667,15 +699,18 @@ class Pod extends React.Component<PodProps, PodState> {
 const mapStateToProps = (state: RootState) => {
   return {
     pods: state.cluster.pods,
+    podsFromMongo: state.cluster.podsFromMongo,
     allPods: state.cluster.allPods
   };
 };
 
 const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchPods: () => dispatch(clusterOperations.fetchPods()),
+  fetchPodsFromMongo: () => dispatch(clusterOperations.fetchPodsFromMongo()),
   addPod: (data: PodModel.PodRequest) => {
     dispatch(clusterOperations.addPod(data));
-  }
+  },
+  removePod: (id: string) => dispatch(clusterOperations.removePod(id))
 });
 
 export default connect(

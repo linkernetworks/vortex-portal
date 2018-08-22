@@ -4,10 +4,12 @@ import * as Node from '@/models/Node';
 import * as Pod from '@/models/Pod';
 import * as Service from '@/models/Service';
 import * as Namespace from '@/models/Namespace';
+import { omit } from 'lodash';
 
 export interface ClusterStateType {
   nodes: Node.Nodes;
   pods: Pod.Pods;
+  podsFromMongo: Array<Pod.PodFromMongo>;
   containers: {};
   services: Array<Service.Service>;
   namespaces: Array<Namespace.Namespace>;
@@ -23,6 +25,7 @@ export type ClusterActionType = ActionType<typeof Cluster>;
 const initialState: ClusterStateType = {
   nodes: {},
   pods: {},
+  podsFromMongo: [],
   containers: {},
   services: [],
   namespaces: [],
@@ -46,6 +49,8 @@ export function clusterReducer(
     case getType(Cluster.fetchNodeNICs.request):
     case getType(Cluster.fetchPods.request):
     case getType(Cluster.fetchPod.request):
+    case getType(Cluster.fetchPodsFromMongo.request):
+    case getType(Cluster.removePod.request):
     case getType(Cluster.fetchContainers.request):
     case getType(Cluster.fetchContainer.request):
     case getType(Cluster.fetchServices.request):
@@ -82,6 +87,12 @@ export function clusterReducer(
         },
         isLoading: false
       };
+    case getType(Cluster.fetchPodsFromMongo.success):
+      return {
+        ...state,
+        podsFromMongo: action.payload,
+        isLoading: false
+      };
     case getType(Cluster.fetchContainers.success):
       return {
         ...state,
@@ -102,6 +113,19 @@ export function clusterReducer(
       return {
         ...state,
         isLoading: false
+      };
+    case getType(Cluster.removePod.success):
+      const targetPod = state.podsFromMongo.filter(
+        record => record.id === action.payload.id
+      );
+      return {
+        ...state,
+        isLoading: false,
+        podsFromMongo: state.podsFromMongo.filter(
+          record => record.id !== action.payload.id
+        ),
+        pods: omit(state.pods, targetPod[0].name),
+        allPods: state.allPods.filter(record => record !== targetPod[0].name)
       };
     case getType(Cluster.fetchServices.success):
       return {
