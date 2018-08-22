@@ -33,6 +33,7 @@ export interface Resource {
   capacityEphemeralStorage: number;
   memoryTotalHugepages: number;
   memoryFreeHugepages: number;
+  memoryHugepageSize: number;
 }
 
 export interface NetworkInterfaceController {
