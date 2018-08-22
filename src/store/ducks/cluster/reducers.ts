@@ -1,4 +1,5 @@
 import { ActionType, getType } from 'typesafe-actions';
+import { omitBy } from 'lodash';
 import * as Cluster from './actions';
 import * as Node from '@/models/Node';
 import * as Pod from '@/models/Pod';
@@ -46,6 +47,9 @@ export function clusterReducer(
     case getType(Cluster.fetchNodeNICs.request):
     case getType(Cluster.fetchPods.request):
     case getType(Cluster.fetchPod.request):
+    case getType(Cluster.fetchPodFromMongo.request):
+    case getType(Cluster.fetchPodsFromMongo.request):
+    case getType(Cluster.removePod.request):
     case getType(Cluster.fetchContainers.request):
     case getType(Cluster.fetchContainer.request):
     case getType(Cluster.fetchServices.request):
@@ -102,6 +106,26 @@ export function clusterReducer(
       return {
         ...state,
         isLoading: false
+      };
+    case getType(Cluster.removePod.success):
+      const result = _.omitBy(state.pods, (value: any, key: string) => {
+        console.log(value);
+        return !key.startsWith('a');
+      });
+      return {
+        ...state,
+        isLoading: false
+        // pods: result,
+        // allPods: state.allPods.filter(
+        //   pod => pod !== state.pods[action.payload.id].podName
+        // )
+        // allPods: state.allPods.filter(record => record !== action.payload.id),
+        // get the mongo id then get the podname
+
+        // pods: {
+        //   ...state.pods,
+        //   [action.payload.podName]: action.payload.id
+        // }
       };
     case getType(Cluster.fetchServices.success):
       return {

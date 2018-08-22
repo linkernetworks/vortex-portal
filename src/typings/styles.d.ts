@@ -30,3 +30,8 @@ declare module '*.less' {
   const styles: SelectorNode & Stringifyable;
   export = styles;
 }
+
+// lodash global typing - begin
+declare namespace _ {
+}
+// lodash global typing - end
