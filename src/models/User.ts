@@ -3,8 +3,21 @@ export enum UserType {
   Normal = 'NORMAL'
 }
 
-export default interface User {
-  name: string;
-  type: UserType;
-  email?: string;
+export interface LoginCredential {
+  username: string; // email
+  password: string;
+}
+
+export interface User {
+  loginCredential?: LoginCredential;
+  role?: string;
+  displayName: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+}
+
+export interface UserResponse extends User {
+  id: string;
+  createdAt: Date;
 }
