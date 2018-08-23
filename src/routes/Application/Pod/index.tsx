@@ -201,6 +201,7 @@ class Pod extends React.Component<PodProps, PodState> {
     const columns = [
       {
         title: 'Name',
+        dataIndex: 'detail.containerName',
         key: 'name'
       },
       {
@@ -448,18 +449,26 @@ class Pod extends React.Component<PodProps, PodState> {
     );
   };
 
-  protected renderAction = (podID: string) => {
-    return [
-      <Popconfirm
-        key="action.delete"
-        title={<FormattedMessage id="action.confirmToDelete" />}
-        onConfirm={this.props.removePod.bind(this, podID)}
-      >
-        <Button>
-          <Icon type="delete" /> <FormattedMessage id="pod.delete" />
+  protected renderAction = (podMetaData: PodModel.PodFromMongo) => {
+    if (podMetaData !== undefined) {
+      return (
+        <Popconfirm
+          key="action.delete"
+          title={<FormattedMessage id="action.confirmToDelete" />}
+          onConfirm={this.props.removePod.bind(this, podMetaData.id)}
+        >
+          <Button>
+            <Icon type="delete" /> <FormattedMessage id="pod.delete" />
+          </Button>
+        </Popconfirm>
+      );
+    } else {
+      return (
+        <Button type="dashed" disabled={true}>
+          <Icon type="delete" /> <FormattedMessage id="pod.undeletable" />
         </Button>
-      </Popconfirm>
-    ];
+      );
+    }
   };
 
   protected renderDetail = (pod: string) => {
@@ -662,7 +671,7 @@ class Pod extends React.Component<PodProps, PodState> {
               {this.renderResource(currentContainer.resource)}
             </Drawer>
             <div className={styles.drawerBottom}>
-              {this.renderAction(this.props.pods[currentPod].metadata!.id)}
+              {this.renderAction(this.props.pods[currentPod].metadata)}
             </div>
           </Drawer>
         )}
@@ -692,7 +701,6 @@ const mapStateToProps = (state: RootState) => {
   });
   return {
     pods: state.cluster.pods,
-    podsFromMongo: state.cluster.podsFromMongo,
     allPods: state.cluster.allPods
   };
 };
