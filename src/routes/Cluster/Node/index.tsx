@@ -417,7 +417,7 @@ class Node extends React.Component<NodeProps, NodeState> {
         />
         {this.props.nodes.hasOwnProperty(currentNode) && (
           <Drawer
-            title={this.props.nodes[currentNode].detail.hostname}
+            title="Node"
             width={720}
             placement="right"
             closable={false}
@@ -425,12 +425,12 @@ class Node extends React.Component<NodeProps, NodeState> {
             visible={this.state.visible}
           >
             <div className={styles.nodeContentSection}>
-              <h2>Details</h2>
+              <h3>Details</h3>
               {this.renderDetail(currentNode)}
             </div>
 
             <div className={styles.nodeContentSection}>
-              <h2>Labels</h2>
+              <h3>Labels</h3>
               {this.renderListItemContent(
                 <FormattedMessage id="node.detail.labels" />,
                 this.renderLabels(this.props.nodes[currentNode].detail.labels)
@@ -438,12 +438,12 @@ class Node extends React.Component<NodeProps, NodeState> {
             </div>
 
             <div className={styles.nodeContentSection}>
-              <h2>Resources</h2>
+              <h3>Resources</h3>
               {this.renderResource(currentNode)}
             </div>
 
             <div className={styles.nodeContentSection}>
-              <h2>Interfaces</h2>
+              <h3>Interfaces</h3>
               {this.renderInterface(currentNode)}
             </div>
           </Drawer>

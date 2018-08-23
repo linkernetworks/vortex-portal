@@ -310,6 +310,57 @@ class Pod extends React.Component<PodProps, PodState> {
     );
   };
 
+  protected renderPodStatusIcon = (pod: PodModel.Pod) => {
+    switch (pod.status) {
+      case 'reading':
+        return (
+          <Icon
+            type="check-circle"
+            style={{ color: 'green', paddingLeft: '10px' }}
+          />
+        );
+      case 'running':
+        return <Icon type="clock-circle" style={{ paddingLeft: '10px' }} />;
+      case 'waiting':
+        return (
+          <Icon
+            type="close-circle"
+            style={{ color: 'red', paddingLeft: '10px' }}
+          />
+        );
+      case 'terminated':
+        return (
+          <Icon type="pause" style={{ color: 'green', paddingLeft: '10px' }} />
+        );
+      default:
+        return;
+    }
+  };
+
+  protected renderContainerStatusIcon = (containerStatus: string) => {
+    switch (containerStatus) {
+      case 'running':
+      case 'ready':
+        return (
+          <Icon
+            type="check-circle"
+            style={{ color: 'green', paddingLeft: '10px' }}
+          />
+        );
+      case 'waiting':
+        return <Icon type="clock-circle" style={{ paddingLeft: '10px' }} />;
+      case 'terminated':
+        return (
+          <Icon
+            type="close-circle"
+            style={{ color: 'red', paddingLeft: '10px' }}
+          />
+        );
+      default:
+        return;
+    }
+  };
+
   protected renderResource = (container: ContainerModel.Resource) => {
     return (
       <div>
@@ -338,13 +389,15 @@ class Pod extends React.Component<PodProps, PodState> {
     data2: Array<{ timestamp: number; value: string }>
   ) {
     const chartData: Array<{ x: string; y1: number; y2: number }> = [];
-    data1.map((d, i) => {
-      chartData.push({
-        x: moment(d.timestamp * 1000).calendar(),
-        y1: parseFloat(data1[i].value),
-        y2: parseFloat(data2[i].value)
+    if (data1 !== null && data1.length > 0) {
+      data1.map((d, i) => {
+        chartData.push({
+          x: moment(d.timestamp * 1000).calendar(),
+          y1: parseFloat(data1[i].value),
+          y2: parseFloat(data2[i].value)
+        });
       });
-    });
+    }
     return (
       <LineChart
         width={600}
@@ -378,12 +431,14 @@ class Pod extends React.Component<PodProps, PodState> {
     data: Array<{ timestamp: number; value: string }>
   ) {
     const chartData: Array<{ x: string; y1: number }> = [];
-    data.map(d => {
-      chartData.push({
-        x: moment(d.timestamp * 1000).calendar(),
-        y1: parseFloat(d.value)
+    if (data !== null && data.length > 0) {
+      data.map(d => {
+        chartData.push({
+          x: moment(d.timestamp * 1000).calendar(),
+          y1: parseFloat(d.value)
+        });
       });
-    });
+    }
     return (
       <LineChart
         width={600}
@@ -595,54 +650,76 @@ class Pod extends React.Component<PodProps, PodState> {
         />
         {this.props.pods.hasOwnProperty(currentPod) && (
           <Drawer
-            title={this.props.pods[currentPod].podName}
+            title="Pod"
             width={720}
             closable={false}
             onClose={this.hideMorePod}
             visible={this.state.visiblePodDrawer}
           >
-            <div className={styles.podContentSection}>
-              <h2>Details</h2>
+            <div className={styles.contentSection}>
+              <h2 style={{ display: 'inline' }}>
+                {this.props.pods[currentPod].podName}
+              </h2>
+              {this.renderPodStatusIcon(this.props.pods[currentPod])}
+            </div>
+
+            <div className={styles.contentSection}>
+              <h3>Details</h3>
               {this.renderDetail(currentPod)}
             </div>
 
-            <div className={styles.podContentSection}>
-              <h2>Labels</h2>
+            <div className={styles.contentSection}>
+              <h3>Labels</h3>
               {this.renderListItemContent(
                 <FormattedMessage id="pod.labels" />,
                 this.renderLabels(this.props.pods[currentPod].labels)
               )}
             </div>
 
-            <div className={styles.podContentSection}>
-              <h2>Containers</h2>
+            <div className={styles.contentSection}>
+              <h3>Containers</h3>
               {this.renderContainer()}
             </div>
 
-            <h2>Interface</h2>
+            <h3>Interface</h3>
             {this.renderInterface(this.props.pods[currentPod].nics)}
 
             <Drawer
-              title={currentContainer.detail.containerName}
+              title="Container"
               width={720}
               closable={false}
               onClose={this.hideMoreContainer}
               visible={this.state.visibleContainerDrawer}
             >
-              <h2>Detail</h2>
-              {this.renderContainerDetail(currentContainer.detail)}
+              <div className={styles.contentSection}>
+                <h2 style={{ display: 'inline' }}>
+                  {currentContainer.detail.containerName}
+                </h2>
+                {this.renderContainerStatusIcon(currentContainer.status.status)}
+              </div>
 
-              <h2>Commands</h2>
-              {this.renderListItemContent(
-                <FormattedMessage id={`container.detail.command`} />,
-                this.renderCommands(currentContainer.detail.command)
-              )}
+              <div className={styles.contentSection}>
+                <h3>Detail</h3>
+                {this.renderContainerDetail(currentContainer.detail)}
+              </div>
 
-              <h2>Status</h2>
-              {this.renderStatus(currentContainer.status)}
+              <div className={styles.contentSection}>
+                <h3>Commands</h3>
+                {this.renderListItemContent(
+                  <FormattedMessage id={`container.detail.command`} />,
+                  this.renderCommands(currentContainer.detail.command)
+                )}
+              </div>
 
-              <h2>Resource</h2>
-              {this.renderResource(currentContainer.resource)}
+              <div className={styles.contentSection}>
+                <h3>Status</h3>
+                {this.renderStatus(currentContainer.status)}
+              </div>
+
+              <div className={styles.contentSection}>
+                <h3>Resource</h3>
+                {this.renderResource(currentContainer.resource)}
+              </div>
             </Drawer>
           </Drawer>
         )}
