@@ -1,7 +1,10 @@
 {
   "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
   "rules": {
-    "prettier": [true, { "singleQuote": true }],
+    "prettier": {
+      "options": [{"singleQuote": true}],
+      "severity": "warning"
+    },
     "interface-name": [true, "never-prefix"],
     "ordered-imports": false,
     "object-literal-sort-keys": false,
