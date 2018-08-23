@@ -61,7 +61,6 @@ interface PodState {
 
 interface PodProps {
   pods: PodModel.Pods;
-  podsFromMongo: Array<PodModel.PodFromMongo>;
   allPods: Array<string>;
   fetchPods: () => any;
   fetchPodsFromMongo: () => any;
@@ -449,12 +448,12 @@ class Pod extends React.Component<PodProps, PodState> {
     );
   };
 
-  protected renderAction = (podName: string | undefined) => {
+  protected renderAction = (podID: string) => {
     return [
       <Popconfirm
         key="action.delete"
         title={<FormattedMessage id="action.confirmToDelete" />}
-        onConfirm={this.props.removePod.bind(this, this.getPodId(podName))}
+        onConfirm={this.props.removePod.bind(this, podID)}
       >
         <Button>
           <Icon type="delete" /> <FormattedMessage id="pod.delete" />
@@ -522,17 +521,6 @@ class Pod extends React.Component<PodProps, PodState> {
         </Row>
       </div>
     );
-  };
-
-  protected getPodId = (podName: any) => {
-    const pod = this.props.podsFromMongo.filter(
-      record => record.name === podName
-    );
-    if (pod.length === 1) {
-      return pod[0].id;
-    } else {
-      return 'none';
-    }
   };
 
   protected getPodInfo = (pods: Array<string>) => {
@@ -674,7 +662,7 @@ class Pod extends React.Component<PodProps, PodState> {
               {this.renderResource(currentContainer.resource)}
             </Drawer>
             <div className={styles.drawerBottom}>
-              {this.renderAction(this.props.pods[currentPod].podName)}
+              {this.renderAction(this.props.pods[currentPod].metadata!.id)}
             </div>
           </Drawer>
         )}
@@ -697,6 +685,11 @@ class Pod extends React.Component<PodProps, PodState> {
 }
 
 const mapStateToProps = (state: RootState) => {
+  state.cluster.podsFromMongo.forEach(pod => {
+    if (state.cluster.pods[pod.name] !== undefined) {
+      state.cluster.pods[pod.name].metadata = pod;
+    }
+  });
   return {
     pods: state.cluster.pods,
     podsFromMongo: state.cluster.podsFromMongo,
