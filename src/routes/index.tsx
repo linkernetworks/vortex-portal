@@ -9,6 +9,7 @@ import Network from '@/routes/Cluster/Network';
 
 import ApplicationOverview from '@/routes/Application/Overview';
 import Deployment from '@/routes/Application/Deployment';
+import CreateDeployment from '@/routes/Application/Deployment/Create';
 import Namespace from '@/routes/Application/Namespace';
 import Pod from '@/routes/Application/Pod';
 import Container from '@/routes/Application/Container';
@@ -68,6 +69,11 @@ const appRoutes = (
       layout={MainLayout}
       component={Namespace}
       path="/application/namespace"
+    />
+    <RouteWithLayout
+      layout={MainLayout}
+      component={CreateDeployment}
+      path="/application/deployment/create"
     />
     <RouteWithLayout
       layout={MainLayout}

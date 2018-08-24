@@ -14,6 +14,7 @@ import service from './service';
 import namespace from './namespace';
 import storage from './storage';
 import volume from './volume';
+import deployment from './deployment';
 
 export default {
   'parentLocale': 'en',
@@ -34,4 +35,5 @@ export default {
   ...namespace,
   ...storage,
   ...volume,
+  ...deployment,
 };

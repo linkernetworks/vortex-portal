@@ -4,16 +4,19 @@ import * as Node from '@/models/Node';
 import * as Pod from '@/models/Pod';
 import * as Service from '@/models/Service';
 import * as Namespace from '@/models/Namespace';
+import * as Deployment from '@/models/Deployment';
 
 export interface ClusterStateType {
   nodes: Node.Nodes;
   pods: Pod.Pods;
   containers: {};
+  deployments: Deployment.Controllers;
   services: Array<Service.Service>;
   namespaces: Array<Namespace.Namespace>;
   allNodes: Array<string>;
   allPods: Array<string>;
   allContainers: Array<string>;
+  allDeployments: Array<string>;
   nics: {};
   isLoading: boolean;
 }
@@ -24,11 +27,13 @@ const initialState: ClusterStateType = {
   nodes: {},
   pods: {},
   containers: {},
+  deployments: {},
   services: [],
   namespaces: [],
   allNodes: [],
   allPods: [],
   allContainers: [],
+  allDeployments: [],
   nics: {},
   isLoading: false
 };
@@ -142,6 +147,18 @@ export function clusterReducer(
         namespaces: state.namespaces.filter(
           record => record.id !== action.payload.id
         )
+      };
+    case getType(Cluster.fetchDeployments.success):
+      return {
+        ...state,
+        deployments: action.payload,
+        allDeployments: Object.keys(action.payload),
+        isLoading: false
+      };
+    case getType(Cluster.addDeployment.success):
+      return {
+        ...state,
+        isLoading: false
       };
     default:
       return state;

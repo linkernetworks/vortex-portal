@@ -4,6 +4,7 @@ import * as Pod from '@/models/Pod';
 import * as Container from '@/models/Container';
 import * as Service from '@/models/Service';
 import * as Namespace from '@/models/Namespace';
+import * as Deployment from '@/models/Deployment';
 
 export const fetchNodes = createAsyncAction(
   'FETCH_NODES_REQUEST',
@@ -88,3 +89,15 @@ export const removeNamespace = createAsyncAction(
   'REMOVE_NAMESPACE_SUCCESS',
   'REMOVE_NAMESPACE_FAILURE'
 )<void, { id: string }, Error>();
+
+export const fetchDeployments = createAsyncAction(
+  'FETCH_DEPLOYMENTS_REQUEST',
+  'FETCH_DEPLOYMENTS_SUCCESS',
+  'FETCH_DEPLOYMENTS_FAILURE'
+)<void, Deployment.Controllers, Error>();
+
+export const addDeployment = createAsyncAction(
+  'ADD_DEPLOYMENT_REQUEST',
+  'ADD_DEPLOYMENT_SUCCESS',
+  'ADD_DEPLOYMENT_FAILURE'
+)<void, Deployment.Deployment, Error>();

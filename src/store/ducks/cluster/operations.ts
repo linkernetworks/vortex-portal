@@ -3,11 +3,13 @@ import { clusterActions, ClusterActionType } from './index';
 import * as PodModel from '@/models/Pod';
 import * as ServiceModel from '@/models/Service';
 import * as NamespaceModel from '@/models/Namespace';
+import * as DeploymentModel from '@/models/Deployment';
 import * as nodeAPI from '@/services/node';
 import * as podAPI from '@/services/pod';
 import * as containerAPI from '@/services/container';
 import * as serviceAPI from '@/services/service';
 import * as namespaceAPI from '@/services/namespace';
+import * as deploymentAPI from '@/services/deployment';
 
 export const fetchNodes = (): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
@@ -197,6 +199,32 @@ export const removeNamespace = (
       }
     } catch (e) {
       return dispatch(clusterActions.removeNamespace.failure(e));
+    }
+  };
+};
+
+export const fetchDeployments = (): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.fetchDeployments.request());
+    try {
+      const res = await deploymentAPI.getControllers();
+      return dispatch(clusterActions.fetchDeployments.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.fetchDeployments.failure(e));
+    }
+  };
+};
+
+export const addDeployment = (
+  data: DeploymentModel.Deployment
+): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.addDeployment.request);
+    try {
+      const res = await deploymentAPI.createDeployment(data);
+      return dispatch(clusterActions.addDeployment.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.addDeployment.failure(e));
     }
   };
 };

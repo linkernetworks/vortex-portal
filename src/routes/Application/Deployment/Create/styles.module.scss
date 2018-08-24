@@ -1,0 +1,13 @@
+.card {
+  margin-bottom: 2em;
+}
+
+.add {
+  width: 100%;
+}
+
+:global {
+  .ant-table-footer {
+    background: transparent;
+  }
+}
