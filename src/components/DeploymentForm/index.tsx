@@ -9,7 +9,6 @@ import { FormattedMessage } from 'react-intl';
 import {
   Form,
   Button,
-  Modal,
   Select,
   Input,
   InputNumber,
@@ -683,11 +682,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
   }
 
   public renderNetworkForm = () => {
-    const {
-      getFieldDecorator,
-      getFieldValue,
-      setFieldsValue
-    } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const customPanelStyle = {
       background: '#f7f7f7',
       borderRadius: 4,

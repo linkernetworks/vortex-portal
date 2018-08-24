@@ -2,48 +2,16 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import * as DeploymentModel from '@/models/Deployment';
 import * as ContainerModel from '@/models/Container';
-import * as NetworkModel from '@/models/Network';
-import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
-import {
-  Row,
-  Col,
-  Tag,
-  Drawer,
-  Button,
-  Icon,
-  Tabs,
-  Input,
-  Select,
-  Table
-} from 'antd';
+import { Button, Icon, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { filter, includes } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
 
-import * as containerAPI from '@/services/container';
-import * as networkAPI from '@/services/network';
-import * as namespaceAPI from '@/services/namespace';
-
 import * as styles from './styles.module.scss';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend
-} from 'recharts';
-
-const InputGroup = Input.Group;
-const Search = Input.Search;
-const Option = Select.Option;
-const TabPane = Tabs.TabPane;
 
 interface DeploymentState {
   visibleDeploymentDrawer: boolean;

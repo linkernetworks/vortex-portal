@@ -5,39 +5,15 @@ import * as NamespaceModel from '@/models/Namespace';
 import { networkModels, networkOperations } from '@/store/ducks/network';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import {
-  Row,
-  Col,
-  Tag,
-  Drawer,
-  Button,
-  Icon,
-  Tabs,
-  Input,
-  Select,
-  Table,
-  Card
-} from 'antd';
-import { ColumnProps } from 'antd/lib/table';
-import * as moment from 'moment';
-import { filter, includes } from 'lodash';
+import { Card } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
 
-import * as containerAPI from '@/services/container';
-import * as networkAPI from '@/services/network';
-import * as namespaceAPI from '@/services/namespace';
-
 import * as styles from './styles.module.scss';
 
 import DeploymentForm from '@/components/DeploymentForm';
-
-const InputGroup = Input.Group;
-const Search = Input.Search;
-const Option = Select.Option;
-const TabPane = Tabs.TabPane;
 
 interface CreateDeploymentState {
   tabKey: string;
