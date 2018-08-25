@@ -5,10 +5,10 @@ import { Avatar, Icon, Dropdown, Menu, Tooltip } from 'antd';
 import * as styles from './styles.module.scss';
 
 import { intlModels } from '@/store/ducks/intl';
-import { User } from '@/models';
+import { User } from '@/models/User';
 
 export interface NavHeaderProps {
-  currentUser: User;
+  // currentUser: User;
   locale: string;
   localeOptions: Array<intlModels.IntlOption>;
   onMenuClick: () => void;
@@ -21,7 +21,7 @@ class NavHeader extends React.Component<NavHeaderProps> {
   };
 
   public render() {
-    const { onMenuClick, currentUser, locale, localeOptions } = this.props;
+    const { onMenuClick, locale, localeOptions } = this.props;
     const { handleLangsClick } = this;
 
     const menu = (
@@ -68,7 +68,7 @@ class NavHeader extends React.Component<NavHeaderProps> {
           <Dropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>
               <Avatar size="small" className={styles.avatar} icon="user" />
-              <span className={styles.name}>{currentUser.name}</span>
+              {/* <span className={styles.name}>{currentUser.displayName}</span> */}
             </span>
           </Dropdown>
         </div>

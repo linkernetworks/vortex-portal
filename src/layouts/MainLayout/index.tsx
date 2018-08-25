@@ -9,7 +9,6 @@ import { RootState, RootAction } from '@/store/ducks';
 import SiderMenu from '@/components/SiderMenu';
 import NavHeader from '@/components/NavHeader';
 import BaseFooter from '@/components/BaseFooter';
-import { UserType } from '@/models/User';
 import { getMenuData } from '@/routes/menu';
 import * as metaAPI from '@/services/meta';
 
@@ -53,8 +52,9 @@ class MainLayout extends React.PureComponent<MainLayoutProps, MainLayoutState> {
     const { handleMenuClick } = this;
     const { locale, localeOptions, location, changeLanguage } = this.props;
     const currentUser = {
-      name: 'Lucien',
-      type: UserType.Admin
+      id: '123',
+      displayName: 'Lucien',
+      createdAt: new Date()
     };
 
     return (
@@ -71,7 +71,6 @@ class MainLayout extends React.PureComponent<MainLayoutProps, MainLayoutState> {
               <NavHeader
                 onMenuClick={handleMenuClick}
                 onLangsClick={changeLanguage}
-                currentUser={currentUser}
                 locale={locale}
                 localeOptions={localeOptions}
               />

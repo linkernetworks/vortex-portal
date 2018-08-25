@@ -1,0 +1,109 @@
+@import "../../styles/variables";
+@import "../../styles/mq";
+
+$width: 320px;
+
+.billboard {
+  position: relative;
+  width: 80%;
+  min-width: $width;
+  margin: 0 auto;
+  padding: $card-padding-wider;
+  color: #fff;
+  z-index: 100;
+  border-radius: $border-radius-base $border-radius-base 0 0;
+  background: linear-gradient($purple-6, #8A2387);
+
+  @include mq($from: desktop) {
+    width: $width;
+    height: 60vh;
+    max-height: 480px;
+    margin: 0;
+    border-radius: $border-radius-base;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0.2;
+    background-blend-mode: luminosity;
+    background-image: url(../../assets/pattern.jpg), linear-gradient($purple-6, #702c63);
+    background-position: center center;
+    background-size: cover;
+    border-radius: $border-radius-base $border-radius-base 0 0;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 1px 10px 6px;
+
+    @include mq($from: desktop) {
+      border-radius: $border-radius-base;
+    }
+
+  }
+}
+
+.langMenu {
+  position: absolute;
+  bottom: 1em;
+  left: 0;
+  right: 0;
+  text-align: center;
+
+  span {
+    cursor: pointer;
+    color: $text-color-secondary-dark;
+    &:global(.is-actived) {
+      color: #fff;
+    }
+  }
+
+}
+
+.logo {
+  height: 48px;
+  margin-bottom: 32px;
+
+  img {
+    height: 80%;
+    vertical-align: middle;
+    margin-right: 1em;
+  }
+  h1 {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 3.6em;
+    color: #fff;
+    margin: 0;
+  }
+}
+
+.header {
+  padding-bottom: $padding-md;
+  h2, p {
+    margin: 0;
+  }
+}
+
+.form {
+  width: 80%;
+  min-width: $width;
+  padding: $card-padding-wider;
+  margin: 0 auto;
+  border-radius: 0 0 $border-radius-base $border-radius-base;
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 8px 40px 6px;
+
+  :global(.ant-form-item:last-of-type) {
+    margin-bottom: 0;
+  }
+
+  @include mq($from: desktop) {
+    width: $width;
+    margin: 0;
+    border-radius: 0 $border-radius-base $border-radius-base 0;
+  }
+}
+

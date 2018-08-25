@@ -1,0 +1,31 @@
+@import "../../styles/variables";
+
+.header {
+  padding-bottom: $padding-md;
+  h2 {
+    margin: 0;
+  }
+}
+
+.actions {
+  margin-top: $padding-lg !important;
+  .action {
+    width: 100%;
+  }
+}
+
+.login-button {
+  width: 100%;
+}
+
+.icon {
+  color: $text-color-secondary;
+}
+
+.divider {
+  :global(.ant-divider-inner-text) {
+    color: $text-color-secondary;
+    font-size: $font-size-sm;
+    padding: 0 $font-size-sm;
+  }
+}
