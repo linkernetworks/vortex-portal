@@ -1,6 +1,9 @@
-export enum UserType {
-  Admin = 'ADMIN',
-  Normal = 'NORMAL'
+import { Omit } from '@/utils/types';
+
+export enum UserRole {
+  root = 'root',
+  user = 'user',
+  guest = 'guest'
 }
 
 export interface LoginCredential {
@@ -8,16 +11,20 @@ export interface LoginCredential {
   password: string;
 }
 
-export interface User {
-  loginCredential?: LoginCredential;
-  role?: string;
+export interface UserBrief {
+  loginCredential: LoginCredential;
+  role: UserRole;
   displayName: string;
-  firstName?: string;
-  lastName?: string;
-  phoneNumber?: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
 }
 
-export interface UserResponse extends User {
+export type UserFields = Omit<UserBrief, 'loginCredential'> & LoginCredential;
+
+export type FlattenUser = Omit<User, 'loginCredential'> & LoginCredential;
+
+export interface User extends UserBrief {
   id: string;
   createdAt: Date;
 }

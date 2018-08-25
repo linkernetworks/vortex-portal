@@ -1,9 +1,8 @@
 export default {
-  'user.signin': 'Sign in',
-  'user.signup': 'Sign up',
-  'user.account': 'Account',
+  'user.displayName': 'Display Name',
+  'user.firstName': 'First Name',
+  'user.lastName': 'Last Name',
   'user.username': 'Username',
-  'user.password': 'Password',
-  'user.dont_have_hint': 'don\'t have a account?',
-  'user.forget': 'Forget your Password?'
+  'user.role': 'Role',
+  'user.phoneNumber': 'Phone Number',
 };
