@@ -53,23 +53,19 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
         detail: {
           containerName: '',
           createAt: 0,
+          status: '',
+          restartCount: '',
           pod: '',
           namespace: '',
           node: '',
           image: '',
           command: []
         },
-        status: {
-          status: '',
-          waitingReason: '',
-          terminatedReason: '',
-          restartTime: ''
-        },
         resource: {
           cpuUsagePercentage: [],
           memoryUsageBytes: []
         }
-      } as ContainerModel.Container,
+      },
       searchType: 'deployment',
       searchText: ''
     };
