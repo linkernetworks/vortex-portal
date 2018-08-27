@@ -87,25 +87,14 @@ export const fetchPodsFromMongo = (): RTAction<Promise<ClusterActionType>> => {
   };
 };
 
-export const fetchContainers = (): RTAction<Promise<ClusterActionType>> => {
-  return async dispatch => {
-    dispatch(clusterActions.fetchContainers.request);
-    try {
-      const res = await containerAPI.getContainers();
-      return dispatch(clusterActions.fetchContainers.success(res.data));
-    } catch (e) {
-      return dispatch(clusterActions.fetchContainers.failure(e));
-    }
-  };
-};
-
 export const fetchContainer = (
+  pod: string,
   container: string
 ): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
     dispatch(clusterActions.fetchContainer.request);
     try {
-      const res = await containerAPI.getContainer(container);
+      const res = await containerAPI.getContainer(pod, container);
       return dispatch(clusterActions.fetchContainer.success(res.data));
     } catch (e) {
       return dispatch(clusterActions.fetchContainer.failure(e));

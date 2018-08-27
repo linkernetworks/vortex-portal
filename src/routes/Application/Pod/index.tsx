@@ -160,7 +160,7 @@ class Pod extends React.Component<PodProps, PodState> {
   protected showMorePod = (pod: string) => {
     const containers: Array<ContainerModel.Container> = [];
     this.props.pods[pod].containers.map(container => {
-      containerAPI.getContainer(container).then(res => {
+      containerAPI.getContainer(pod, container).then(res => {
         containers.push(res.data);
         this.setState({ containers });
       });
