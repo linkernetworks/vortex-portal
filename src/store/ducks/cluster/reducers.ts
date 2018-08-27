@@ -4,7 +4,6 @@ import * as Node from '@/models/Node';
 import * as Pod from '@/models/Pod';
 import * as Service from '@/models/Service';
 import * as Namespace from '@/models/Namespace';
-import { omit } from 'lodash';
 
 export interface ClusterStateType {
   nodes: Node.Nodes;
@@ -115,17 +114,12 @@ export function clusterReducer(
         isLoading: false
       };
     case getType(Cluster.removePod.success):
-      const targetPod = state.podsFromMongo.filter(
-        record => record.id === action.payload.id
-      );
       return {
         ...state,
         isLoading: false,
         podsFromMongo: state.podsFromMongo.filter(
           record => record.id !== action.payload.id
-        ),
-        pods: omit(state.pods, targetPod[0].name),
-        allPods: state.allPods.filter(record => record !== targetPod[0].name)
+        )
       };
     case getType(Cluster.fetchServices.success):
       return {

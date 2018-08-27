@@ -15,6 +15,7 @@ import {
   Input,
   Select,
   Table,
+  notification,
   Popconfirm
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
@@ -57,6 +58,7 @@ interface PodState {
   namespaces: Array<NamespaceModel.Namespace>;
   searchType: string;
   searchText: string;
+  deletable: boolean;
 }
 
 interface PodProps {
@@ -111,7 +113,8 @@ class Pod extends React.Component<PodProps, PodState> {
       networks: [],
       namespaces: [],
       searchType: 'pod',
-      searchText: ''
+      searchText: '',
+      deletable: true
     };
   }
 
@@ -145,6 +148,15 @@ class Pod extends React.Component<PodProps, PodState> {
 
   protected handleSearch = (e: any) => {
     this.setState({ searchText: e.target.value });
+  };
+
+  protected handleRemovePod = (id: string) => {
+    this.setState({ deletable: false });
+    this.props.removePod(id);
+    return notification.success({
+      message: 'Success',
+      description: 'Delete the pod successfully.'
+    });
   };
 
   protected showMorePod = (pod: string) => {
@@ -450,12 +462,12 @@ class Pod extends React.Component<PodProps, PodState> {
   };
 
   protected renderAction = (podMetaData: PodModel.PodFromMongo) => {
-    if (podMetaData !== undefined) {
+    if (podMetaData !== undefined && this.state.deletable === true) {
       return (
         <Popconfirm
           key="action.delete"
           title={<FormattedMessage id="action.confirmToDelete" />}
-          onConfirm={this.props.removePod.bind(this, podMetaData.id)}
+          onConfirm={this.handleRemovePod.bind(this, podMetaData.id)}
         >
           <Button>
             <Icon type="delete" /> <FormattedMessage id="pod.delete" />
