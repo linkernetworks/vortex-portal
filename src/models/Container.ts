@@ -1,6 +1,5 @@
 export interface Container {
   detail: Detail;
-  status: Status;
   resource: Resource;
 }
 
@@ -11,18 +10,13 @@ export interface Containers {
 export interface Detail {
   containerName: string;
   createAt: number;
+  status: string;
+  restartCount: string;
   pod: string;
   namespace: string;
   node: string;
   image: string;
   command: Array<string>;
-}
-
-export interface Status {
-  status: string;
-  waitingReason: string;
-  terminatedReason: string;
-  restartTime: string;
 }
 
 export interface Resource {

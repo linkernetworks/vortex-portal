@@ -145,25 +145,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
           <Col span={6}>
             {this.renderListItemContent(
               <FormattedMessage id={`container.status.status`} />,
-              this.props.containers[container].status.status
-            )}
-          </Col>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage id={`container.status.waitingReason`} />,
-              this.props.containers[container].status.waitingReason
-            )}
-          </Col>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage id={`container.status.terminatedReason`} />,
-              this.props.containers[container].status.terminatedReason
-            )}
-          </Col>
-          <Col span={6}>
-            {this.renderListItemContent(
-              <FormattedMessage id={`container.status.restartTime`} />,
-              this.props.containers[container].status.restartTime
+              this.props.containers[container].detail.status
             )}
           </Col>
         </Row>
@@ -176,7 +158,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
       <div>
         {this.renderListItemContent(
           <FormattedMessage id={`container.status.status`} />,
-          this.props.containers[container].status.status
+          this.props.containers[container].detail.status
         )}
         {this.renderListItemContent(
           <FormattedMessage id={`container.detail.namespace`} />,

@@ -36,6 +36,20 @@ $tag-gutter: 8px;
   margin-bottom: $tag-gutter;
 }
 
+.readyIcon{
+  color: green;
+  padding-left: $padding-xs;
+}
+
+.errorIcon{
+  color: red;
+  padding-left: $padding-xs;
+}
+
+.pendingIcon{
+  padding-left: $padding-xs;
+}
+
 .table {
   background-color: #fafafa;
   padding-left: $padding-md;

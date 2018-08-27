@@ -87,17 +87,13 @@ class Pod extends React.Component<PodProps, PodState> {
         detail: {
           containerName: '',
           createAt: 0,
+          status: '',
+          restartCount: '',
           pod: '',
           namespace: '',
           node: '',
           image: '',
           command: []
-        },
-        status: {
-          status: '',
-          waitingReason: '',
-          terminatedReason: '',
-          restartTime: ''
         },
         resource: {
           cpuUsagePercentage: [],
@@ -202,7 +198,7 @@ class Pod extends React.Component<PodProps, PodState> {
       },
       {
         title: 'Status',
-        dataIndex: 'status.status',
+        dataIndex: 'detail.status',
         key: 'status'
       },
       {
@@ -235,74 +231,38 @@ class Pod extends React.Component<PodProps, PodState> {
 
   protected renderContainerDetail = (container: ContainerModel.Detail) => {
     return (
-      <Row>
-        <Col span={6}>
-          {this.renderListItemContent(
-            <FormattedMessage id={`container.detail.namespace`} />,
-            container.namespace
-          )}
-        </Col>
-        <Col span={6}>
-          {this.renderListItemContent(
-            <FormattedMessage id={`container.detail.image`} />,
-            container.image
-          )}
-        </Col>
-        <Col span={6}>
-          {this.renderListItemContent(
-            <FormattedMessage id={`container.detail.node`} />,
-            container.node
-          )}
-        </Col>
-        <Col span={6}>
-          {this.renderListItemContent(
-            <FormattedMessage id={`container.detail.createAt`} />,
-            moment(container.createAt * 1000).calendar()
-          )}
-        </Col>
-      </Row>
-    );
-  };
-
-  protected renderCommands = (command: Array<string>) => {
-    return (
-      <div className={styles.commands}>
-        {command != null &&
-          command.map(c => (
-            <Tag className={styles.command} key={c}>
-              {c}
-            </Tag>
-          ))}
-      </div>
-    );
-  };
-
-  protected renderStatus = (container: ContainerModel.Status) => {
-    return (
       <div>
         <Row>
           <Col span={6}>
             {this.renderListItemContent(
-              <FormattedMessage id={`container.status.status`} />,
+              <FormattedMessage id={`container.detail.status`} />,
               container.status
             )}
           </Col>
           <Col span={6}>
             {this.renderListItemContent(
-              <FormattedMessage id={`container.status.waitingReason`} />,
-              container.waitingReason
+              <FormattedMessage id={`container.detail.namespace`} />,
+              container.namespace
             )}
           </Col>
           <Col span={6}>
             {this.renderListItemContent(
-              <FormattedMessage id={`container.status.terminatedReason`} />,
-              container.terminatedReason
+              <FormattedMessage id={`container.detail.image`} />,
+              container.image
             )}
           </Col>
           <Col span={6}>
             {this.renderListItemContent(
-              <FormattedMessage id={`container.status.restartTime`} />,
-              container.restartTime
+              <FormattedMessage id={`container.detail.createAt`} />,
+              moment(container.createAt * 1000).calendar()
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col span={6}>
+            {this.renderListItemContent(
+              <FormattedMessage id={`container.detail.node`} />,
+              container.node
             )}
           </Col>
         </Row>
@@ -310,54 +270,30 @@ class Pod extends React.Component<PodProps, PodState> {
     );
   };
 
-  protected renderPodStatusIcon = (pod: PodModel.Pod) => {
-    switch (pod.status) {
-      case 'reading':
-        return (
-          <Icon
-            type="check-circle"
-            style={{ color: 'green', paddingLeft: '10px' }}
-          />
-        );
-      case 'running':
-        return <Icon type="clock-circle" style={{ paddingLeft: '10px' }} />;
-      case 'waiting':
-        return (
-          <Icon
-            type="close-circle"
-            style={{ color: 'red', paddingLeft: '10px' }}
-          />
-        );
-      case 'terminated':
-        return (
-          <Icon type="pause" style={{ color: 'green', paddingLeft: '10px' }} />
-        );
-      default:
-        return;
-    }
+  protected renderCommands = (command: Array<string>) => {
+    return (
+      <div className={styles.commands}>
+        {(command != null &&
+          command.map(c => (
+            <Tag color="green" className={styles.command} key={c}>
+              {c}
+            </Tag>
+          ))) ||
+          (command == null && 'null')}
+      </div>
+    );
   };
 
-  protected renderContainerStatusIcon = (containerStatus: string) => {
-    switch (containerStatus) {
+  protected renderStatusIcon = (status: string) => {
+    switch (status) {
       case 'running':
       case 'ready':
-        return (
-          <Icon
-            type="check-circle"
-            style={{ color: 'green', paddingLeft: '10px' }}
-          />
-        );
-      case 'waiting':
-        return <Icon type="clock-circle" style={{ paddingLeft: '10px' }} />;
-      case 'terminated':
-        return (
-          <Icon
-            type="close-circle"
-            style={{ color: 'red', paddingLeft: '10px' }}
-          />
-        );
+      case 'Completed':
+        return <Icon type="check-circle" className={styles.readyIcon} />;
+      case 'ContainerCreating':
+        return <Icon type="clock-circle" className={styles.pendIcon} />;
       default:
-        return;
+        return <Icon type="close-circle" className={styles.errorIcon} />;
     }
   };
 
@@ -660,7 +596,7 @@ class Pod extends React.Component<PodProps, PodState> {
               <h2 style={{ display: 'inline' }}>
                 {this.props.pods[currentPod].podName}
               </h2>
-              {this.renderPodStatusIcon(this.props.pods[currentPod])}
+              {this.renderStatusIcon(this.props.pods[currentPod].status)}
             </div>
 
             <div className={styles.contentSection}>
@@ -695,7 +631,7 @@ class Pod extends React.Component<PodProps, PodState> {
                 <h2 style={{ display: 'inline' }}>
                   {currentContainer.detail.containerName}
                 </h2>
-                {this.renderContainerStatusIcon(currentContainer.status.status)}
+                {this.renderStatusIcon(currentContainer.detail.status)}
               </div>
 
               <div className={styles.contentSection}>
@@ -706,14 +642,9 @@ class Pod extends React.Component<PodProps, PodState> {
               <div className={styles.contentSection}>
                 <h3>Commands</h3>
                 {this.renderListItemContent(
-                  <FormattedMessage id={`container.detail.command`} />,
+                  null,
                   this.renderCommands(currentContainer.detail.command)
                 )}
-              </div>
-
-              <div className={styles.contentSection}>
-                <h3>Status</h3>
-                {this.renderStatus(currentContainer.status)}
               </div>
 
               <div className={styles.contentSection}>
