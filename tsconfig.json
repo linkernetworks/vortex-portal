@@ -14,7 +14,7 @@
     "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
-    "rootDir": "src",
+    "rootDir": "./src",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -22,6 +22,7 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true
   },
+  "include": ["src"],
   "exclude": [
     "node_modules",
     "build",

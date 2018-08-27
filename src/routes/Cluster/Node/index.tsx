@@ -4,6 +4,7 @@ import { Row, Col, Tag, Drawer, Tabs, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
+import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { Dispatch } from 'redux';
 import * as NodeModel from '@/models/Node';
@@ -29,7 +30,9 @@ interface NodeState {
   currentNode: string;
 }
 
-interface NodeProps {
+type NodeProps = OwnProps & InjectedAuthRouterProps;
+
+interface OwnProps {
   nodes: NodeModel.Nodes;
   allNodes: Array<string>;
   nodesNics: NodeModel.NodesNics;

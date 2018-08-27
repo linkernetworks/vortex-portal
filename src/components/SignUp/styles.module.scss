@@ -1,0 +1,15 @@
+@import "../../styles/variables";
+
+.header {
+  padding-bottom: $padding-md;
+  h2 {
+    margin: 0;
+  }
+}
+
+.actions {
+  margin-top: $padding-lg;
+  .action {
+    width: 100%;
+  }
+}

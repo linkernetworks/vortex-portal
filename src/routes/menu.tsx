@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { UserType } from '@/models/User';
+import { UserRole } from '@/models/User';
 
 export interface MenuItem {
   name: string;
   path: string;
   icon?: React.ReactChild;
   children?: Array<MenuItem>;
-  authority?: UserType;
+  authority?: UserRole;
 }
 
 export const menuData: Array<MenuItem> = [
@@ -65,14 +65,14 @@ export const menuData: Array<MenuItem> = [
     name: 'users',
     icon: 'team',
     path: 'users',
-    authority: UserType.Admin
+    authority: UserRole.root
   }
 ];
 
 function formatter(
   data: Array<MenuItem>,
   parentPath = '/',
-  parentAuthority?: UserType
+  parentAuthority?: UserRole
 ) {
   return data.map(item => {
     const result = {

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Card } from 'antd';
 import { FormattedMessage } from 'react-intl';
+import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
@@ -21,7 +22,9 @@ interface CreateDeploymentState {
   tabKey: string;
 }
 
-interface CreateDeploymentProps {
+type CreateDeploymentProps = OwnProps & InjectedAuthRouterProps;
+
+interface OwnProps {
   deployments: DeploymentModel.Controllers;
   allDeployments: Array<string>;
   containers: ContainerModel.Containers;

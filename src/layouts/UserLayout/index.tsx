@@ -7,7 +7,7 @@ import * as styles from './styles.module.scss';
 const particlesParams = {
   particles: {
     number: {
-      value: 32,
+      value: 28,
       density: {
         enable: true,
         value_area: 1480
@@ -46,11 +46,7 @@ const particlesParams = {
   retina_detect: true
 };
 
-class UserLayout extends React.Component<object, object> {
-  public shouldComponentUpdate() {
-    return false;
-  }
-
+class UserLayout extends React.PureComponent<object, object> {
   public render() {
     return (
       <div className={styles.container}>

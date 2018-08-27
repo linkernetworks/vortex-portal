@@ -5,6 +5,7 @@ import * as styles from './styles.module.scss';
 import { Card, List, Button, Icon, Tree, Tag, Popconfirm } from 'antd';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
+import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { Dispatch } from 'redux';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
@@ -19,7 +20,8 @@ interface ServiceState {
   visibleModal: boolean;
 }
 
-interface ServiceProps {
+type ServiceProps = OwnProps & InjectedAuthRouterProps;
+interface OwnProps {
   services: Array<ServiceModel.Service>;
   fetchServices: () => any;
   addService: (data: ServiceModel.Service) => any;

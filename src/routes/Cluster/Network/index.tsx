@@ -4,6 +4,7 @@ import { Card, Button, Tag, Icon, Tree, List, Popconfirm } from 'antd';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import * as styles from './styles.module.scss';
 import { RootState, RTDispatch } from '@/store/ducks';
@@ -24,7 +25,9 @@ interface NetworkState {
   isCreating: boolean;
 }
 
-interface NetworkProps {
+type NetworkProps = OwnProps & InjectedAuthRouterProps;
+
+interface OwnProps {
   nodes: Nodes;
   nodesWithUsedInterfaces: {
     [node: string]: Array<string>;

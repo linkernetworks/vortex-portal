@@ -5,13 +5,15 @@ import { Layout } from 'antd';
 import { Location } from 'history';
 
 import { intlActions, intlModels } from '@/store/ducks/intl';
+import { userActions } from '@/store/ducks/user';
 import { RootState, RootAction } from '@/store/ducks';
 import SiderMenu from '@/components/SiderMenu';
 import NavHeader from '@/components/NavHeader';
 import BaseFooter from '@/components/BaseFooter';
-import { UserType } from '@/models/User';
 import { getMenuData } from '@/routes/menu';
 import * as metaAPI from '@/services/meta';
+import { User } from '@/models/User';
+import { removeToken } from '@/utils/auth';
 
 import * as styles from './styles.module.scss';
 import logo from '@/assets/logo.png';
@@ -22,7 +24,9 @@ interface MainLayoutProps {
   locale: string;
   localeOptions: Array<intlModels.IntlOption>;
   location: Location;
+  user: User | null;
   changeLanguage: (locale: string) => any;
+  logout: () => any;
 }
 
 interface MainLayoutState {
@@ -37,6 +41,7 @@ class MainLayout extends React.PureComponent<MainLayoutProps, MainLayoutState> {
     };
   }
 
+  // TODO: Would be issue when auth redirect
   public componentDidMount() {
     metaAPI.getVersion().then(res => {
       this.setState({
@@ -45,17 +50,22 @@ class MainLayout extends React.PureComponent<MainLayoutProps, MainLayoutState> {
     });
   }
 
-  protected handleMenuClick = () => {
-    return;
+  protected handleMenuClick = ({ key }: { key: string }) => {
+    if (key === 'logout') {
+      this.props.logout();
+      removeToken();
+    }
   };
 
   public render() {
     const { handleMenuClick } = this;
-    const { locale, localeOptions, location, changeLanguage } = this.props;
-    const currentUser = {
-      name: 'Lucien',
-      type: UserType.Admin
-    };
+    const {
+      locale,
+      localeOptions,
+      location,
+      user,
+      changeLanguage
+    } = this.props;
 
     return (
       <div className="App">
@@ -71,9 +81,9 @@ class MainLayout extends React.PureComponent<MainLayoutProps, MainLayoutState> {
               <NavHeader
                 onMenuClick={handleMenuClick}
                 onLangsClick={changeLanguage}
-                currentUser={currentUser}
                 locale={locale}
                 localeOptions={localeOptions}
+                currentUser={user}
               />
             </Header>
             <Content className={styles.content}>{this.props.children}</Content>
@@ -96,13 +106,15 @@ const mapStateToProps = (state: RootState) => {
   return {
     locale: state.intl.locale,
     localeOptions: state.intl.options,
-    location: state.router.location as Location
+    location: state.router.location as Location,
+    user: state.user.auth.user
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
   changeLanguage: (newLocale: string) =>
-    dispatch(intlActions.updateLocale({ locale: newLocale }))
+    dispatch(intlActions.updateLocale({ locale: newLocale })),
+  logout: () => dispatch(userActions.logout())
 });
 
 export default connect(

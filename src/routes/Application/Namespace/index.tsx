@@ -5,6 +5,7 @@ import * as styles from './styles.module.scss';
 import { Card, List, Button, Icon, Popconfirm } from 'antd';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
+import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { Dispatch } from 'redux';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
@@ -18,7 +19,9 @@ interface NamespaceState {
   visibleModal: boolean;
 }
 
-interface NamespaceProps {
+type NamespaceProps = OwnProps & InjectedAuthRouterProps;
+
+interface OwnProps {
   namespaces: Array<NamespaceModel.Namespace>;
   fetchNamespaces: () => any;
   addNamespace: (data: NamespaceModel.Namespace) => any;

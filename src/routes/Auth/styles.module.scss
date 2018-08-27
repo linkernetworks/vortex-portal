@@ -97,7 +97,7 @@ $width: 320px;
   box-shadow: rgba(0, 0, 0, 0.1) 0 8px 40px 6px;
 
   :global(.ant-form-item:last-of-type) {
-    margin: 0;
+    margin-bottom: 0;
   }
 
   @include mq($from: desktop) {
@@ -107,18 +107,3 @@ $width: 320px;
   }
 }
 
-.login-button {
-  width: 100%;
-}
-
-.icon {
-  color: $text-color-secondary;
-}
-
-.divider {
-  :global(.ant-divider-inner-text) {
-    color: $text-color-secondary;
-    font-size: $font-size-sm;
-    padding: 0 $font-size-sm;
-  }
-}
