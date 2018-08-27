@@ -17,7 +17,7 @@ export async function findSavedAuthToken(): Promise<{
   token: string;
   user: User;
 }> {
-  const token = localStorage.getItem(JWTTOKEN);
+  const token = loadToken();
 
   if (token) {
     try {
@@ -32,6 +32,10 @@ export async function findSavedAuthToken(): Promise<{
   }
 
   return Promise.reject();
+}
+
+export function loadToken() {
+  return localStorage.getItem(JWTTOKEN);
 }
 
 export function saveToken(token: string) {

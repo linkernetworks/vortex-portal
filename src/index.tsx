@@ -17,6 +17,7 @@ import registerServiceWorker from '@/registerServiceWorker';
 import LocaleContainer from '@/containers/LocaleContainer';
 import { userActions } from '@/store/ducks/user';
 import { findSavedAuthToken } from '@/utils/auth';
+import '@/services/request'; // set token header
 
 const store = configureStore();
 library.add(faServer, faPlug, faDatabase);
