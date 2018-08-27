@@ -22,6 +22,7 @@ import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { filter, includes } from 'lodash';
 import { FormattedMessage } from 'react-intl';
+import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
@@ -61,7 +62,8 @@ interface PodState {
   deletable: boolean;
 }
 
-interface PodProps {
+type PodProps = OwnProps & InjectedAuthRouterProps;
+interface OwnProps {
   pods: PodModel.Pods;
   allPods: Array<string>;
   fetchPods: () => any;

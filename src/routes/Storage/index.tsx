@@ -6,6 +6,7 @@ import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { mapValues } from 'lodash';
 import { Dispatch } from 'redux';
+import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import * as styles from './styles.module.scss';
 import StorageForm from '@/components/StorageForm';
@@ -22,7 +23,9 @@ import {
 } from '@/models/Storage';
 import { FormField } from '@/utils/types';
 
-interface StorageProps {
+type StorageProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
+
+interface OwnProps {
   storages: {
     data: Array<StorageModel>;
     isLoading: boolean;
@@ -62,10 +65,7 @@ const tabList = [
   }
 ];
 
-class Storage extends React.PureComponent<
-  StorageProps & InjectedIntlProps,
-  StorageState
-> {
+class Storage extends React.PureComponent<StorageProps, StorageState> {
   private actionColumn: ColumnProps<StorageModel | VolumeModel> = {
     title: this.props.intl.formatMessage({ id: 'action' }),
     render: (_, record) => {
@@ -176,7 +176,7 @@ class Storage extends React.PureComponent<
     };
   };
 
-  constructor(props: StorageProps & InjectedIntlProps) {
+  constructor(props: StorageProps) {
     super(props);
     this.state = {
       isCreatingStorage: false,

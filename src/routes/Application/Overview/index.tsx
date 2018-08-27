@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
-class Overview extends React.Component {
+class Overview extends React.Component<object & InjectedAuthRouterProps> {
   public render() {
     return (
       <div>

@@ -23,6 +23,7 @@ class SignIn extends React.PureComponent<
   };
 
   public render() {
+    const { getFieldDecorator } = this.props.form;
     return (
       <React.Fragment>
         <Form>
@@ -35,34 +36,32 @@ class SignIn extends React.PureComponent<
             </p>
           </div>
           <FormItem>
-            <FormattedMessage id="auth.username">
-              {(message: string) => (
-                <Input
-                  prefix={<Icon className={styles.icon} type="user" />}
-                  size="large"
-                  placeholder={message}
-                />
-              )}
-            </FormattedMessage>
+            {getFieldDecorator('username', {})(
+              <Input
+                prefix={<Icon className={styles.icon} type="mail" />}
+                placeholder={this.props.intl.formatMessage({
+                  id: 'auth.username'
+                })}
+              />
+            )}
           </FormItem>
           <FormItem>
-            <FormattedMessage id="auth.password">
-              {(message: string) => (
-                <Input
-                  prefix={<Icon className={styles.icon} type="lock" />}
-                  type="password"
-                  size="large"
-                  placeholder={message}
-                />
-              )}
-            </FormattedMessage>
+            {getFieldDecorator('password', {})(
+              <Input
+                type="password"
+                prefix={<Icon className={styles.icon} type="lock" />}
+                placeholder={this.props.intl.formatMessage({
+                  id: 'auth.password'
+                })}
+              />
+            )}
           </FormItem>
           <FormItem>
             <Button
               type="primary"
-              htmlType="submit"
               size="large"
               className={styles['login-button']}
+              onClick={this.handleSubmit}
             >
               <FormattedMessage id="auth.signin" />
             </Button>

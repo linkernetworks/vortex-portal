@@ -22,4 +22,5 @@ export default {
   'auth.hint.signup.success': 'Success to Signup',
   'auth.hint.signup.success.description': 'Please sign in with your email and password',
   'auth.hint.signup.failure': 'Failed to Signup',
+  'auth.hint.signin.failure': 'Failed to Signin',
 };

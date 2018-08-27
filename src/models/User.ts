@@ -1,5 +1,7 @@
 import { Omit } from '@/utils/types';
 
+export const JWTTOKEN = 'JWTTOKEN';
+
 export enum UserRole {
   root = 'root',
   user = 'user',

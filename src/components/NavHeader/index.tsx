@@ -8,10 +8,10 @@ import { intlModels } from '@/store/ducks/intl';
 import { User } from '@/models/User';
 
 export interface NavHeaderProps {
-  // currentUser: User;
+  currentUser: User | null;
   locale: string;
   localeOptions: Array<intlModels.IntlOption>;
-  onMenuClick: () => void;
+  onMenuClick: ({ key }: { key: string }) => void;
   onLangsClick: (locale: string) => void;
 }
 
@@ -21,19 +21,20 @@ class NavHeader extends React.Component<NavHeaderProps> {
   };
 
   public render() {
-    const { onMenuClick, locale, localeOptions } = this.props;
+    const { onMenuClick, locale, localeOptions, currentUser } = this.props;
     const { handleLangsClick } = this;
 
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
         <Menu.Item disabled={true}>
-          <Icon type="user" />
-          <FormattedMessage id="nav.profile" />
+          <Icon type="info-circle-o" />
+          <span>{currentUser && currentUser.role}</span>
+          {/* <FormattedMessage id="nav.profile" /> */}
         </Menu.Item>
-        <Menu.Item disabled={true}>
+        {/* <Menu.Item disabled={true}>
           <Icon type="setting" />
           <FormattedMessage id="nav.setting" />
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Divider />
         <Menu.Item key="logout">
           <Icon type="logout" />
@@ -68,7 +69,9 @@ class NavHeader extends React.Component<NavHeaderProps> {
           <Dropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>
               <Avatar size="small" className={styles.avatar} icon="user" />
-              {/* <span className={styles.name}>{currentUser.displayName}</span> */}
+              <span className={styles.name}>
+                {currentUser && currentUser.displayName}
+              </span>
             </span>
           </Dropdown>
         </div>

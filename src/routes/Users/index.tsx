@@ -5,12 +5,15 @@ import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { Dispatch } from 'redux';
+import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { FlattenUser } from '@/models/User';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { userOperations, userSelectors } from '@/store/ducks/user';
 
-interface UsersProps extends ColumnProps<FlattenUser> {
+type UsersProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
+
+interface OwnProps extends ColumnProps<FlattenUser> {
   users: {
     data: Array<FlattenUser>;
     isLoading: boolean;
@@ -20,10 +23,7 @@ interface UsersProps extends ColumnProps<FlattenUser> {
   removeUser: (id: string) => any;
 }
 
-class Users extends React.PureComponent<
-  UsersProps & InjectedIntlProps,
-  object
-> {
+class Users extends React.PureComponent<UsersProps, object> {
   private columns: Array<ColumnProps<FlattenUser>> = [
     {
       title: this.props.intl.formatMessage({ id: 'user.username' }),

@@ -6,36 +6,54 @@ import { Divider, Row, Col, notification } from 'antd';
 import { omit } from 'lodash';
 import { Location } from 'history';
 import { Dispatch } from 'redux';
-import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
+import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import * as styles from './styles.module.scss';
 import logo from '@/assets/logo.png';
 
-import { RootState, RootAction } from '@/store/ducks';
+import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { intlActions, intlModels } from '@/store/ducks/intl';
+import { userOperations, userActions, userModels } from '@/store/ducks/user';
 import SignUp from '@/components/SignUp';
 import SignIn from '@/components/SignIn';
 import * as userAPI from '@/services/user';
 import { FlattenUser, LoginCredential } from '@/models/User';
 
-interface AuthPageProps {
+type AuthPageProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
+
+interface OwnProps {
   locale: string;
   localeOptions: Array<intlModels.IntlOption>;
   location: Location;
+  auth: userModels.Auth;
+  error: Error;
   changeLanguage: (locale: string) => any;
+  clearUserError: () => any;
+  login: (data: LoginCredential) => any;
   push: (path: string) => any;
 }
 
-// interface LoginPageState {
-
-// }
-
-class AuthPage extends React.PureComponent<
-  AuthPageProps & InjectedIntlProps,
-  object
-> {
-  constructor(props: AuthPageProps & InjectedIntlProps) {
+class AuthPage extends React.PureComponent<AuthPageProps, object> {
+  constructor(props: AuthPageProps) {
     super(props);
+  }
+
+  public componentDidUpdate(prevProps: AuthPageProps) {
+    const { formatMessage } = this.props.intl;
+
+    if (!prevProps.error && this.props.error) {
+      notification.error({
+        message: formatMessage({
+          id: 'auth.hint.signin.failure'
+        }),
+        description: this.props.error.message,
+        duration: 3,
+        onClose: () => {
+          this.props.clearUserError();
+        }
+      });
+    }
   }
 
   protected handleLangsClick = (locale: string) => {
@@ -79,9 +97,7 @@ class AuthPage extends React.PureComponent<
   };
 
   protected handleSignInSubmit = (fields: LoginCredential) => {
-    const { formatMessage } = this.props.intl;
-
-    userAPI.signin(fields);
+    this.props.login(fields);
   };
 
   protected renderLangMenu = () => {
@@ -123,11 +139,7 @@ class AuthPage extends React.PureComponent<
           <Col xs={24} md={12}>
             <div className={styles.form}>
               {location.pathname === '/signin' ? (
-                <SignIn
-                  onSubmit={() => {
-                    return;
-                  }}
-                />
+                <SignIn onSubmit={this.handleSignInSubmit} />
               ) : (
                 <SignUp onSubmit={this.handleSignUpSubmit} />
               )}
@@ -143,17 +155,21 @@ const mapStateToProps = (state: RootState) => {
   return {
     locale: state.intl.locale,
     localeOptions: state.intl.options,
-    location: state.router.location as Location
+    location: state.router.location as Location,
+    auth: state.user.auth,
+    error: state.user.error
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
+const mapDispatchToProps = (dispatch: Dispatch<RootAction> & RTDispatch) => ({
   changeLanguage: (newLocale: string) =>
     dispatch(intlActions.updateLocale({ locale: newLocale })),
+  clearUserError: () => dispatch(userActions.clearUserError()),
+  login: (data: LoginCredential) => dispatch(userOperations.login(data)),
   push: (path: string) => dispatch(push(path))
 });
 
-export default connect(
+export default connect<any>(
   mapStateToProps,
   mapDispatchToProps
 )(injectIntl(AuthPage));

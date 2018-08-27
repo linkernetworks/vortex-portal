@@ -1,6 +1,9 @@
+import * as jwtDecode from 'jwt-decode';
 import { RTAction } from '../index';
 import { userActions, UserActionType } from './index';
 import * as userAPI from '@/services/user';
+import { LoginCredential } from '@/models/User';
+import { saveToken } from '@/utils/auth';
 
 export const fetchUsers = (): RTAction<Promise<UserActionType>> => {
   return async dispatch => {
@@ -26,6 +29,29 @@ export const removeUser = (id: string): RTAction<Promise<UserActionType>> => {
       }
     } catch (e) {
       return dispatch(userActions.removeUser.failure(e.response.data));
+    }
+  };
+};
+
+export const login = (
+  data: LoginCredential
+): RTAction<Promise<UserActionType>> => {
+  return async dispatch => {
+    dispatch(userActions.login.request());
+    try {
+      const res = await userAPI.signin(data);
+      const token = res.data.message;
+      const decode: any = jwtDecode(token);
+      const user = await userAPI.getUser(decode.sub, token);
+      saveToken(token);
+      return dispatch(
+        userActions.login.success({
+          user: user.data,
+          token: res.data.message
+        })
+      );
+    } catch (e) {
+      return dispatch(userActions.login.failure(e.response.data));
     }
   };
 };

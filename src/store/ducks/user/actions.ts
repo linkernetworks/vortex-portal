@@ -13,4 +13,19 @@ export const removeUser = createAsyncAction(
   'REMOVE_USER_FAILURE'
 )<void, { id: string }, Error>();
 
+export const login = createAsyncAction(
+  'LOGIN_REQUEST',
+  'LOGIN_SUCCESS',
+  'LOGIN_FAILURE'
+)<
+  void,
+  {
+    user: User.User;
+    token: string;
+  },
+  Error
+>();
+
+export const logout = createStandardAction('LOGOUT')<void>();
+
 export const clearUserError = createStandardAction('CLEAR_USER_ERROR')<void>();

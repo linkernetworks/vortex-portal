@@ -7,6 +7,7 @@ import { Button, Icon, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
+import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
@@ -23,7 +24,8 @@ interface DeploymentState {
   searchText: string;
 }
 
-interface DeploymentProps {
+type DeploymentProps = OwnProps & InjectedAuthRouterProps;
+interface OwnProps {
   deployments: DeploymentModel.Controllers;
   allDeployments: Array<string>;
   fetchDeployments: () => any;
