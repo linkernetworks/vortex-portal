@@ -12,5 +12,6 @@ export default {
   'deployment.age': 'Age',
   'deployment.add': 'Create Deployment',
   'deployment.addWithNetwork': 'Create Deployment with Network',
-  'deployment.replicas': 'Number of pods'
+  'deployment.replicas': 'Number of pods',
+  'deployment.volumes': 'Volumes'
 };

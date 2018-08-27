@@ -10,6 +10,8 @@ import { FormattedMessage } from 'react-intl';
 
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
+import { volumeOperations } from '@/store/ducks/volume';
+import { Volume as VolumeModel, VolumeFields } from '@/models/Storage';
 
 import * as styles from './styles.module.scss';
 
@@ -26,10 +28,12 @@ interface CreateDeploymentProps {
   allContainers: Array<string>;
   networks: Array<networkModels.Network>;
   namespaces: Array<NamespaceModel.Namespace>;
+  volumes: Array<VolumeModel>;
   fetchDeployments: () => any;
   fetchContainers: () => any;
   fetchNetworks: () => any;
   fetchNamespaces: () => any;
+  fetchVolumes: () => any;
   addDeployment: (data: DeploymentModel.Deployment) => any;
   push: (route: string) => any;
 }
@@ -60,6 +64,7 @@ class CreateDeployment extends React.Component<
     this.props.fetchContainers();
     this.props.fetchNetworks();
     this.props.fetchNamespaces();
+    this.props.fetchVolumes();
   }
 
   protected handleSubmit = (deployment: DeploymentModel.Deployment) => {
@@ -82,6 +87,7 @@ class CreateDeployment extends React.Component<
             network={false}
             networks={this.props.networks}
             namespaces={this.props.namespaces}
+            volumes={this.props.volumes}
             onSubmit={this.handleSubmit}
           />
         );
@@ -96,6 +102,7 @@ class CreateDeployment extends React.Component<
             network={true}
             networks={this.props.networks}
             namespaces={this.props.namespaces}
+            volumes={this.props.volumes}
             onSubmit={this.handleSubmit}
           />
         );
@@ -129,7 +136,8 @@ const mapStateToProps = (state: RootState) => {
     containers: state.cluster.containers,
     allContainers: state.cluster.allContainers,
     networks: state.network.networks,
-    namespaces: state.cluster.namespaces
+    namespaces: state.cluster.namespaces,
+    volumes: state.volume.volumes
   };
 };
 
@@ -138,6 +146,7 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchContainers: () => dispatch(clusterOperations.fetchContainers()),
   fetchNetworks: () => dispatch(networkOperations.fetchNetworks()),
   fetchNamespaces: () => dispatch(clusterOperations.fetchNamespaces()),
+  fetchVolumes: () => dispatch(volumeOperations.fetchVolumes()),
   addDeployment: (data: DeploymentModel.Deployment) => {
     dispatch(clusterOperations.addDeployment(data));
   },

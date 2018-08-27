@@ -5,7 +5,7 @@ export interface Deployment {
   envVars: any;
   containers: Array<DeploymentContainer>;
   networks: Array<DeploymentNetwork>;
-  volumes: Array<string>;
+  volumes: Array<DeploymentVolume>;
   nodeAffinity: Array<string>;
   networkType: string;
   capability: boolean;
@@ -20,6 +20,11 @@ export interface DeploymentRouteGw {
 
 export interface DeploymentRouteIntf {
   dstCIDR: string;
+}
+
+export interface DeploymentVolume {
+  name: string;
+  mountPath: string;
 }
 
 export interface DeploymentContainer {

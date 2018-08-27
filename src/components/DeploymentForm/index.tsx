@@ -5,6 +5,7 @@ import * as ContainerModel from '@/models/Container';
 import * as NetworkModel from '@/models/Network';
 import * as NamespaceModel from '@/models/Namespace';
 import { findIndex } from 'lodash';
+import { Volume as VolumeModel, VolumeFields } from '@/models/Storage';
 import { FormattedMessage } from 'react-intl';
 import {
   Form,
@@ -41,6 +42,7 @@ interface DeploymentFormProps extends FormComponentProps {
   network: boolean;
   networks: Array<NetworkModel.Network>;
   namespaces: Array<NamespaceModel.Namespace>;
+  volumes: Array<VolumeModel>;
   onSubmit: (data: any) => void;
 }
 
@@ -49,6 +51,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
   private labelValue: React.RefObject<Input>;
   private envVarsKey: React.RefObject<Input>;
   private envVarsValue: React.RefObject<Input>;
+  private mountPath: React.RefObject<Input>;
 
   constructor(props: DeploymentFormProps) {
     super(props);
@@ -56,11 +59,14 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
     this.labelValue = React.createRef();
     this.envVarsKey = React.createRef();
     this.envVarsValue = React.createRef();
+    this.mountPath = React.createRef();
     const key = Math.random()
       .toString(36)
       .substring(7);
     this.state = {
       currentStep: 0,
+      volumes: [],
+      volumeName: '',
       labels: new Map(),
       envVars: new Map(),
       containerKey: key,
@@ -106,6 +112,10 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
   protected handleSubmit = () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        let volumes = [];
+        if (values.volumes) {
+          volumes = [...values.volumes];
+        }
         const labels = {};
         if (values.labels) {
           Array.from(values.labels.keys()).map((key: string) => {
@@ -177,11 +187,12 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
           networks,
           networkType,
           capability: values.capability,
-          volumes: [],
+          volumes,
           nodeAffinity: [],
           replicas
         };
-        this.props.onSubmit(deployment);
+        console.log(deployment);
+        // this.props.onSubmit(deployment);
       }
     });
   };
@@ -272,11 +283,49 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
     );
   };
 
+  protected handleVolumeNameChange = (volumeName: string) => {
+    this.setState({ volumeName });
+  };
+
   protected handleCommandChange = (index: number, value: any) => {
     const { containers } = this.state;
     const newContainers = [...containers];
     newContainers[index].command = value;
     this.setState({ containers: newContainers });
+  };
+
+  protected addVolume = () => {
+    if (
+      this.mountPath.current != null &&
+      this.state.volumeName !== '' &&
+      this.mountPath.current.input.value !== ''
+    ) {
+      const { volumes } = this.state;
+      const newVolumes = [...volumes];
+      newVolumes.push({
+        name: this.state.volumeName,
+        mountPath: this.mountPath.current.input.value
+      });
+      this.mountPath.current.input.value = '';
+      this.setState({ volumes: newVolumes });
+
+      const { setFieldsValue } = this.props.form;
+      setFieldsValue({
+        volumes: newVolumes
+      });
+    }
+  };
+
+  protected deleteVolume = (index: number) => {
+    const { volumes } = this.state;
+    const newVolumes = [...volumes];
+    newVolumes.splice(index, 1);
+    this.setState({ volumes: newVolumes });
+
+    const { setFieldsValue } = this.props.form;
+    setFieldsValue({
+      volumes: newVolumes
+    });
   };
 
   protected addLabel = () => {
@@ -516,6 +565,15 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
 
   public renderDeploymentForm() {
     const { getFieldDecorator } = this.props.form;
+    const filterVolumeOptions = this.props.volumes.filter(volume => {
+      const index = findIndex(
+        this.state.volumes,
+        (v: DeploymentModel.DeploymentVolume) => {
+          return v.name === volume.name;
+        }
+      );
+      return index === -1;
+    });
     return (
       <Form>
         <FormItem
@@ -546,6 +604,75 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
             })(<InputNumber min={0} placeholder="Replicas" />)}
           </FormItem>
         )}
+        <FormItem
+          {...formItemLayout}
+          label={<FormattedMessage id="deployment.volumes" />}
+        >
+          {getFieldDecorator('volumes', {
+            rules: [
+              {
+                required: false
+              }
+            ]
+          })(
+            <div>
+              {this.state.volumes.map((volume: any, index: number) => {
+                return (
+                  <Row key={volume.name}>
+                    <Col span={10}>
+                      <Input
+                        disabled={true}
+                        value={volume.name}
+                        placeholder="Volume Name"
+                      />
+                    </Col>
+                    <Col span={10}>
+                      <Input
+                        disabled={true}
+                        value={volume.mountPath}
+                        placeholder="Mount Path"
+                      />
+                    </Col>
+                    <Button
+                      style={{ marginLeft: 12 }}
+                      shape="circle"
+                      icon="close"
+                      onClick={() => this.deleteVolume(index)}
+                    />
+                  </Row>
+                );
+              })}
+              {filterVolumeOptions.length > 0 && (
+                <div>
+                  <Select
+                    style={{ width: 200 }}
+                    placeholder="Select a volume"
+                    onChange={this.handleVolumeNameChange}
+                  >
+                    {filterVolumeOptions.map(volume => {
+                      return (
+                        <Option key={volume.name} value={volume.name}>
+                          {volume.name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                  <Input
+                    ref={this.mountPath}
+                    style={{ width: 200 }}
+                    placeholder="Give a mount path"
+                    onBlur={this.addVolume}
+                  />
+                  <Button
+                    style={{ marginLeft: 12 }}
+                    shape="circle"
+                    icon="enter"
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </FormItem>
         <FormItem
           {...formItemLayout}
           label={<FormattedMessage id="deployment.labels" />}
