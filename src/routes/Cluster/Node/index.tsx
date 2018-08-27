@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Tag, Drawer, Tabs, Table } from 'antd';
+import { Row, Col, Tag, Drawer, Tabs, Table, Icon } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
@@ -100,6 +100,15 @@ class Node extends React.Component<NodeProps, NodeState> {
         <div className="content">{content}</div>
       </div>
     );
+  };
+
+  protected renderStatusIcon = (status: string) => {
+    switch (status) {
+      case 'Ready':
+        return <Icon type="check-circle" className={styles.readyIcon} />;
+      default:
+        return <Icon type="close-circle" className={styles.errorIcon} />;
+    }
   };
 
   protected renderDetail = (node: string) => {
@@ -433,33 +442,42 @@ class Node extends React.Component<NodeProps, NodeState> {
         />
         {this.props.nodes.hasOwnProperty(currentNode) && (
           <Drawer
-            title={this.props.nodes[currentNode].detail.hostname}
+            title="Node"
             width={720}
             placement="right"
             closable={false}
             onClose={this.hideMore}
             visible={this.state.visible}
           >
-            <div className={styles.nodeContentSection}>
-              <h2>Details</h2>
+            <div className={styles.contentSection}>
+              <h2 style={{ display: 'inline' }}>
+                {this.props.nodes[currentNode].detail.hostname}
+              </h2>
+              {this.renderStatusIcon(
+                this.props.nodes[currentNode].detail.status
+              )}
+            </div>
+
+            <div className={styles.contentSection}>
+              <h3>Details</h3>
               {this.renderDetail(currentNode)}
             </div>
 
-            <div className={styles.nodeContentSection}>
-              <h2>Labels</h2>
+            <div className={styles.contentSection}>
+              <h3>Labels</h3>
               {this.renderListItemContent(
                 <FormattedMessage id="node.detail.labels" />,
                 this.renderLabels(this.props.nodes[currentNode].detail.labels)
               )}
             </div>
 
-            <div className={styles.nodeContentSection}>
-              <h2>Resources</h2>
+            <div className={styles.contentSection}>
+              <h3>Resources</h3>
               {this.renderResource(currentNode)}
             </div>
 
-            <div className={styles.nodeContentSection}>
-              <h2>Interfaces</h2>
+            <div className={styles.contentSection}>
+              <h3>Interfaces</h3>
               {this.renderInterface(currentNode)}
             </div>
           </Drawer>

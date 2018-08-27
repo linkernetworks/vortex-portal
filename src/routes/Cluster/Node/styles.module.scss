@@ -28,8 +28,18 @@ $tag-gutter: 8px;
   }
 }
 
-.nodeContentSection{
-  padding-bottom: $padding-md;;
+.contentSection{
+  padding-bottom: $padding-md;
+}
+
+.readyIcon{
+  color: green;
+  padding-left: $padding-xs;
+}
+
+.errorIcon{
+  color: green;
+  padding-left: $padding-xs;
 }
 
 .labels {
