@@ -41,7 +41,7 @@ import {
   Legend
 } from 'recharts';
 
-import PodForm from '@/components/PodForm';
+// import PodForm from '@/components/PodForm';
 
 const InputGroup = Input.Group;
 const Search = Input.Search;
@@ -688,7 +688,7 @@ class Pod extends React.Component<PodProps, PodState> {
           </Drawer>
         )}
 
-        <Button type="dashed" className={styles.add} onClick={this.showCreate}>
+        {/* <Button type="dashed" className={styles.add} onClick={this.showCreate}>
           <Icon type="plus" /> <FormattedMessage id="pod.add" />
         </Button>
         <PodForm
@@ -699,7 +699,7 @@ class Pod extends React.Component<PodProps, PodState> {
           visible={this.state.visibleModal}
           onCancel={this.hideCreate}
           onSubmit={this.handleSubmit}
-        />
+        /> */}
       </div>
     );
   }
