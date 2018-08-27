@@ -5,7 +5,7 @@ import * as ContainerModel from '@/models/Container';
 import * as NetworkModel from '@/models/Network';
 import * as NamespaceModel from '@/models/Namespace';
 import { findIndex } from 'lodash';
-import { Volume as VolumeModel, VolumeFields } from '@/models/Storage';
+import { Volume as VolumeModel } from '@/models/Storage';
 import { FormattedMessage } from 'react-intl';
 import {
   Form,

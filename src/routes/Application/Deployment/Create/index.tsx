@@ -11,7 +11,7 @@ import { FormattedMessage } from 'react-intl';
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
 import { volumeOperations } from '@/store/ducks/volume';
-import { Volume as VolumeModel, VolumeFields } from '@/models/Storage';
+import { Volume as VolumeModel } from '@/models/Storage';
 
 import * as styles from './styles.module.scss';
 
