@@ -14,7 +14,9 @@ import {
   Tabs,
   Input,
   Select,
-  Table
+  Table,
+  notification,
+  Popconfirm
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
@@ -56,13 +58,16 @@ interface PodState {
   namespaces: Array<NamespaceModel.Namespace>;
   searchType: string;
   searchText: string;
+  deletable: boolean;
 }
 
 interface PodProps {
   pods: PodModel.Pods;
   allPods: Array<string>;
   fetchPods: () => any;
+  fetchPodsFromMongo: () => any;
   addPod: (data: PodModel.PodRequest) => any;
+  removePod: (id: string) => any;
 }
 
 interface PodInfo {
@@ -108,12 +113,14 @@ class Pod extends React.Component<PodProps, PodState> {
       networks: [],
       namespaces: [],
       searchType: 'pod',
-      searchText: ''
+      searchText: '',
+      deletable: true
     };
   }
 
   public componentDidMount() {
     this.props.fetchPods();
+    this.props.fetchPodsFromMongo();
   }
 
   protected showCreate = () => {
@@ -141,6 +148,15 @@ class Pod extends React.Component<PodProps, PodState> {
 
   protected handleSearch = (e: any) => {
     this.setState({ searchText: e.target.value });
+  };
+
+  protected handleRemovePod = (id: string) => {
+    this.setState({ deletable: false });
+    this.props.removePod(id);
+    return notification.success({
+      message: 'Success',
+      description: 'Delete the pod successfully.'
+    });
   };
 
   protected showMorePod = (pod: string) => {
@@ -445,6 +461,28 @@ class Pod extends React.Component<PodProps, PodState> {
     );
   };
 
+  protected renderAction = (podMetaData: PodModel.PodFromMongo) => {
+    if (podMetaData !== undefined && this.state.deletable === true) {
+      return (
+        <Popconfirm
+          key="action.delete"
+          title={<FormattedMessage id="action.confirmToDelete" />}
+          onConfirm={this.handleRemovePod.bind(this, podMetaData.id)}
+        >
+          <Button>
+            <Icon type="delete" /> <FormattedMessage id="pod.delete" />
+          </Button>
+        </Popconfirm>
+      );
+    } else {
+      return (
+        <Button type="dashed" disabled={true}>
+          <Icon type="delete" /> <FormattedMessage id="pod.undeletable" />
+        </Button>
+      );
+    }
+  };
+
   protected renderDetail = (pod: string) => {
     return (
       <div>
@@ -644,6 +682,9 @@ class Pod extends React.Component<PodProps, PodState> {
               <h2>Resource</h2>
               {this.renderResource(currentContainer.resource)}
             </Drawer>
+            <div className={styles.drawerBottom}>
+              {this.renderAction(this.props.pods[currentPod].metadata)}
+            </div>
           </Drawer>
         )}
 
@@ -665,6 +706,11 @@ class Pod extends React.Component<PodProps, PodState> {
 }
 
 const mapStateToProps = (state: RootState) => {
+  state.cluster.podsFromMongo.forEach(pod => {
+    if (state.cluster.pods[pod.name] !== undefined) {
+      state.cluster.pods[pod.name].metadata = pod;
+    }
+  });
   return {
     pods: state.cluster.pods,
     allPods: state.cluster.allPods
@@ -673,9 +719,11 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchPods: () => dispatch(clusterOperations.fetchPods()),
+  fetchPodsFromMongo: () => dispatch(clusterOperations.fetchPodsFromMongo()),
   addPod: (data: PodModel.PodRequest) => {
     dispatch(clusterOperations.addPod(data));
-  }
+  },
+  removePod: (id: string) => dispatch(clusterOperations.removePod(id))
 });
 
 export default connect(

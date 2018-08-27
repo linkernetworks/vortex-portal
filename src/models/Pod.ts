@@ -11,6 +11,7 @@ export interface Pod {
   restartCount: number;
   containers: Array<string>;
   nics: NICS;
+  metadata: PodFromMongo;
 }
 
 export interface PodRouteGwRequest {
@@ -53,6 +54,11 @@ export interface PodRequest {
   networkType: string;
   capability: boolean;
   restartPolicy: string;
+}
+
+export interface PodFromMongo {
+  id: string;
+  name: string;
 }
 
 export interface Pods {

@@ -9,6 +9,7 @@ import * as Deployment from '@/models/Deployment';
 export interface ClusterStateType {
   nodes: Node.Nodes;
   pods: Pod.Pods;
+  podsFromMongo: Array<Pod.PodFromMongo>;
   containers: {};
   deployments: Deployment.Controllers;
   services: Array<Service.Service>;
@@ -26,6 +27,7 @@ export type ClusterActionType = ActionType<typeof Cluster>;
 const initialState: ClusterStateType = {
   nodes: {},
   pods: {},
+  podsFromMongo: [],
   containers: {},
   deployments: {},
   services: [],
@@ -51,6 +53,8 @@ export function clusterReducer(
     case getType(Cluster.fetchNodeNICs.request):
     case getType(Cluster.fetchPods.request):
     case getType(Cluster.fetchPod.request):
+    case getType(Cluster.fetchPodsFromMongo.request):
+    case getType(Cluster.removePod.request):
     case getType(Cluster.fetchContainers.request):
     case getType(Cluster.fetchContainer.request):
     case getType(Cluster.fetchServices.request):
@@ -87,6 +91,12 @@ export function clusterReducer(
         },
         isLoading: false
       };
+    case getType(Cluster.fetchPodsFromMongo.success):
+      return {
+        ...state,
+        podsFromMongo: action.payload,
+        isLoading: false
+      };
     case getType(Cluster.fetchContainers.success):
       return {
         ...state,
@@ -107,6 +117,14 @@ export function clusterReducer(
       return {
         ...state,
         isLoading: false
+      };
+    case getType(Cluster.removePod.success):
+      return {
+        ...state,
+        isLoading: false,
+        podsFromMongo: state.podsFromMongo.filter(
+          record => record.id !== action.payload.id
+        )
       };
     case getType(Cluster.fetchServices.success):
       return {
