@@ -1,4 +1,5 @@
 import { ActionType, getType } from 'typesafe-actions';
+import { last } from 'lodash';
 import * as Cluster from './actions';
 import * as Node from '@/models/Node';
 import * as Pod from '@/models/Pod';
@@ -8,6 +9,7 @@ import * as Deployment from '@/models/Deployment';
 
 export interface ClusterStateType {
   nodes: Node.Nodes;
+  nodesNics: Node.NodesNics;
   pods: Pod.Pods;
   podsFromMongo: Array<Pod.PodFromMongo>;
   containers: {};
@@ -18,7 +20,6 @@ export interface ClusterStateType {
   allPods: Array<string>;
   allContainers: Array<string>;
   allDeployments: Array<string>;
-  nics: {};
   isLoading: boolean;
 }
 
@@ -26,6 +27,7 @@ export type ClusterActionType = ActionType<typeof Cluster>;
 
 const initialState: ClusterStateType = {
   nodes: {},
+  nodesNics: {},
   pods: {},
   podsFromMongo: [],
   containers: {},
@@ -36,7 +38,6 @@ const initialState: ClusterStateType = {
   allPods: [],
   allContainers: [],
   allDeployments: [],
-  nics: {},
   isLoading: false
 };
 
@@ -50,7 +51,6 @@ export function clusterReducer(
 
   switch (action.type) {
     case getType(Cluster.fetchNodes.request):
-    case getType(Cluster.fetchNodeNICs.request):
     case getType(Cluster.fetchPods.request):
     case getType(Cluster.fetchPod.request):
     case getType(Cluster.fetchPodsFromMongo.request):
@@ -66,15 +66,93 @@ export function clusterReducer(
     case getType(Cluster.removeNamespace.request):
       return { ...state, isLoading: true };
     case getType(Cluster.fetchNodes.success):
+      const nodes = action.payload;
+      const allNodes = Object.keys(action.payload);
+      const nodesNics = state.nodesNics;
+
+      allNodes.map(key => {
+        const nics = nodes[key].nics;
+        Object.keys(nics).map(name => {
+          // Remove virtual interface
+          if (nics[name].type !== 'physical') {
+            delete nics[name];
+          } else if (nics[name].dpdk === true) {
+            delete nics[name];
+          } else {
+            // Add nics data or creating nics data for chart to draw
+            if (
+              nodesNics.hasOwnProperty(key) &&
+              nodesNics[key].hasOwnProperty(name)
+            ) {
+              const newNetworkTraffic = nics[name].nicNetworkTraffic;
+              const originNetworkTraffic =
+                nodesNics[key][name].nicNetworkTraffic;
+
+              const receiveBytesTotal = last(
+                originNetworkTraffic.receiveBytesTotal
+              );
+              newNetworkTraffic.receiveBytesTotal.map(data => {
+                if (
+                  receiveBytesTotal &&
+                  data.timestamp > receiveBytesTotal.timestamp
+                ) {
+                  originNetworkTraffic.receiveBytesTotal.push(data);
+                }
+              });
+
+              const transmitBytesTotal = last(
+                originNetworkTraffic.transmitBytesTotal
+              );
+              newNetworkTraffic.transmitBytesTotal.map(data => {
+                if (
+                  transmitBytesTotal &&
+                  data.timestamp > transmitBytesTotal.timestamp
+                ) {
+                  originNetworkTraffic.transmitBytesTotal.push(data);
+                }
+              });
+
+              const receivePacketsTotal = last(
+                originNetworkTraffic.receivePacketsTotal
+              );
+              newNetworkTraffic.receivePacketsTotal.map(data => {
+                if (
+                  receivePacketsTotal &&
+                  data.timestamp > receivePacketsTotal.timestamp
+                ) {
+                  originNetworkTraffic.receivePacketsTotal.push(data);
+                }
+              });
+
+              const transmitPacketsTotal = last(
+                originNetworkTraffic.transmitPacketsTotal
+              );
+              newNetworkTraffic.transmitPacketsTotal.map(data => {
+                if (
+                  transmitPacketsTotal &&
+                  data.timestamp > transmitPacketsTotal.timestamp
+                ) {
+                  originNetworkTraffic.transmitPacketsTotal.push(data);
+                }
+              });
+            } else {
+              if (nodesNics.hasOwnProperty(key)) {
+                nodesNics[key][name] = nics[name];
+              } else {
+                nodesNics[key] = {};
+                nodesNics[key][name] = nics[name];
+              }
+            }
+          }
+        });
+      });
       return {
         ...state,
-        nodes: action.payload,
-        allNodes: Object.keys(action.payload),
+        nodes,
+        allNodes,
+        nodesNics,
         isLoading: false
       };
-    case getType(Cluster.fetchNodeNICs.success):
-      const nics = { ...state.nics, ...action.payload };
-      return { ...state, nics, isLoading: false };
     case getType(Cluster.fetchPods.success):
       return {
         ...state,

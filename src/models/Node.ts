@@ -8,6 +8,10 @@ export interface Nodes {
   [name: string]: Node;
 }
 
+export interface NodesNics {
+  [name: string]: NetworkInterfaceController;
+}
+
 export interface Detail {
   hostname: string;
   createAt: number;

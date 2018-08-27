@@ -32,6 +32,7 @@ interface NodeState {
 interface NodeProps {
   nodes: NodeModel.Nodes;
   allNodes: Array<string>;
+  nodesNics: NodeModel.NodesNics;
   fetchNodes: () => any;
 }
 
@@ -48,6 +49,7 @@ interface NodeInfo {
 const TabPane = Tabs.TabPane;
 
 class Node extends React.Component<NodeProps, NodeState> {
+  private intervalId: number;
   constructor(props: NodeProps) {
     super(props);
     this.state = {
@@ -58,6 +60,11 @@ class Node extends React.Component<NodeProps, NodeState> {
 
   public componentDidMount() {
     this.props.fetchNodes();
+    this.intervalId = window.setInterval(this.props.fetchNodes, 5000);
+  }
+
+  public componentWillUnmount() {
+    clearInterval(this.intervalId);
   }
 
   protected showMore = (node: string) => {
@@ -244,13 +251,15 @@ class Node extends React.Component<NodeProps, NodeState> {
       data2 = [];
     }
     const chartData: Array<{ x: string; y1: number; y2: number }> = [];
-    data1.map((d, i) => {
-      chartData.push({
-        x: moment(d.timestamp * 1000).calendar(),
-        y1: parseFloat(data1[i].value),
-        y2: parseFloat(data2[i].value)
+    if (data1.length === data2.length) {
+      data1.map((d, i) => {
+        chartData.push({
+          x: moment(d.timestamp * 1000).calendar(),
+          y1: parseFloat(data1[i].value),
+          y2: parseFloat(data2[i].value)
+        });
       });
-    });
+    }
     return (
       <LineChart
         width={600}
@@ -309,9 +318,9 @@ class Node extends React.Component<NodeProps, NodeState> {
                   <FormattedMessage id="node.nics.TXRXBytesTotal" />,
                   <div>
                     {this.renderChart(
-                      this.props.nodes[node].nics[name].nicNetworkTraffic
+                      this.props.nodesNics[node][name].nicNetworkTraffic
                         .receiveBytesTotal,
-                      this.props.nodes[node].nics[name].nicNetworkTraffic
+                      this.props.nodesNics[node][name].nicNetworkTraffic
                         .transmitBytesTotal
                     )}
                   </div>
@@ -322,9 +331,9 @@ class Node extends React.Component<NodeProps, NodeState> {
                   <FormattedMessage id="node.nics.TXRXPacketsTotal" />,
                   <div>
                     {this.renderChart(
-                      this.props.nodes[node].nics[name].nicNetworkTraffic
+                      this.props.nodesNics[node][name].nicNetworkTraffic
                         .receivePacketsTotal,
-                      this.props.nodes[node].nics[name].nicNetworkTraffic
+                      this.props.nodesNics[node][name].nicNetworkTraffic
                         .transmitPacketsTotal
                     )}
                   </div>
@@ -458,20 +467,10 @@ class Node extends React.Component<NodeProps, NodeState> {
 }
 
 const mapStateToProps = (state: RootState) => {
-  // Remove virtual interface
-  Object.keys(state.cluster.nodes).map(key => {
-    Object.keys(state.cluster.nodes[key].nics).map(name => {
-      if (state.cluster.nodes[key].nics[name].type !== 'physical') {
-        delete state.cluster.nodes[key].nics[name];
-      } else if (state.cluster.nodes[key].nics[name].dpdk === true) {
-        delete state.cluster.nodes[key].nics[name];
-      }
-    });
-  });
-
   return {
     nodes: state.cluster.nodes,
-    allNodes: state.cluster.allNodes
+    allNodes: state.cluster.allNodes,
+    nodesNics: state.cluster.nodesNics
   };
 };
 
