@@ -220,12 +220,11 @@ class Node extends React.Component<NodeProps, NodeState> {
           <Col span={8}>
             {this.renderListItemContent(
               <FormattedMessage id="node.resource.memoryHugepages" />,
-              formatBytes(
-                this.props.nodes[node].resource.memoryTotalHugepages
-              ) +
+              this.props.nodes[node].resource.memoryFreeHugepages +
                 ' / ' +
-                formatBytes(this.props.nodes[node].resource.memoryFreeHugepages)
+                this.props.nodes[node].resource.memoryTotalHugepages
             )}
+            {}
           </Col>
         </Row>
         <Row>
@@ -243,8 +242,8 @@ class Node extends React.Component<NodeProps, NodeState> {
           </Col>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.memoryHugepageSize" />,
-              formatBytes(this.props.nodes[node].resource.memoryHugepageSize)
+              <FormattedMessage id="node.resource.memoryHugepagesSize" />,
+              formatBytes(this.props.nodes[node].resource.memoryHugepagesSize)
             )}
           </Col>
         </Row>

@@ -20,8 +20,8 @@ export default {
   'node.resource.capacityCPU': 'Capacity CPU (Core)',
   'node.resource.capacityPods': 'Capacity Pods',
   'node.resource.capacityMemory': 'Capacity Memory',
-  'node.resource.memoryHugepages': 'Hugepages (Total / Free)',
-  'node.resource.memoryHugepageSize': 'Hugepages Size',
+  'node.resource.memoryHugepages': 'Hugepages ( Free / Total )',
+  'node.resource.memoryHugepagesSize': 'Hugepages Size',
 
   'node.nics.name': 'Name',
   'node.nics.type': 'Type',
