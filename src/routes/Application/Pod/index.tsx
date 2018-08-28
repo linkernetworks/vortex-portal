@@ -218,7 +218,10 @@ class Pod extends React.Component<PodProps, PodState> {
         containers.push(res.data);
         this.setState({ containers });
       });
-      const id = window.setInterval(() => this.fetchContainer(pod, container), 5000);
+      const id = window.setInterval(
+        () => this.fetchContainer(pod, container),
+        5000
+      );
       this.intervalContainersId.push(id);
     });
     this.setState({ visiblePodDrawer: true, currentPod: pod });
@@ -503,15 +506,8 @@ class Pod extends React.Component<PodProps, PodState> {
     if (!nics) {
       return <div />;
     }
-    let defaultKey = '';
-    for (const name of Object.keys(nics)) {
-      if (nics[name].default) {
-        defaultKey = name;
-        break;
-      }
-    }
     return (
-      <Tabs defaultActiveKey={defaultKey}>
+      <Tabs>
         {Object.keys(nics).map(name => (
           <TabPane tab={name} key={name}>
             <div>{name}</div>
