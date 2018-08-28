@@ -33,7 +33,6 @@ interface OwnProps {
   namespaces: Array<NamespaceModel.Namespace>;
   volumes: Array<VolumeModel>;
   fetchDeployments: () => any;
-  fetchContainers: () => any;
   fetchNetworks: () => any;
   fetchNamespaces: () => any;
   fetchVolumes: () => any;
@@ -64,7 +63,6 @@ class CreateDeployment extends React.Component<
   }
   public componentDidMount() {
     this.props.fetchDeployments();
-    this.props.fetchContainers();
     this.props.fetchNetworks();
     this.props.fetchNamespaces();
     this.props.fetchVolumes();
@@ -146,7 +144,6 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchDeployments: () => dispatch(clusterOperations.fetchDeployments()),
-  fetchContainers: () => dispatch(clusterOperations.fetchContainers()),
   fetchNetworks: () => dispatch(networkOperations.fetchNetworks()),
   fetchNamespaces: () => dispatch(clusterOperations.fetchNamespaces()),
   fetchVolumes: () => dispatch(volumeOperations.fetchVolumes()),

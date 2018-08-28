@@ -42,12 +42,6 @@ export const fetchPodsFromMongo = createAsyncAction(
   'FETCH_PODS_FROM_MONGO_FAILURE'
 )<void, Array<Pod.PodFromMongo>, Error>();
 
-export const fetchContainers = createAsyncAction(
-  'FETCH_CONTAINERS_REQUEST',
-  'FETCH_CONTAINERS_SUCCESS',
-  'FETCH_CONTAINERS_FAILURE'
-)<void, Container.Containers, Error>();
-
 export const fetchContainer = createAsyncAction(
   'FETCH_CONTAINER_REQUEST',
   'FETCH_CONTAINER_SUCCESS',

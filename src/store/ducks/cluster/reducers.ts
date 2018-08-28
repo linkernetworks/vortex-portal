@@ -55,7 +55,6 @@ export function clusterReducer(
     case getType(Cluster.fetchPod.request):
     case getType(Cluster.fetchPodsFromMongo.request):
     case getType(Cluster.removePod.request):
-    case getType(Cluster.fetchContainers.request):
     case getType(Cluster.fetchContainer.request):
     case getType(Cluster.fetchServices.request):
     case getType(Cluster.fetchNamespaces.request):
@@ -173,13 +172,6 @@ export function clusterReducer(
       return {
         ...state,
         podsFromMongo: action.payload,
-        isLoading: false
-      };
-    case getType(Cluster.fetchContainers.success):
-      return {
-        ...state,
-        containers: action.payload,
-        allContainers: Object.keys(action.payload),
         isLoading: false
       };
     case getType(Cluster.fetchContainer.success):
