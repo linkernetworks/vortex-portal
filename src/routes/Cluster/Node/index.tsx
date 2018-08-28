@@ -254,7 +254,8 @@ class Node extends React.Component<NodeProps, NodeState> {
 
   protected renderChart(
     data1: Array<{ timestamp: number; value: string }>,
-    data2: Array<{ timestamp: number; value: string }>
+    data2: Array<{ timestamp: number; value: string }>,
+    toMB: boolean
   ) {
     if (data1 === null) {
       data1 = [];
@@ -265,11 +266,21 @@ class Node extends React.Component<NodeProps, NodeState> {
     const chartData: Array<{ x: string; y1: number; y2: number }> = [];
     if (data1.length === data2.length) {
       data1.map((d, i) => {
-        chartData.push({
-          x: moment(d.timestamp * 1000).calendar(),
-          y1: parseFloat(data1[i].value),
-          y2: parseFloat(data2[i].value)
-        });
+        const y1 = parseFloat(data1[i].value);
+        const y2 = parseFloat(data2[i].value);
+        if (toMB) {
+          chartData.push({
+            x: moment(d.timestamp * 1000).calendar(),
+            y1: parseFloat((y1 / (1024 * 1024)).toFixed(2)),
+            y2: parseFloat((y2 / (1024 * 1024)).toFixed(2))
+          });
+        } else {
+          chartData.push({
+            x: moment(d.timestamp * 1000).calendar(),
+            y1,
+            y2
+          });
+        }
       });
     }
     return (
@@ -302,8 +313,15 @@ class Node extends React.Component<NodeProps, NodeState> {
   }
 
   protected renderInterface = (node: string) => {
+    let defaultKey = '';
+    for (const name of Object.keys(this.props.nodes[node].nics)) {
+      if (this.props.nodes[node].nics[name].default) {
+        defaultKey = name;
+        break;
+      }
+    }
     return (
-      <Tabs>
+      <Tabs defaultActiveKey={defaultKey}>
         {Object.keys(this.props.nodes[node].nics).map(name => {
           return (
             <TabPane tab={name} key={name}>
@@ -327,13 +345,14 @@ class Node extends React.Component<NodeProps, NodeState> {
               </Col>
               <div>
                 {this.renderListItemContent(
-                  <FormattedMessage id="node.nics.TXRXBytesTotal" />,
+                  <FormattedMessage id="node.nics.TXRXMegabyteTotal" />,
                   <div>
                     {this.renderChart(
                       this.props.nodesNics[node][name].nicNetworkTraffic
                         .receiveBytesTotal,
                       this.props.nodesNics[node][name].nicNetworkTraffic
-                        .transmitBytesTotal
+                        .transmitBytesTotal,
+                      true
                     )}
                   </div>
                 )}
@@ -346,7 +365,8 @@ class Node extends React.Component<NodeProps, NodeState> {
                       this.props.nodesNics[node][name].nicNetworkTraffic
                         .receivePacketsTotal,
                       this.props.nodesNics[node][name].nicNetworkTraffic
-                        .transmitPacketsTotal
+                        .transmitPacketsTotal,
+                      false
                     )}
                   </div>
                 )}

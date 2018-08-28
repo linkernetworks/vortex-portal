@@ -3,6 +3,7 @@ import * as PodModel from '@/models/Pod';
 import * as ContainerModel from '@/models/Container';
 import * as NetworkModel from '@/models/Network';
 import * as NamespaceModel from '@/models/Namespace';
+import { findIndex, last } from 'lodash';
 import { connect } from 'react-redux';
 import {
   Row,
@@ -66,6 +67,7 @@ type PodProps = OwnProps & InjectedAuthRouterProps;
 interface OwnProps {
   pods: PodModel.Pods;
   allPods: Array<string>;
+  podsNics: PodModel.PodsNics;
   fetchPods: () => any;
   fetchPodsFromMongo: () => any;
   addPod: (data: PodModel.PodRequest) => any;
@@ -83,6 +85,8 @@ interface PodInfo {
 const TabPane = Tabs.TabPane;
 
 class Pod extends React.Component<PodProps, PodState> {
+  private intervalPodId: number;
+  private intervalContainersId: Array<number> = [];
   constructor(props: PodProps) {
     super(props);
     this.state = {
@@ -118,7 +122,12 @@ class Pod extends React.Component<PodProps, PodState> {
 
   public componentDidMount() {
     this.props.fetchPods();
+    this.intervalPodId = window.setInterval(this.props.fetchPods, 5000);
     this.props.fetchPodsFromMongo();
+  }
+
+  public componentWillUnmount() {
+    clearInterval(this.intervalPodId);
   }
 
   protected showCreate = () => {
@@ -157,13 +166,60 @@ class Pod extends React.Component<PodProps, PodState> {
     });
   };
 
+  protected fetchContainer = (pod: string, container: string) => {
+    const containers = [...this.state.containers];
+    containerAPI.getContainer(pod, container).then(res => {
+      const newContainer = res.data;
+      const index = findIndex(containers, c => {
+        return c.detail.containerName === newContainer.detail.containerName;
+      });
+      if (index !== -1) {
+        const originContainer = containers[index];
+
+        const cpuUsagePercentage = last(
+          originContainer.resource.cpuUsagePercentage
+        );
+        if (newContainer.resource.cpuUsagePercentage) {
+          newContainer.resource.cpuUsagePercentage.map(data => {
+            if (
+              cpuUsagePercentage &&
+              data.timestamp > cpuUsagePercentage.timestamp
+            ) {
+              originContainer.resource.cpuUsagePercentage.push(data);
+            }
+          });
+        }
+
+        const memoryUsageBytes = last(
+          originContainer.resource.memoryUsageBytes
+        );
+        if (newContainer.resource.memoryUsageBytes) {
+          newContainer.resource.memoryUsageBytes.map(data => {
+            if (
+              memoryUsageBytes &&
+              data.timestamp > memoryUsageBytes.timestamp
+            ) {
+              originContainer.resource.memoryUsageBytes.push(data);
+            }
+          });
+        }
+      } else {
+        containers.push(newContainer);
+      }
+    });
+    this.setState({ containers });
+  };
+
   protected showMorePod = (pod: string) => {
-    const containers: Array<ContainerModel.Container> = [];
     this.props.pods[pod].containers.map(container => {
+      // Only show in pod's container drawer so get container data without flow
+      const containers: Array<ContainerModel.Container> = [];
       containerAPI.getContainer(pod, container).then(res => {
         containers.push(res.data);
         this.setState({ containers });
       });
+      const id = window.setInterval(() => this.fetchContainer(pod, container), 5000);
+      this.intervalContainersId.push(id);
     });
     this.setState({ visiblePodDrawer: true, currentPod: pod });
   };
@@ -176,7 +232,10 @@ class Pod extends React.Component<PodProps, PodState> {
   };
 
   protected hideMorePod = () => {
-    this.setState({ visiblePodDrawer: false });
+    this.intervalContainersId.map(id => {
+      clearInterval(id);
+    });
+    this.setState({ visiblePodDrawer: false, containers: [] });
   };
 
   protected hideMoreContainer = () => {
@@ -323,14 +382,18 @@ class Pod extends React.Component<PodProps, PodState> {
             {this.renderListItemContent(
               <FormattedMessage id={`container.resource.cpuUsagePercentage`} />,
               <div>
-                {this.renderContainerChart(container.cpuUsagePercentage)}
+                {this.renderContainerChart(container.cpuUsagePercentage, false)}
               </div>
             )}
           </Col>
           <Col span={24}>
             {this.renderListItemContent(
-              <FormattedMessage id={`container.resource.memoryUsageBytes`} />,
-              <div>{this.renderContainerChart(container.memoryUsageBytes)}</div>
+              <FormattedMessage
+                id={`container.resource.memoryUsageMegabyte`}
+              />,
+              <div>
+                {this.renderContainerChart(container.memoryUsageBytes, true)}
+              </div>
             )}
           </Col>
         </Row>
@@ -340,16 +403,27 @@ class Pod extends React.Component<PodProps, PodState> {
 
   protected renderPodChart(
     data1: Array<{ timestamp: number; value: string }>,
-    data2: Array<{ timestamp: number; value: string }>
+    data2: Array<{ timestamp: number; value: string }>,
+    toMB: boolean
   ) {
     const chartData: Array<{ x: string; y1: number; y2: number }> = [];
-    if (data1 !== null && data1.length > 0) {
+    if (data1.length === data2.length) {
       data1.map((d, i) => {
-        chartData.push({
-          x: moment(d.timestamp * 1000).calendar(),
-          y1: parseFloat(data1[i].value),
-          y2: parseFloat(data2[i].value)
-        });
+        const y1 = parseFloat(data1[i].value);
+        const y2 = parseFloat(data2[i].value);
+        if (toMB) {
+          chartData.push({
+            x: moment(d.timestamp * 1000).calendar(),
+            y1: parseFloat((y1 / (1024 * 1024)).toFixed(2)),
+            y2: parseFloat((y2 / (1024 * 1024)).toFixed(2))
+          });
+        } else {
+          chartData.push({
+            x: moment(d.timestamp * 1000).calendar(),
+            y1,
+            y2
+          });
+        }
       });
     }
     return (
@@ -382,15 +456,24 @@ class Pod extends React.Component<PodProps, PodState> {
   }
 
   protected renderContainerChart(
-    data: Array<{ timestamp: number; value: string }>
+    data: Array<{ timestamp: number; value: string }>,
+    toMB: boolean
   ) {
     const chartData: Array<{ x: string; y1: number }> = [];
     if (data !== null && data.length > 0) {
       data.map(d => {
-        chartData.push({
-          x: moment(d.timestamp * 1000).calendar(),
-          y1: parseFloat(d.value)
-        });
+        const y1 = parseFloat(d.value);
+        if (toMB) {
+          chartData.push({
+            x: moment(d.timestamp * 1000).calendar(),
+            y1: parseFloat((y1 / (1024 * 1024)).toFixed(2))
+          });
+        } else {
+          chartData.push({
+            x: moment(d.timestamp * 1000).calendar(),
+            y1
+          });
+        }
       });
     }
     return (
@@ -417,39 +500,49 @@ class Pod extends React.Component<PodProps, PodState> {
   }
 
   protected renderInterface = (nics: PodModel.NICS) => {
+    if (!nics) {
+      return <div />;
+    }
+    let defaultKey = '';
+    for (const name of Object.keys(nics)) {
+      if (nics[name].default) {
+        defaultKey = name;
+        break;
+      }
+    }
     return (
-      <Tabs>
-        {Object.keys(nics).map(name => {
-          return (
-            <TabPane tab={name} key={name}>
-              <div>{name}</div>
-              <Row>
-                <Col span={24}>
-                  {this.renderListItemContent(
-                    <FormattedMessage id="pod.nicNetworkTraffic.TXRXBytesTotal" />,
-                    <div>
-                      {this.renderPodChart(
-                        nics[name].nicNetworkTraffic.receiveBytesTotal,
-                        nics[name].nicNetworkTraffic.transmitBytesTotal
-                      )}
-                    </div>
-                  )}
-                </Col>
-                <Col span={24}>
-                  {this.renderListItemContent(
-                    <FormattedMessage id="pod.nicNetworkTraffic.TXRXPacketsTotal" />,
-                    <div>
-                      {this.renderPodChart(
-                        nics[name].nicNetworkTraffic.receivePacketsTotal,
-                        nics[name].nicNetworkTraffic.transmitPacketsTotal
-                      )}
-                    </div>
-                  )}
-                </Col>
-              </Row>
-            </TabPane>
-          );
-        })}
+      <Tabs defaultActiveKey={defaultKey}>
+        {Object.keys(nics).map(name => (
+          <TabPane tab={name} key={name}>
+            <div>{name}</div>
+            <Row>
+              <Col span={24}>
+                {this.renderListItemContent(
+                  <FormattedMessage id="pod.nicNetworkTraffic.TXRXMegabyteTotal" />,
+                  <div>
+                    {this.renderPodChart(
+                      nics[name].nicNetworkTraffic.receiveBytesTotal,
+                      nics[name].nicNetworkTraffic.transmitBytesTotal,
+                      true
+                    )}
+                  </div>
+                )}
+              </Col>
+              <Col span={24}>
+                {this.renderListItemContent(
+                  <FormattedMessage id="pod.nicNetworkTraffic.TXRXPacketsTotal" />,
+                  <div>
+                    {this.renderPodChart(
+                      nics[name].nicNetworkTraffic.receivePacketsTotal,
+                      nics[name].nicNetworkTraffic.transmitPacketsTotal,
+                      false
+                    )}
+                  </div>
+                )}
+              </Col>
+            </Row>
+          </TabPane>
+        ))}
       </Tabs>
     );
   };
@@ -658,7 +751,7 @@ class Pod extends React.Component<PodProps, PodState> {
             </div>
 
             <h3>Interface</h3>
-            {this.renderInterface(this.props.pods[currentPod].nics)}
+            {this.renderInterface(this.props.podsNics[currentPod])}
 
             <Drawer
               title="Container"
@@ -723,7 +816,8 @@ const mapStateToProps = (state: RootState) => {
   });
   return {
     pods: state.cluster.pods,
-    allPods: state.cluster.allPods
+    allPods: state.cluster.allPods,
+    podsNics: state.cluster.podsNics
   };
 };
 

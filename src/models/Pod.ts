@@ -65,6 +65,10 @@ export interface Pods {
   [name: string]: Pod;
 }
 
+export interface PodsNics {
+  [name: string]: NICS;
+}
+
 export interface NICS {
   [name: string]: {
     nicNetworkTraffic: {
@@ -74,4 +78,9 @@ export interface NICS {
       transmitPacketsTotal: Array<{ timestamp: number; value: string }>;
     };
   };
+}
+
+export enum NICType {
+  virtual = 'virtual',
+  physical = 'physical'
 }

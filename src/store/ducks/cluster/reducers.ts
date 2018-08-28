@@ -11,6 +11,7 @@ export interface ClusterStateType {
   nodes: Node.Nodes;
   nodesNics: Node.NodesNics;
   pods: Pod.Pods;
+  podsNics: Pod.PodsNics;
   podsFromMongo: Array<Pod.PodFromMongo>;
   containers: {};
   deployments: Deployment.Controllers;
@@ -29,6 +30,7 @@ const initialState: ClusterStateType = {
   nodes: {},
   nodesNics: {},
   pods: {},
+  podsNics: {},
   podsFromMongo: [],
   containers: {},
   deployments: {},
@@ -153,10 +155,82 @@ export function clusterReducer(
         isLoading: false
       };
     case getType(Cluster.fetchPods.success):
+      const pods = action.payload;
+      const allPods = Object.keys(action.payload);
+      const podsNics = state.podsNics;
+
+      allPods.map(key => {
+        const nics = pods[key].nics;
+        Object.keys(nics).map(name => {
+          if (
+            podsNics.hasOwnProperty(key) &&
+            podsNics[key].hasOwnProperty(name)
+          ) {
+            const newNetworkTraffic = nics[name].nicNetworkTraffic;
+            const originNetworkTraffic = podsNics[key][name].nicNetworkTraffic;
+
+            const receiveBytesTotal = last(
+              originNetworkTraffic.receiveBytesTotal
+            );
+            newNetworkTraffic.receiveBytesTotal.map(data => {
+              if (
+                receiveBytesTotal &&
+                data.timestamp > receiveBytesTotal.timestamp
+              ) {
+                originNetworkTraffic.receiveBytesTotal.push(data);
+              }
+            });
+
+            const transmitBytesTotal = last(
+              originNetworkTraffic.transmitBytesTotal
+            );
+            newNetworkTraffic.transmitBytesTotal.map(data => {
+              if (
+                transmitBytesTotal &&
+                data.timestamp > transmitBytesTotal.timestamp
+              ) {
+                originNetworkTraffic.transmitBytesTotal.push(data);
+              }
+            });
+
+            const receivePacketsTotal = last(
+              originNetworkTraffic.receivePacketsTotal
+            );
+            newNetworkTraffic.receivePacketsTotal.map(data => {
+              if (
+                receivePacketsTotal &&
+                data.timestamp > receivePacketsTotal.timestamp
+              ) {
+                originNetworkTraffic.receivePacketsTotal.push(data);
+              }
+            });
+
+            const transmitPacketsTotal = last(
+              originNetworkTraffic.transmitPacketsTotal
+            );
+            newNetworkTraffic.transmitPacketsTotal.map(data => {
+              if (
+                transmitPacketsTotal &&
+                data.timestamp > transmitPacketsTotal.timestamp
+              ) {
+                originNetworkTraffic.transmitPacketsTotal.push(data);
+              }
+            });
+          } else {
+            if (podsNics.hasOwnProperty(key)) {
+              podsNics[key][name] = nics[name];
+            } else {
+              podsNics[key] = {};
+              podsNics[key][name] = nics[name];
+            }
+          }
+        });
+      });
       return {
         ...state,
-        pods: action.payload,
-        allPods: Object.keys(action.payload),
+        pods,
+        allPods,
+        podsNics,
         isLoading: false
       };
     case getType(Cluster.fetchPod.success):

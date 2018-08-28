@@ -7,6 +7,10 @@ export interface Containers {
   [name: string]: Container;
 }
 
+export interface ContainersResource {
+  [name: string]: Resource;
+}
+
 export interface Detail {
   containerName: string;
   createAt: number;

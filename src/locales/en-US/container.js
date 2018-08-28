@@ -7,12 +7,12 @@ export default {
   'container.detail.image': 'Image',
   'container.detail.command': 'Command',
   'container.detail.newCommand': 'New Command',
+  'container.detail.status': 'Status',
 
-  'container.status.status': 'Status',
   'container.status.waitingReason': 'Waiting Reason',
   'container.status.terminatedReason': 'Terminated Reason',
   'container.status.restartTime': 'Restart Time',
 
   'container.resource.cpuUsagePercentage': 'CPU Usage Percentage',
-  'container.resource.memoryUsageBytes': 'Memory Usage Bytes',
+  'container.resource.memoryUsageMegabyte': 'Memory Usage MB',
 };

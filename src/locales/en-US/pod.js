@@ -19,6 +19,6 @@ export default {
   'pod.restartPolicy': 'Restart Policy',
   'pod.capability': 'Capability',
 
-  'pod.nicNetworkTraffic.TXRXBytesTotal': 'Receive/Transmit Bytes Total',
+  'pod.nicNetworkTraffic.TXRXMegabyteTotal': 'Receive/Transmit MB Total',
   'pod.nicNetworkTraffic.TXRXPacketsTotal': 'Receive/Transmit Packets Total',
 };
