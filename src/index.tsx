@@ -16,7 +16,7 @@ import configureStore, { history } from '@/store/configureStore';
 import registerServiceWorker from '@/registerServiceWorker';
 import LocaleContainer from '@/containers/LocaleContainer';
 import { userActions } from '@/store/ducks/user';
-import { findSavedAuthToken } from '@/utils/auth';
+import { findAndVerifySavedAuthToken, removeToken } from '@/utils/auth';
 import '@/services/request'; // set token header
 
 const store = configureStore();
@@ -31,12 +31,12 @@ ReactDOM.render(
   document.getElementById('root') as HTMLElement
 );
 
-findSavedAuthToken()
+findAndVerifySavedAuthToken()
   .then(payload => {
     store.dispatch(userActions.login.success(payload));
   })
-  .catch(e => {
-    return;
+  .catch(() => {
+    removeToken();
   });
 
 if (module.hot) {

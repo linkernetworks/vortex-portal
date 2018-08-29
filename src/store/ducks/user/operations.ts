@@ -41,9 +41,9 @@ export const login = (
     try {
       const res = await userAPI.signin(data);
       const token = res.data.message;
-      const decode: any = jwtDecode(token);
-      const user = await userAPI.getUser(decode.sub, token);
       saveToken(token);
+      const decode: any = jwtDecode(token);
+      const user = await userAPI.getUser(decode.sub);
       return dispatch(
         userActions.login.success({
           user: user.data,

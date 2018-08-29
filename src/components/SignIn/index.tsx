@@ -9,14 +9,13 @@ import { LoginCredential } from '@/models/User';
 
 const FormItem = Form.Item;
 
-interface SignInProps extends FormComponentProps {
+type SignInProps = OwnProps & InjectedIntlProps;
+
+interface OwnProps extends FormComponentProps {
   onSubmit: (data: LoginCredential) => any;
 }
 
-class SignIn extends React.PureComponent<
-  SignInProps & InjectedIntlProps,
-  object
-> {
+class SignIn extends React.PureComponent<SignInProps, object> {
   protected handleSubmit = () => {
     const data = this.props.form.getFieldsValue() as LoginCredential;
     this.props.onSubmit(data);

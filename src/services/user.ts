@@ -22,12 +22,8 @@ export const getUsers = (): AxiosPromise<Array<User>> => {
   return axios.get('/v1/users');
 };
 
-export const getUser = (id: string, token: string): AxiosPromise<User> => {
-  return axios.get(`/v1/users/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
+export const getUser = (id: string): AxiosPromise<User> => {
+  return axios.get(`/v1/users/${id}`);
 };
 
 export const deleteUser = (id: string): AxiosPromise<Response> => {
