@@ -145,7 +145,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
           networkType = values.networkType;
           replicas = values.replicas;
         }
-        if (values.networkType === 'custom') {
+        if (networkType === 'custom') {
           this.state.networks.map((network: PodModel.PodNetworkRequest) => {
             const routesGw: Array<PodModel.PodRouteGwRequest> = [];
             const routesIntf: Array<PodModel.PodRouteIntfRequest> = [];
