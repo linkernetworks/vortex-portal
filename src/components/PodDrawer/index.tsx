@@ -10,8 +10,6 @@ import {
   Button,
   Icon,
   Tabs,
-  Input,
-  Select,
   Table,
   notification,
   Popconfirm

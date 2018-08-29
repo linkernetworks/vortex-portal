@@ -12,8 +12,6 @@ import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
 
-import * as podAPI from '@/services/pod';
-
 import * as styles from './styles.module.scss';
 
 import PodDrawer from '@/components/PodDrawer';
