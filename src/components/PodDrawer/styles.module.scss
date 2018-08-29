@@ -1,5 +1,5 @@
 
-@import '../../../styles/variables';
+@import '../../styles/variables';
 $tag-gutter: 8px;
 
 .column {
@@ -41,14 +41,37 @@ $tag-gutter: 8px;
   padding-left: $padding-xs;
 }
 
+.errorIcon{
+  color: red;
+  padding-left: $padding-xs;
+}
+
+.pendingIcon{
+  padding-left: $padding-xs;
+}
+
 .table {
+  background-color: white;
   th, td {
-    padding: $padding-md !important;
+    padding-left: $padding-md !important;
+    padding-right: $padding-md !important;
   }
 }
 
 .contentSection{
-  padding-bottom: $padding-md;
+   padding-bottom: $padding-md;
+ }
+
+.drawerBottom{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 16px;
+  text-align: right;
+  left: 0;
+  background: #fff;
+  border-radius: 0 0 4px 4px;
 }
 
 .add {

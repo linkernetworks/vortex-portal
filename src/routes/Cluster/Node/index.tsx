@@ -453,7 +453,7 @@ class Node extends React.Component<NodeProps, NodeState> {
     ];
     return (
       <div>
-        <Card title="Node">
+        <Card>
           <Table
             className={styles.table}
             columns={columns}

@@ -55,6 +55,7 @@ export interface Controller {
   currentPod: number;
   availablePod: number;
   labels: any;
+  pods: Array<string>;
 }
 
 export interface Controllers {

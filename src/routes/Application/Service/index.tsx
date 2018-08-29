@@ -137,7 +137,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     ];
     return (
       <div>
-        <Card title="Service">
+        <Card>
           <Table
             className={styles.table}
             columns={columns}
