@@ -191,8 +191,8 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
           nodeAffinity: [],
           replicas
         };
-        console.log(deployment);
-        // this.props.onSubmit(deployment);
+
+        this.props.onSubmit(deployment);
       }
     });
   };
