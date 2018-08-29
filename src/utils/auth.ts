@@ -13,7 +13,7 @@ export function basicTokenToData(token: string) {
   };
 }
 
-export async function findSavedAuthToken(): Promise<{
+export async function findAndVerifySavedAuthToken(): Promise<{
   token: string;
   user: User;
 }> {
