@@ -29,6 +29,13 @@ $tag-gutter: 8px;
   }
 }
 
+.table {
+  background-color: white;
+  th, td {
+    padding-left: $padding-md !important;
+    padding-right: $padding-md !important;
+  }
+}
 
 .leading {
   margin-bottom: 6px;

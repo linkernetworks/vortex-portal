@@ -2,7 +2,8 @@ import * as React from 'react';
 import * as ServiceModel from '@/models/Service';
 import { connect } from 'react-redux';
 import * as styles from './styles.module.scss';
-import { Card, List, Button, Icon, Tree, Tag, Popconfirm } from 'antd';
+import { Button, Icon, Tree, Tag, Popconfirm, Table } from 'antd';
+import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
@@ -13,7 +14,6 @@ import { clusterOperations } from '@/store/ducks/cluster';
 
 import ServiceForm from '@/components/ServiceForm';
 
-const ListItem = List.Item;
 const TreeNode = Tree.TreeNode;
 
 interface ServiceState {
@@ -53,7 +53,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     this.setState({ visibleModal: false });
   };
 
-  protected renderListItemAction = (id: string | undefined) => {
+  protected renderAction = (id: string | undefined) => {
     return [
       <Popconfirm
         key="action.delete"
@@ -67,106 +67,91 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     ];
   };
 
-  protected renderListItemContent = (
-    title: string | React.ReactNode,
-    content: string | React.ReactNode,
-    col = 1
-  ) => {
-    return (
-      <div className={styles.column} style={{ flex: col }}>
-        <div className="title">{title}</div>
-        <div className="content">{content}</div>
-      </div>
-    );
-  };
-
-  protected renderListItem = (item: ServiceModel.Service) => {
-    return (
-      <ListItem key={item.id} actions={this.renderListItemAction(item.id)}>
-        <div className={styles.content}>
-          <div className={styles.leading}>
-            <h3 className="title" title={item.name}>
-              {item.name}
-            </h3>
-          </div>
-          <div className={styles.property}>
-            {this.renderListItemContent(
-              <FormattedMessage id={`service.namespace`} />,
-              item.namespace
-            )}
-            {this.renderListItemContent(
-              <FormattedMessage id={`service.type`} />,
-              item.type
-            )}
-            {this.renderListItemContent(
-              <FormattedMessage id={`service.selectors`} />,
-              <div>
-                {Object.keys(item.selector).map((key: string) => (
-                  <Tag key={key}>{`${key} : ${item.selector[key]}`}</Tag>
-                ))}
-              </div>
-            )}
-            {this.renderListItemContent(
-              <FormattedMessage id={`service.ports`} />,
-              <Tree showIcon={true} selectable={false}>
-                {item.ports.map((port: ServiceModel.ServicePort) => (
-                  <TreeNode
-                    title={port.name}
-                    key={port.name}
-                    icon={<Icon type="tags" />}
-                  >
-                    <TreeNode
-                      icon={<Icon type="tag-o" />}
-                      title={`Target Port: ${port.targetPort}`}
-                    />
-                    <TreeNode
-                      icon={<Icon type="tag-o" />}
-                      title={`Port: ${port.port}`}
-                    />
-                    {item.type === 'NodePort' && (
-                      <TreeNode
-                        icon={<Icon type="tag-o" />}
-                        title={`Node Port: ${port.nodePort}`}
-                      />
-                    )}
-                  </TreeNode>
-                ))}
-              </Tree>
-            )}
-            {this.renderListItemContent(
-              <FormattedMessage id={`service.createAt`} />,
-              moment(item.createdAt).calendar()
-            )}
-          </div>
-        </div>
-      </ListItem>
-    );
-  };
-
   public render() {
     const { services } = this.props;
+    const columns: Array<ColumnProps<ServiceModel.Service>> = [
+      {
+        title: <FormattedMessage id="service.name" />,
+        dataIndex: 'name'
+      },
+      {
+        title: <FormattedMessage id="service.namespace" />,
+        dataIndex: 'namespace'
+      },
+      {
+        title: <FormattedMessage id="service.type" />,
+        dataIndex: 'type'
+      },
+      {
+        title: <FormattedMessage id="service.selectors" />,
+        render: (_, record) => (
+          <div>
+            {Object.keys(record.selector).map((key: string) => (
+              <Tag key={key}>{`${key} : ${record.selector[key]}`}</Tag>
+            ))}
+          </div>
+        )
+      },
+      {
+        title: <FormattedMessage id="service.ports" />,
+        render: (_, record) => (
+          <Tree showIcon={true} selectable={false}>
+            {record.ports.map((port: ServiceModel.ServicePort) => (
+              <TreeNode
+                title={port.name}
+                key={port.name}
+                icon={<Icon type="tags" />}
+              >
+                <TreeNode
+                  icon={<Icon type="tag-o" />}
+                  title={`Target Port: ${port.targetPort}`}
+                />
+                <TreeNode
+                  icon={<Icon type="tag-o" />}
+                  title={`Port: ${port.port}`}
+                />
+                {record.type === 'NodePort' && (
+                  <TreeNode
+                    icon={<Icon type="tag-o" />}
+                    title={`Node Port: ${port.nodePort}`}
+                  />
+                )}
+              </TreeNode>
+            ))}
+          </Tree>
+        )
+      },
+      {
+        title: <FormattedMessage id="service.createdAt" />,
+        render: (_, record) => moment(record.createdAt).calendar()
+      },
+      {
+        title: 'Action',
+        key: 'action',
+        render: (_, record) => (
+          <div className={styles.drawerBottom}>
+            {this.renderAction(record.id)}
+          </div>
+        )
+      }
+    ];
     return (
       <div>
-        <Card title="Service">
-          <List
-            bordered={true}
-            dataSource={services}
-            renderItem={this.renderListItem}
-          />
-          <Button
-            type="dashed"
-            className={styles.add}
-            onClick={this.showCreate}
-          >
-            <Icon type="plus" /> <FormattedMessage id="service.add" />
-          </Button>
-          <ServiceForm
-            services={services}
-            visible={this.state.visibleModal}
-            onCancel={this.hideCreate}
-            onSubmit={this.handleSubmit}
-          />
-        </Card>
+        <Table
+          className={styles.table}
+          columns={columns}
+          dataSource={services}
+          size="middle"
+        />
+        <Button type="dashed" className={styles.add} onClick={this.showCreate}>
+          <Icon type="plus" /> <FormattedMessage id="service.add" />
+        </Button>
+        <ServiceForm
+          services={services}
+          visible={this.state.visibleModal}
+          onCancel={this.hideCreate}
+          onSubmit={this.handleSubmit}
+        />
       </div>
     );
   }

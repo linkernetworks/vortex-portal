@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
 import * as styles from './styles.module.scss';
-import { Card, List, Button, Icon, Popconfirm, Table } from 'antd';
+import { Button, Icon, Popconfirm, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
