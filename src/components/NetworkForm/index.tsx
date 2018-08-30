@@ -144,7 +144,7 @@ class NetworkForm extends React.PureComponent<
         ''
       ) : (
         <FormattedMessage
-          id="form.message.requred"
+          id="form.message.required"
           values={{
             field: <FormattedMessage id={`network.${field}`} />
           }}

@@ -16,16 +16,20 @@ interface OwnProps extends FormComponentProps {
 }
 
 class SignIn extends React.PureComponent<SignInProps, object> {
-  protected handleSubmit = () => {
-    const data = this.props.form.getFieldsValue() as LoginCredential;
-    this.props.onSubmit(data);
+  protected handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    this.props.form.validateFields((error, value: LoginCredential) => {
+      if (!error) {
+        this.props.onSubmit(value);
+      }
+    });
   };
 
   public render() {
     const { getFieldDecorator } = this.props.form;
     return (
       <React.Fragment>
-        <Form>
+        <Form onSubmit={this.handleSubmit}>
           <div className={styles.header}>
             <h2>
               <FormattedMessage id="auth.signin" />
@@ -35,7 +39,25 @@ class SignIn extends React.PureComponent<SignInProps, object> {
             </p>
           </div>
           <FormItem>
-            {getFieldDecorator('username', {})(
+            {getFieldDecorator('username', {
+              rules: [
+                {
+                  required: true,
+                  message: (
+                    <FormattedMessage
+                      id="form.message.required"
+                      values={{
+                        field: <FormattedMessage id="auth.username" />
+                      }}
+                    />
+                  )
+                },
+                {
+                  type: 'email',
+                  message: <FormattedMessage id="form.message.email" />
+                }
+              ]
+            })(
               <Input
                 prefix={<Icon className={styles.icon} type="mail" />}
                 placeholder={this.props.intl.formatMessage({
@@ -45,7 +67,21 @@ class SignIn extends React.PureComponent<SignInProps, object> {
             )}
           </FormItem>
           <FormItem>
-            {getFieldDecorator('password', {})(
+            {getFieldDecorator('password', {
+              rules: [
+                {
+                  required: true,
+                  message: (
+                    <FormattedMessage
+                      id="form.message.required"
+                      values={{
+                        field: <FormattedMessage id="auth.password" />
+                      }}
+                    />
+                  )
+                }
+              ]
+            })(
               <Input
                 type="password"
                 prefix={<Icon className={styles.icon} type="lock" />}
@@ -60,7 +96,7 @@ class SignIn extends React.PureComponent<SignInProps, object> {
               type="primary"
               size="large"
               className={styles['login-button']}
-              onClick={this.handleSubmit}
+              htmlType="submit"
             >
               <FormattedMessage id="auth.signin" />
             </Button>

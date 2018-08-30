@@ -148,7 +148,9 @@ class SignUp extends React.PureComponent<
     }));
   };
 
-  protected handleSubmit = () => {
+  protected handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     const value = omit(
       this.props.form.getFieldsValue(),
       'confirmPassword'
@@ -175,7 +177,7 @@ class SignUp extends React.PureComponent<
     const isLast = +tabKey === this.steps.length - 1;
 
     return (
-      <Form>
+      <Form onSubmit={this.handleSubmit}>
         <div className={styles.header}>
           <h2>
             <FormattedMessage id="auth.signup" />
@@ -204,7 +206,7 @@ class SignUp extends React.PureComponent<
                 <Button
                   type="primary"
                   className={styles.action}
-                  onClick={this.handleSubmit}
+                  htmlType="submit"
                 >
                   <FormattedMessage id="action.done" />
                 </Button>

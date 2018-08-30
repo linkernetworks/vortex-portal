@@ -5,4 +5,5 @@ export default {
   'user.username': 'Username',
   'user.role': 'Role',
   'user.phoneNumber': 'Phone Number',
+  'user.add': 'Create User'
 };
