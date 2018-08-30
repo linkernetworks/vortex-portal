@@ -307,7 +307,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         mountPath: this.mountPath.current.input.value
       });
       this.mountPath.current.input.value = '';
-      this.setState({ volumes: newVolumes });
+      this.setState({ volumes: newVolumes, volumeName: '' });
 
       const { setFieldsValue } = this.props.form;
       setFieldsValue({
@@ -642,33 +642,37 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                   </Row>
                 );
               })}
+              <Select
+                value={
+                  this.state.volumeName === ''
+                    ? undefined
+                    : this.state.volumeName
+                }
+                style={{ width: 200 }}
+                placeholder="Select a volume"
+                onChange={this.handleVolumeNameChange}
+              >
+                {filterVolumeOptions.map(volume => {
+                  return (
+                    <Option key={volume.name} value={volume.name}>
+                      {volume.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+              <Input
+                ref={this.mountPath}
+                style={{ width: 200 }}
+                placeholder="Give a mount path"
+                onBlur={this.addVolume}
+              />
               {filterVolumeOptions.length > 0 && (
-                <div>
-                  <Select
-                    style={{ width: 200 }}
-                    placeholder="Select a volume"
-                    onChange={this.handleVolumeNameChange}
-                  >
-                    {filterVolumeOptions.map(volume => {
-                      return (
-                        <Option key={volume.name} value={volume.name}>
-                          {volume.name}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                  <Input
-                    ref={this.mountPath}
-                    style={{ width: 200 }}
-                    placeholder="Give a mount path"
-                    onBlur={this.addVolume}
-                  />
-                  <Button
-                    style={{ marginLeft: 12 }}
-                    shape="circle"
-                    icon="enter"
-                  />
-                </div>
+                <Button
+                  style={{ marginLeft: 12 }}
+                  shape="circle"
+                  icon="enter"
+                  onClick={this.addVolume}
+                />
               )}
             </div>
           )}
