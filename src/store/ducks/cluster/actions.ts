@@ -102,8 +102,20 @@ export const fetchDeployments = createAsyncAction(
   'FETCH_DEPLOYMENTS_FAILURE'
 )<void, Deployment.Controllers, Error>();
 
+export const fetchDeploymentsFromMongo = createAsyncAction(
+  'FETCH_DEPLOYMENTS_FROM_MONGO_REQUEST',
+  'FETCH_DEPLOYMENTS_FROM_MONGO_SUCCESS',
+  'FETCH_DEPLOYMENTS_FROM_MONGO_FAILURE'
+)<void, Array<Deployment.Deployment>, Error>();
+
 export const addDeployment = createAsyncAction(
   'ADD_DEPLOYMENT_REQUEST',
   'ADD_DEPLOYMENT_SUCCESS',
   'ADD_DEPLOYMENT_FAILURE'
 )<void, Deployment.Deployment, Error>();
+
+export const removeDeployment = createAsyncAction(
+  'REMOVE_DEPLOYMENT_REQUEST',
+  'REMOVE_DEPLOYMENT_SUCCESS',
+  'REMOVE_DEPLOYMENT_FAILURE'
+)<void, { id: string }, Error>();

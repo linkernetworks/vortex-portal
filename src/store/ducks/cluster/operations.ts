@@ -245,3 +245,37 @@ export const addDeployment = (
     }
   };
 };
+
+export const removeDeployment = (
+  id: string
+): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.removeDeployment.request());
+    try {
+      const res = await deploymentAPI.deleteDeployment(id);
+      if (!res.data.error) {
+        return dispatch(clusterActions.removeDeployment.success({ id }));
+      } else {
+        throw new Error(res.data.message);
+      }
+    } catch (e) {
+      return dispatch(clusterActions.removeDeployment.failure(e));
+    }
+  };
+};
+
+export const fetchDeploymentsFromMongo = (): RTAction<
+  Promise<ClusterActionType>
+> => {
+  return async dispatch => {
+    dispatch(clusterActions.fetchDeploymentsFromMongo.request);
+    try {
+      const res = await deploymentAPI.getDeploymentsFromMongo();
+      return dispatch(
+        clusterActions.fetchDeploymentsFromMongo.success(res.data)
+      );
+    } catch (e) {
+      return dispatch(clusterActions.fetchDeploymentsFromMongo.failure(e));
+    }
+  };
+};

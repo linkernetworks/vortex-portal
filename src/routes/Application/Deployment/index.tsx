@@ -3,7 +3,15 @@ import { Link } from 'react-router-dom';
 import * as DeploymentModel from '@/models/Deployment';
 import * as PodModel from '@/models/Pod';
 import { connect } from 'react-redux';
-import { Button, Icon, Card, Table, Drawer, Tag } from 'antd';
+import {
+  Button,
+  Icon,
+  Table,
+  Drawer,
+  Tag,
+  notification,
+  Popconfirm
+} from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
@@ -22,6 +30,7 @@ interface DeploymentState {
   visibleModal: boolean;
   currentPod: string;
   currentDeployment: string;
+  deletable: boolean;
 }
 
 type DeploymentProps = OwnProps & InjectedAuthRouterProps;
@@ -33,6 +42,8 @@ interface OwnProps {
   deployments: DeploymentModel.Controllers;
   allDeployments: Array<string>;
   fetchDeployments: () => any;
+  fetchDeploymentsFromMongo: () => any;
+  removeDeployment: (id: string) => any;
 }
 
 interface PodInfo {
@@ -62,7 +73,8 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
       visibleDeploymentDrawer: false,
       visibleModal: false,
       currentPod: '',
-      currentDeployment: ''
+      currentDeployment: '',
+      deletable: true
     };
   }
 
@@ -70,6 +82,7 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
     this.props.fetchPods();
     this.intervalPodId = window.setInterval(this.props.fetchPods, 5000);
     this.props.fetchDeployments();
+    this.props.fetchDeploymentsFromMongo();
   }
 
   public componentWillUnmount() {
@@ -166,6 +179,15 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
     }
   };
 
+  protected handleRemoveDeployment = (id: string) => {
+    this.setState({ deletable: false });
+    this.props.removeDeployment(id);
+    return notification.success({
+      message: 'Success',
+      description: 'Delete the deployment successfully.'
+    });
+  };
+
   protected renderListItemContent = (
     title: string | React.ReactNode,
     content: string | React.ReactNode
@@ -240,6 +262,29 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
     );
   };
 
+  protected renderAction = (id: string | undefined) => {
+    if (!!id && this.state.deletable === true) {
+      return (
+        <Popconfirm
+          key="action.delete"
+          title={<FormattedMessage id="action.confirmToDelete" />}
+          onConfirm={this.handleRemoveDeployment.bind(this, id)}
+        >
+          <Button>
+            <Icon type="delete" /> <FormattedMessage id="deployment.delete" />
+          </Button>
+        </Popconfirm>
+      );
+    } else {
+      return (
+        <Button type="dashed" disabled={true}>
+          <Icon type="delete" />
+          <FormattedMessage id="deployment.undeletable" />
+        </Button>
+      );
+    }
+  };
+
   public render() {
     const { deployments, pods, podsNics } = this.props;
     const { currentDeployment, currentPod } = this.state;
@@ -287,15 +332,29 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
                 hideMorePod={this.hideMorePod}
                 removePod={this.props.removePod}
               />
+<<<<<<< HEAD
             </Drawer>
           )}
         </Card>
+=======
+            )}
+            <div className={styles.drawerBottom}>
+              {this.renderAction(deployments[currentDeployment].id)}
+            </div>
+          </Drawer>
+        )}
+>>>>>>> Add delete deployment
       </div>
     );
   }
 }
 
 const mapStateToProps = (state: RootState) => {
+  state.cluster.deploymentsFromMongo.forEach(deployment => {
+    if (state.cluster.deployments[deployment.name] !== undefined) {
+      state.cluster.deployments[deployment.name].id = deployment.id;
+    }
+  });
   return {
     pods: state.cluster.pods,
     podsNics: state.cluster.podsNics,
@@ -306,8 +365,12 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchPods: () => dispatch(clusterOperations.fetchPods()),
+  removePod: (id: string) => dispatch(clusterOperations.removePod(id)),
   fetchDeployments: () => dispatch(clusterOperations.fetchDeployments()),
-  removePod: (id: string) => dispatch(clusterOperations.removePod(id))
+  fetchDeploymentsFromMongo: () =>
+    dispatch(clusterOperations.fetchDeploymentsFromMongo()),
+  removeDeployment: (id: string) =>
+    dispatch(clusterOperations.removeDeployment(id))
 });
 
 export default connect(
