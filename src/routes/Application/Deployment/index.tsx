@@ -96,10 +96,6 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
         width: 300
       },
       {
-        title: <FormattedMessage id="deployment.type" />,
-        dataIndex: 'type'
-      },
-      {
         title: <FormattedMessage id="deployment.namespace" />,
         dataIndex: 'namespace'
       },
