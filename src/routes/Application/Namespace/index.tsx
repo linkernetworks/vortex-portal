@@ -2,7 +2,8 @@ import * as React from 'react';
 import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
 import * as styles from './styles.module.scss';
-import { Card, List, Button, Icon, Popconfirm } from 'antd';
+import { Card, List, Button, Icon, Popconfirm, Table } from 'antd';
+import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
@@ -12,8 +13,6 @@ import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
 
 import NamespaceForm from '@/components/NamespaceForm';
-
-const ListItem = List.Item;
 
 interface NamespaceState {
   visibleModal: boolean;
@@ -53,7 +52,7 @@ class Namespace extends React.Component<NamespaceProps, NamespaceState> {
     this.setState({ visibleModal: false });
   };
 
-  protected renderListItemAction = (id: string | undefined) => {
+  protected renderAction = (id: string | undefined) => {
     return [
       <Popconfirm
         key="action.delete"
@@ -67,63 +66,45 @@ class Namespace extends React.Component<NamespaceProps, NamespaceState> {
     ];
   };
 
-  protected renderListItemContent = (
-    title: string | React.ReactNode,
-    content: string | React.ReactNode,
-    col = 1
-  ) => {
-    return (
-      <div className={styles.column} style={{ flex: col }}>
-        <div className="title">{title}</div>
-        <div className="content">{content}</div>
-      </div>
-    );
-  };
-
-  protected renderListItem = (item: NamespaceModel.Namespace) => {
-    return (
-      <ListItem key={item.id} actions={this.renderListItemAction(item.id)}>
-        <div className={styles.content}>
-          <div className={styles.leading}>
-            <h3 className="title" title={item.name}>
-              {item.name}
-            </h3>
-          </div>
-          <div className={styles.property}>
-            {this.renderListItemContent(
-              <FormattedMessage id={`service.createAt`} />,
-              moment(item.createdAt).calendar()
-            )}
-          </div>
-        </div>
-      </ListItem>
-    );
-  };
-
   public render() {
     const { namespaces } = this.props;
+    const columns: Array<ColumnProps<NamespaceModel.Namespace>> = [
+      {
+        title: <FormattedMessage id="namespace.name" />,
+        dataIndex: 'name',
+        width: 300
+      },
+      {
+        title: <FormattedMessage id="namespace.createdAt" />,
+        render: (_, record) => moment(record.createdAt).calendar()
+      },
+      {
+        title: 'Action',
+        key: 'action',
+        render: (_, record) => (
+          <div className={styles.drawerBottom}>
+            {this.renderAction(record.id)}
+          </div>
+        )
+      }
+    ];
     return (
       <div>
-        <Card title="Namespace">
-          <List
-            bordered={true}
-            dataSource={namespaces}
-            renderItem={this.renderListItem}
-          />
-          <Button
-            type="dashed"
-            className={styles.add}
-            onClick={this.showCreate}
-          >
-            <Icon type="plus" /> <FormattedMessage id="namespace.add" />
-          </Button>
-          <NamespaceForm
-            namespaces={namespaces}
-            visible={this.state.visibleModal}
-            onCancel={this.hideCreate}
-            onSubmit={this.handleSubmit}
-          />
-        </Card>
+        <Table
+          className={styles.table}
+          columns={columns}
+          dataSource={namespaces}
+          size="middle"
+        />
+        <Button type="dashed" className={styles.add} onClick={this.showCreate}>
+          <Icon type="plus" /> <FormattedMessage id="namespace.add" />
+        </Button>
+        <NamespaceForm
+          namespaces={namespaces}
+          visible={this.state.visibleModal}
+          onCancel={this.hideCreate}
+          onSubmit={this.handleSubmit}
+        />
       </div>
     );
   }
