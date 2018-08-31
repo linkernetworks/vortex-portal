@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Button, Tag, Icon, Tree, List, Popconfirm, Table } from 'antd';
+import { Button, Tag, Icon, Tree, Popconfirm, Card, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
@@ -120,7 +120,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
                   <TreeNode
                     key={`${node.name}-${idx}-${physicalInterface.name}-${
                       physicalInterface.pciID
-                      }`}
+                    }`}
                     icon={<FontAwesomeIcon icon="plug" />}
                     title={physicalInterface.name || physicalInterface.pciID}
                   />
@@ -136,8 +136,8 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           record.vlanTags.length === 0 ? (
             <FormattedMessage id="network.noTrunk" />
           ) : (
-              this.renderTags(record.vlanTags)
-            )
+            this.renderTags(record.vlanTags)
+          )
       },
       {
         title: <FormattedMessage id="network.createdAt" />,
@@ -155,28 +155,30 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     ];
     return (
       <div>
-        <Table
-          className={styles.table}
-          columns={columns}
-          dataSource={networks}
-          size="middle"
-        />
-        <Button
-          type="dashed"
-          className={styles.add}
-          onClick={() => this.setState({ isCreating: true })}
-        >
-          <Icon type="plus" /> <FormattedMessage id="network.add" />
-        </Button>
-        <NetworkFrom
-          visible={this.state.isCreating}
-          isLoading={this.props.isLoading}
-          onCancel={() => this.setState({ isCreating: false })}
-          onSubmit={this.handleSubmit}
-          networkNames={networkNames}
-          nodes={this.props.nodes}
-          nodesWithUsedInterfaces={this.props.nodesWithUsedInterfaces}
-        />
+        <Card title="Network">
+          <Table
+            className={styles.table}
+            columns={columns}
+            dataSource={networks}
+            size="small"
+          />
+          <Button
+            type="dashed"
+            className={styles.add}
+            onClick={() => this.setState({ isCreating: true })}
+          >
+            <Icon type="plus" /> <FormattedMessage id="network.add" />
+          </Button>
+          <NetworkFrom
+            visible={this.state.isCreating}
+            isLoading={this.props.isLoading}
+            onCancel={() => this.setState({ isCreating: false })}
+            onSubmit={this.handleSubmit}
+            networkNames={networkNames}
+            nodes={this.props.nodes}
+            nodesWithUsedInterfaces={this.props.nodesWithUsedInterfaces}
+          />
+        </Card>
       </div>
     );
   }

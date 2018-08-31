@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Table, Popconfirm } from 'antd';
+import { Card, Table, Popconfirm } from 'antd';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
@@ -92,12 +92,14 @@ class Users extends React.PureComponent<UsersProps, object> {
     const { users } = this.props;
     return (
       <div>
-        <Table
-          className={styles.table}
-          rowKey="id"
-          columns={this.columns}
-          dataSource={users.data}
-        />
+        <Card title="Users">
+          <Table
+            className={styles.table}
+            columns={this.columns}
+            dataSource={users.data}
+            size="small"
+          />
+        </Card>
       </div>
     );
   }

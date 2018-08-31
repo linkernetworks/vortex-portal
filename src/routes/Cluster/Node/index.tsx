@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Tag, Drawer, Tabs, Table, Icon } from 'antd';
+import { Row, Col, Tag, Drawer, Tabs, Card, Table, Icon } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
@@ -453,54 +453,56 @@ class Node extends React.Component<NodeProps, NodeState> {
     ];
     return (
       <div>
-        <Table
-          className={styles.table}
-          columns={columns}
-          dataSource={this.getNodeInfo(this.props.allNodes)}
-          size="middle"
-        />
-        {this.props.nodes.hasOwnProperty(currentNode) && (
-          <Drawer
-            title="Node"
-            width={720}
-            placement="right"
-            closable={false}
-            onClose={this.hideMore}
-            visible={this.state.visible}
-          >
-            <div className={styles.contentSection}>
-              <h2 style={{ display: 'inline' }}>
-                {this.props.nodes[currentNode].detail.hostname}
-              </h2>
-              {this.renderStatusIcon(
-                this.props.nodes[currentNode].detail.status
-              )}
-            </div>
+        <Card title="Node">
+          <Table
+            className={styles.table}
+            columns={columns}
+            dataSource={this.getNodeInfo(this.props.allNodes)}
+            size="small"
+          />
+          {this.props.nodes.hasOwnProperty(currentNode) && (
+            <Drawer
+              title="Node"
+              width={720}
+              placement="right"
+              closable={false}
+              onClose={this.hideMore}
+              visible={this.state.visible}
+            >
+              <div className={styles.contentSection}>
+                <h2 style={{ display: 'inline' }}>
+                  {this.props.nodes[currentNode].detail.hostname}
+                </h2>
+                {this.renderStatusIcon(
+                  this.props.nodes[currentNode].detail.status
+                )}
+              </div>
 
-            <div className={styles.contentSection}>
-              <h3>Details</h3>
-              {this.renderDetail(currentNode)}
-            </div>
+              <div className={styles.contentSection}>
+                <h3>Details</h3>
+                {this.renderDetail(currentNode)}
+              </div>
 
-            <div className={styles.contentSection}>
-              <h3>Labels</h3>
-              {this.renderListItemContent(
-                <FormattedMessage id="node.detail.labels" />,
-                this.renderLabels(this.props.nodes[currentNode].detail.labels)
-              )}
-            </div>
+              <div className={styles.contentSection}>
+                <h3>Labels</h3>
+                {this.renderListItemContent(
+                  <FormattedMessage id="node.detail.labels" />,
+                  this.renderLabels(this.props.nodes[currentNode].detail.labels)
+                )}
+              </div>
 
-            <div className={styles.contentSection}>
-              <h3>Resources</h3>
-              {this.renderResource(currentNode)}
-            </div>
+              <div className={styles.contentSection}>
+                <h3>Resources</h3>
+                {this.renderResource(currentNode)}
+              </div>
 
-            <div className={styles.contentSection}>
-              <h3>Interfaces</h3>
-              {this.renderInterface(currentNode)}
-            </div>
-          </Drawer>
-        )}
+              <div className={styles.contentSection}>
+                <h3>Interfaces</h3>
+                {this.renderInterface(currentNode)}
+              </div>
+            </Drawer>
+          )}
+        </Card>
       </div>
     );
   }

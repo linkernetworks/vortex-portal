@@ -7,7 +7,7 @@ export default {
   'network.selectType': 'Type',
   'network.physicalInterface': 'Physical Interface',
   'network.trunk': 'Trunk',
-  'network.createdAt': 'created at',
+  'network.createdAt': 'Created At',
   'network.vlanTags': 'VLAN Tags',
   'network.VLANTag': 'VLAN Tag',
   'network.newVLANTag': 'New VLANTag',

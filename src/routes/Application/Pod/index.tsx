@@ -17,7 +17,8 @@ import {
   Select,
   Table,
   notification,
-  Popconfirm
+  Popconfirm,
+  Card
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
@@ -688,106 +689,107 @@ class Pod extends React.Component<PodProps, PodState> {
     ];
     return (
       <div>
-        <InputGroup compact={true}>
-          <Select
-            style={{ width: '15%' }}
-            defaultValue="Pod Name"
-            onChange={this.handleChangeSearchType}
-          >
-            <Option value="pod">Pod Name</Option>
-            <Option value="container">Container Name</Option>
-            <Option value="node">Node Name</Option>
-            <Option value="namespace">Namespace</Option>
-          </Select>
-          <Search
-            style={{ width: '20%' }}
-            placeholder="Input search text"
-            value={this.state.searchText}
-            onChange={this.handleSearch}
+        <Card title="Pod">
+          <InputGroup compact={true}>
+            <Select
+              style={{ width: '15%' }}
+              defaultValue="Pod Name"
+              onChange={this.handleChangeSearchType}
+            >
+              <Option value="pod">Pod Name</Option>
+              <Option value="container">Container Name</Option>
+              <Option value="node">Node Name</Option>
+              <Option value="namespace">Namespace</Option>
+            </Select>
+            <Search
+              style={{ width: '20%' }}
+              placeholder="Input search text"
+              value={this.state.searchText}
+              onChange={this.handleSearch}
+            />
+          </InputGroup>
+          <br />
+          <Table
+            className={styles.table}
+            columns={columns}
+            dataSource={this.getPodInfo(filterPods)}
+            size="small"
           />
-        </InputGroup>
-        <br />
-        <Table
-          className={styles.table}
-          columns={columns}
-          dataSource={this.getPodInfo(filterPods)}
-          size="middle"
-        />
-        {this.props.pods.hasOwnProperty(currentPod) && (
-          <Drawer
-            title="Pod"
-            width={720}
-            closable={false}
-            onClose={this.hideMorePod}
-            visible={this.state.visiblePodDrawer}
-          >
-            <div className={styles.contentSection}>
-              <h2 style={{ display: 'inline' }}>
-                {this.props.pods[currentPod].podName}
-              </h2>
-              {this.renderStatusIcon(this.props.pods[currentPod].status)}
-            </div>
-
-            <div className={styles.contentSection}>
-              <h3>Details</h3>
-              {this.renderDetail(currentPod)}
-            </div>
-
-            <div className={styles.contentSection}>
-              <h3>Labels</h3>
-              {this.renderListItemContent(
-                <FormattedMessage id="pod.labels" />,
-                this.renderLabels(this.props.pods[currentPod].labels)
-              )}
-            </div>
-
-            <div className={styles.contentSection}>
-              <h3>Containers</h3>
-              {this.renderContainer()}
-            </div>
-
-            <h3>Interface</h3>
-            {this.renderInterface(this.props.podsNics[currentPod])}
-
+          {this.props.pods.hasOwnProperty(currentPod) && (
             <Drawer
-              title="Container"
+              title="Pod"
               width={720}
               closable={false}
-              onClose={this.hideMoreContainer}
-              visible={this.state.visibleContainerDrawer}
+              onClose={this.hideMorePod}
+              visible={this.state.visiblePodDrawer}
             >
               <div className={styles.contentSection}>
                 <h2 style={{ display: 'inline' }}>
-                  {currentContainer.detail.containerName}
+                  {this.props.pods[currentPod].podName}
                 </h2>
-                {this.renderStatusIcon(currentContainer.detail.status)}
+                {this.renderStatusIcon(this.props.pods[currentPod].status)}
               </div>
 
               <div className={styles.contentSection}>
-                <h3>Detail</h3>
-                {this.renderContainerDetail(currentContainer.detail)}
+                <h3>Details</h3>
+                {this.renderDetail(currentPod)}
               </div>
 
               <div className={styles.contentSection}>
-                <h3>Commands</h3>
+                <h3>Labels</h3>
                 {this.renderListItemContent(
-                  null,
-                  this.renderCommands(currentContainer.detail.command)
+                  <FormattedMessage id="pod.labels" />,
+                  this.renderLabels(this.props.pods[currentPod].labels)
                 )}
               </div>
 
               <div className={styles.contentSection}>
-                <h3>Resource</h3>
-                {this.renderResource(currentContainer.resource)}
+                <h3>Containers</h3>
+                {this.renderContainer()}
+              </div>
+
+              <h3>Interface</h3>
+              {this.renderInterface(this.props.podsNics[currentPod])}
+
+              <Drawer
+                title="Container"
+                width={720}
+                closable={false}
+                onClose={this.hideMoreContainer}
+                visible={this.state.visibleContainerDrawer}
+              >
+                <div className={styles.contentSection}>
+                  <h2 style={{ display: 'inline' }}>
+                    {currentContainer.detail.containerName}
+                  </h2>
+                  {this.renderStatusIcon(currentContainer.detail.status)}
+                </div>
+
+                <div className={styles.contentSection}>
+                  <h3>Detail</h3>
+                  {this.renderContainerDetail(currentContainer.detail)}
+                </div>
+
+                <div className={styles.contentSection}>
+                  <h3>Commands</h3>
+                  {this.renderListItemContent(
+                    null,
+                    this.renderCommands(currentContainer.detail.command)
+                  )}
+                </div>
+
+                <div className={styles.contentSection}>
+                  <h3>Resource</h3>
+                  {this.renderResource(currentContainer.resource)}
+                </div>
+              </Drawer>
+              <div className={styles.drawerBottom}>
+                {this.renderAction(this.props.pods[currentPod].metadata)}
               </div>
             </Drawer>
-            <div className={styles.drawerBottom}>
-              {this.renderAction(this.props.pods[currentPod].metadata)}
-            </div>
-          </Drawer>
-        )}
+          )}
 
-        {/* <Button type="dashed" className={styles.add} onClick={this.showCreate}>
+          {/* <Button type="dashed" className={styles.add} onClick={this.showCreate}>
           <Icon type="plus" /> <FormattedMessage id="pod.add" />
         </Button>
         <PodForm
@@ -799,6 +801,7 @@ class Pod extends React.Component<PodProps, PodState> {
           onCancel={this.hideCreate}
           onSubmit={this.handleSubmit}
         /> */}
+        </Card>
       </div>
     );
   }

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import * as DeploymentModel from '@/models/Deployment';
 import * as ContainerModel from '@/models/Container';
 import { connect } from 'react-redux';
-import { Button, Icon, Table } from 'antd';
+import { Button, Icon, Card, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
@@ -126,7 +126,7 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
         className={styles.table}
         columns={columns}
         dataSource={this.getDeploymentInfo(this.props.allDeployments)}
-        size="middle"
+        size="small"
       />
     );
   };
@@ -134,12 +134,14 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
   public render() {
     return (
       <div>
-        {this.renderTable()}
-        <Link className={styles.action} to="/application/deployment/create">
-          <Button type="dashed" className={styles.add}>
-            <Icon type="plus" /> <FormattedMessage id="deployment.add" />
-          </Button>
-        </Link>
+        <Card title="Deployment">
+          {this.renderTable()}
+          <Link className={styles.action} to="/application/deployment/create">
+            <Button type="dashed" className={styles.add}>
+              <Icon type="plus" /> <FormattedMessage id="deployment.add" />
+            </Button>
+          </Link>
+        </Card>
       </div>
     );
   }

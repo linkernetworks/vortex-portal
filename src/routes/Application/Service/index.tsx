@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ServiceModel from '@/models/Service';
 import { connect } from 'react-redux';
 import * as styles from './styles.module.scss';
-import { Button, Icon, Tree, Tag, Popconfirm, Table } from 'antd';
+import { Button, Icon, Tree, Tag, Popconfirm, Card, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
@@ -137,21 +137,27 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     ];
     return (
       <div>
-        <Table
-          className={styles.table}
-          columns={columns}
-          dataSource={services}
-          size="middle"
-        />
-        <Button type="dashed" className={styles.add} onClick={this.showCreate}>
-          <Icon type="plus" /> <FormattedMessage id="service.add" />
-        </Button>
-        <ServiceForm
-          services={services}
-          visible={this.state.visibleModal}
-          onCancel={this.hideCreate}
-          onSubmit={this.handleSubmit}
-        />
+        <Card title="Service">
+          <Table
+            className={styles.table}
+            columns={columns}
+            dataSource={services}
+            size="small"
+          />
+          <Button
+            type="dashed"
+            className={styles.add}
+            onClick={this.showCreate}
+          >
+            <Icon type="plus" /> <FormattedMessage id="service.add" />
+          </Button>
+          <ServiceForm
+            services={services}
+            visible={this.state.visibleModal}
+            onCancel={this.hideCreate}
+            onSubmit={this.handleSubmit}
+          />
+        </Card>
       </div>
     );
   }
