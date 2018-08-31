@@ -47,9 +47,11 @@ $tag-gutter: 8px;
 }
 
 .table {
-  background-color: #fafafa;
-  padding-left: $padding-md;;
-  padding-right: $padding-md;;
+  background-color: white;
+  th, td {
+    padding-left: $padding-md !important;
+    padding-right: $padding-md !important;
+  }
 }
 
 .label {
