@@ -1,0 +1,10 @@
+@import '../../styles/variables';
+
+.table {
+  background-color: white;
+  th, td {
+    padding-left: $padding-md !important;
+    padding-right: $padding-md !important;
+  }
+}
+

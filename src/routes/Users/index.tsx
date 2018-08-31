@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Card, Table, Popconfirm } from 'antd';
+import { Table, Popconfirm } from 'antd';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
@@ -10,6 +10,8 @@ import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import { FlattenUser } from '@/models/User';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { userOperations, userSelectors } from '@/store/ducks/user';
+
+import * as styles from './styles.module.scss';
 
 type UsersProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
 
@@ -90,9 +92,12 @@ class Users extends React.PureComponent<UsersProps, object> {
     const { users } = this.props;
     return (
       <div>
-        <Card title={<FormattedMessage id="user" />}>
-          <Table rowKey="id" columns={this.columns} dataSource={users.data} />
-        </Card>
+        <Table
+          className={styles.table}
+          rowKey="id"
+          columns={this.columns}
+          dataSource={users.data}
+        />
       </div>
     );
   }
