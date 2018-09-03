@@ -76,22 +76,25 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
   }
 
   public componentDidMount() {
-    const { pod } = this.props;
-    if (!!pod) {
-      pod.containers.map(container => {
-        // Only show in pod's container drawer so get container data without flow
-        const containers: Array<ContainerModel.Container> = [];
-        containerAPI.getContainer(pod.podName, container).then(res => {
-          containers.push(res.data);
-          this.setState({ containers });
+    const tmpId = window.setInterval(() => {
+      const { pod } = this.props;
+      if (!!pod) {
+        pod.containers.map(container => {
+          // Only show in pod's container drawer so get container data without flow
+          const containers: Array<ContainerModel.Container> = [];
+          containerAPI.getContainer(pod.podName, container).then(res => {
+            containers.push(res.data);
+            this.setState({ containers });
+          });
+          const id = window.setInterval(
+            () => this.fetchContainer(pod.podName, container),
+            5000
+          );
+          this.intervalContainersId.push(id);
         });
-        const id = window.setInterval(
-          () => this.fetchContainer(pod.podName, container),
-          5000
-        );
-        this.intervalContainersId.push(id);
-      });
-    }
+        clearInterval(tmpId);
+      }
+    }, 1000);
   }
 
   public componentWillUnmount() {

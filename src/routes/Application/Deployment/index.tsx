@@ -80,8 +80,8 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
   }
 
   public componentDidMount() {
-    this.props.fetchPods();
     this.intervalPodId = window.setInterval(this.props.fetchPods, 5000);
+    this.props.fetchPods();
     this.props.fetchDeployments();
     this.props.fetchDeploymentsFromMongo();
   }
@@ -214,6 +214,9 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
   };
 
   protected getPodInfo = (pods: Array<string>) => {
+    if (Object.keys(this.props.pods).length === 0) {
+      return [];
+    }
     return pods.map(pod => ({
       name: this.props.pods[pod].podName,
       namespace: this.props.pods[pod].namespace,
