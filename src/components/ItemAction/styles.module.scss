@@ -1,0 +1,9 @@
+@import '../../styles/variables';
+
+.disabled {
+  color: $normal-color;
+  cursor: not-allowed;
+  &:hover {
+    color: $normal-color;
+  }
+}
