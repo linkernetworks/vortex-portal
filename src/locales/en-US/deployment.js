@@ -13,5 +13,7 @@ export default {
   'deployment.add': 'Create Deployment',
   'deployment.addWithNetwork': 'Create Deployment with Network',
   'deployment.replicas': 'Number of pods',
-  'deployment.volumes': 'Volumes'
+  'deployment.volumes': 'Volumes',
+  'deployment.delete': 'Delete the Deployment',
+  'deployment.undeletable': 'Can not delete this Deployment',
 };

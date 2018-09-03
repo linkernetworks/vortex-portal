@@ -15,6 +15,7 @@ export interface ClusterStateType {
   podsFromMongo: Array<Pod.PodFromMongo>;
   containers: {};
   deployments: Deployment.Controllers;
+  deploymentsFromMongo: Array<Deployment.Deployment>;
   services: Array<Service.Service>;
   namespaces: Array<Namespace.Namespace>;
   allNodes: Array<string>;
@@ -34,6 +35,7 @@ const initialState: ClusterStateType = {
   podsFromMongo: [],
   containers: {},
   deployments: {},
+  deploymentsFromMongo: [],
   services: [],
   namespaces: [],
   allNodes: [],
@@ -310,6 +312,12 @@ export function clusterReducer(
           record => record.id !== action.payload.id
         )
       };
+    case getType(Cluster.fetchDeploymentsFromMongo.success):
+      return {
+        ...state,
+        deploymentsFromMongo: action.payload,
+        isLoading: false
+      };
     case getType(Cluster.fetchDeployments.success):
       return {
         ...state,
@@ -321,6 +329,14 @@ export function clusterReducer(
       return {
         ...state,
         isLoading: false
+      };
+    case getType(Cluster.removeDeployment.success):
+      return {
+        ...state,
+        isLoading: false,
+        deploymentsFromMongo: state.deploymentsFromMongo.filter(
+          record => record.id !== action.payload.id
+        )
       };
     default:
       return state;

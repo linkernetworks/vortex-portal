@@ -1,4 +1,5 @@
 export interface Deployment {
+  id?: string;
   name: string;
   namespace: string;
   labels: any;
@@ -46,6 +47,7 @@ export interface DeploymentNetwork {
 }
 
 export interface Controller {
+  id?: string;
   controllerName: string;
   type: string;
   namespace: string;
@@ -55,6 +57,7 @@ export interface Controller {
   currentPod: number;
   availablePod: number;
   labels: any;
+  pods: Array<string>;
 }
 
 export interface Controllers {
