@@ -6,6 +6,7 @@ export default {
   'auth.displayName': 'Display Name',
   'auth.firstName': 'First Name',
   'auth.lastName': 'Last Name',
+  'auth.role': 'role',
   'auth.signin': 'Sign in',
   'auth.signup': 'Sign up',
   'auth.signin.subtitle': 'to acccess your service',
@@ -23,4 +24,5 @@ export default {
   'auth.hint.signup.success.description': 'Please sign in with your email and password',
   'auth.hint.signup.failure': 'Failed to Signup',
   'auth.hint.signin.failure': 'Failed to Signin',
+  'auth.help.password': 'This is one-time password, please send to your user.'
 };

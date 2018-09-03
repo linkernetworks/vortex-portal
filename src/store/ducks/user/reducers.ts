@@ -10,13 +10,16 @@ export type UserActionType = ActionType<typeof User>;
 function isLoading(state = false, action: UserActionType) {
   switch (action.type) {
     case getType(User.fetchUsers.request):
+    case getType(User.addUser.request):
     case getType(User.removeUser.request):
     case getType(User.login.request):
       return true;
     case getType(User.fetchUsers.success):
+    case getType(User.addUser.success):
     case getType(User.removeUser.success):
     case getType(User.login.success):
     case getType(User.fetchUsers.failure):
+    case getType(User.addUser.failure):
     case getType(User.removeUser.failure):
     case getType(User.login.failure):
       return false;
@@ -28,6 +31,7 @@ function isLoading(state = false, action: UserActionType) {
 function hasError(state = null, action: UserActionType) {
   switch (action.type) {
     case getType(User.fetchUsers.failure):
+    case getType(User.addUser.failure):
     case getType(User.removeUser.failure):
     case getType(User.login.failure):
       return action.payload;
@@ -42,6 +46,8 @@ function users(state: Array<userModel> = [], action: UserActionType) {
   switch (action.type) {
     case getType(User.fetchUsers.success):
       return action.payload;
+    case getType(User.addUser.success):
+      return [...state, action.payload];
     case getType(User.removeUser.success):
       return state.filter(user => user.id !== action.payload.id);
     default:

@@ -2,7 +2,7 @@ import * as jwtDecode from 'jwt-decode';
 import { RTAction } from '../index';
 import { userActions, UserActionType } from './index';
 import * as userAPI from '@/services/user';
-import { LoginCredential } from '@/models/User';
+import { LoginCredential, UserBrief } from '@/models/User';
 import { saveToken } from '@/utils/auth';
 
 export const fetchUsers = (): RTAction<Promise<UserActionType>> => {
@@ -13,6 +13,18 @@ export const fetchUsers = (): RTAction<Promise<UserActionType>> => {
       return dispatch(userActions.fetchUsers.success(res.data));
     } catch (e) {
       return dispatch(userActions.fetchUsers.failure(e.response.data));
+    }
+  };
+};
+
+export const addUser = (data: UserBrief): RTAction<Promise<UserActionType>> => {
+  return async dispatch => {
+    dispatch(userActions.addUser.request());
+    try {
+      const res = await userAPI.createUser(data);
+      return dispatch(userActions.addUser.success(res.data));
+    } catch (e) {
+      return dispatch(userActions.addUser.failure(e.response.data));
     }
   };
 };

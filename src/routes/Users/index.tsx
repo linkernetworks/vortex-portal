@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Button, Card, Table, Icon, Popconfirm } from 'antd';
+import { Button, Card, Table, Icon } from 'antd';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { Dispatch } from 'redux';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
-import { FlattenUser } from '@/models/User';
+import { FlattenUser, UserBrief, UserFields } from '@/models/User';
+import ItemAction from '@/components/ItemAction';
+import UserForm from '@/components/UserForm';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
-import { userOperations, userSelectors } from '@/store/ducks/user';
+import { userOperations, userSelectors, userActions } from '@/store/ducks/user';
 
 import * as styles from './styles.module.scss';
 
@@ -22,10 +24,16 @@ interface OwnProps extends ColumnProps<FlattenUser> {
     error: Error | null;
   };
   fetchUsers: () => any;
+  addUser: (data: UserBrief) => any;
   removeUser: (id: string) => any;
+  clearUserError: () => any;
 }
 
-class Users extends React.PureComponent<UsersProps, object> {
+interface UserState {
+  isCreating: boolean;
+}
+
+class Users extends React.PureComponent<UsersProps, UserState> {
   private columns: Array<ColumnProps<FlattenUser>> = [
     {
       title: this.props.intl.formatMessage({ id: 'user.username' }),
@@ -67,18 +75,18 @@ class Users extends React.PureComponent<UsersProps, object> {
       title: this.props.intl.formatMessage({ id: 'action' }),
       render: (_, record) => {
         return (
-          <Popconfirm
-            title={<FormattedMessage id="action.confirmToDelete" />}
+          <ItemAction
+            type="delete"
             onConfirm={this.handleItemDelete.bind(this, record.id)}
-          >
-            <a href="javascript:;">
-              <FormattedMessage id="action.delete" />
-            </a>
-          </Popconfirm>
+          />
         );
       }
     }
   ];
+
+  public readonly state: UserState = {
+    isCreating: false
+  };
 
   public componentDidMount() {
     this.props.fetchUsers();
@@ -88,20 +96,46 @@ class Users extends React.PureComponent<UsersProps, object> {
     this.props.removeUser(id);
   };
 
+  protected handleFormToggle = () => {
+    this.setState({ isCreating: !this.state.isCreating });
+  };
+
+  protected handleFormSubmit = (data: UserFields) => {
+    const { username, password, ...rest } = data;
+    this.props
+      .addUser({
+        loginCredential: { username, password },
+        ...rest
+      })
+      .then(() => {
+        if (!this.props.users.error) {
+          this.setState({ isCreating: false });
+        }
+      });
+  };
+
   public render() {
-    const { users } = this.props;
+    const { users, clearUserError } = this.props;
     return (
       <div>
         <Card
           title={<FormattedMessage id="user" />}
           extra={
-            <Button>
+            <Button onClick={this.handleFormToggle}>
               <Icon type="plus" />
               <FormattedMessage id="user.add" />
             </Button>
           }
         >
           <Table rowKey="id" columns={this.columns} dataSource={users.data} />
+          <UserForm
+            visiable={this.state.isCreating}
+            isLoading={users.isLoading}
+            error={users.error}
+            onClose={this.handleFormToggle}
+            onSubmit={this.handleFormSubmit}
+            onCloseError={clearUserError}
+          />
         </Card>
       </div>
     );
@@ -121,7 +155,9 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => {
   return {
     fetchUsers: () => dispatch(userOperations.fetchUsers()),
-    removeUser: (id: string) => dispatch(userOperations.removeUser(id))
+    addUser: (data: UserBrief) => dispatch(userOperations.addUser(data)),
+    removeUser: (id: string) => dispatch(userOperations.removeUser(id)),
+    clearUserError: () => dispatch(userActions.clearUserError())
   };
 };
 

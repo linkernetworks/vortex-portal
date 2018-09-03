@@ -65,7 +65,11 @@ class LocaleContainer extends React.PureComponent<
     const { props } = this;
     return (
       <LocaleProvider locale={props.antLocale}>
-        <IntlProvider locale={props.locale} messages={props.messages}>
+        <IntlProvider
+          locale={props.locale}
+          messages={props.messages}
+          textComponent={React.Fragment}
+        >
           {props.children}
         </IntlProvider>
       </LocaleProvider>
