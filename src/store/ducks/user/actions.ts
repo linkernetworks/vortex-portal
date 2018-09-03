@@ -7,6 +7,12 @@ export const fetchUsers = createAsyncAction(
   'FETCH_USER_FAILURE'
 )<void, Array<User.User>, Error>();
 
+export const addUser = createAsyncAction(
+  'ADD_USER_REQUEST',
+  'ADD_USER_SUCCESS',
+  'ADD_USER_FAILURE'
+)<void, User.User, Error>();
+
 export const removeUser = createAsyncAction(
   'REMOVE_USER_REQUEST',
   'REMOVE_USER_SUCCESS',

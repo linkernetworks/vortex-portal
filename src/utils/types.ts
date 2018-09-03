@@ -9,6 +9,11 @@ export type Diff<T extends object, U extends object> = Pick<
   SetDifference<keyof T, keyof U>
 >;
 
+export type Subtract<T extends T1, T1 extends object> = Pick<
+  T,
+  SetComplement<keyof T, keyof T1>
+>;
+
 export type Omit<T, K extends keyof T> = T extends any
   ? Pick<T, SetComplement<keyof T, K>>
   : never;

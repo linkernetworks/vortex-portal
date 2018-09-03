@@ -26,6 +26,10 @@ export const getUser = (id: string): AxiosPromise<User> => {
   return axios.get(`/v1/users/${id}`);
 };
 
+export const createUser = (data: UserBrief): AxiosPromise<User> => {
+  return axios.post('/v1/users', data);
+};
+
 export const deleteUser = (id: string): AxiosPromise<Response> => {
   return axios.delete(`/v1/users/${id}`);
 };

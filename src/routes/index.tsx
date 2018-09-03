@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Switch, Redirect, Route, RouteProps } from 'react-router-dom';
 import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect';
-// import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
+import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
 
 import { RootState } from '@/store/ducks';
 import MainLayout from '@/layouts/MainLayout';
@@ -40,8 +40,7 @@ export function RouteWithLayout({
   return <Route {...rest} render={childComponent} />;
 }
 
-// TODO: redirect with param
-// const locationHelper = locationHelperBuilder({});
+const locationHelper = locationHelperBuilder({});
 const userIsAuthenticated = connectedRouterRedirect({
   redirectPath: '/signin',
   authenticatedSelector: (state: RootState) => state.user.auth.isAuthenticated,
@@ -49,7 +48,8 @@ const userIsAuthenticated = connectedRouterRedirect({
 });
 
 const userIsNotAuthenticated = connectedRouterRedirect({
-  redirectPath: '/',
+  redirectPath: (_, ownProps) =>
+    locationHelper.getRedirectQueryParam(ownProps) || '/',
   allowRedirectBack: false,
   authenticatedSelector: (state: RootState) => !state.user.auth.isAuthenticated,
   wrapperDisplayName: 'UserIsNotAuthenticated'

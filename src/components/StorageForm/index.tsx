@@ -27,7 +27,7 @@ const fieldRequiredRule = (field: string) => {
     required: true,
     message: (
       <FormattedMessage
-        id="form.message.requred"
+        id="form.message.required"
         values={{
           field: <FormattedMessage id={`storage.${field}`} />
         }}
