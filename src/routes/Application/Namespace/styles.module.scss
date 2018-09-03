@@ -11,6 +11,11 @@ $tag-gutter: 8px;
   display: flex;
 }
 
+.table {
+  th, td {
+    padding: $padding-md !important;
+  }
+}
 
 .column {
   :global {

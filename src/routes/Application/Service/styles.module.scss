@@ -29,6 +29,11 @@ $tag-gutter: 8px;
   }
 }
 
+.table {
+  th, td {
+    padding: $padding-md !important;
+  }
+}
 
 .leading {
   margin-bottom: 6px;

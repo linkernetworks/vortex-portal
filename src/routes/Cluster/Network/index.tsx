@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Card, Button, Tag, Icon, Tree, List, Popconfirm } from 'antd';
+import { Button, Tag, Icon, Tree, Popconfirm, Card, Table } from 'antd';
+import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,7 +19,6 @@ import { Nodes } from '@/models/Node';
 
 import NetworkFrom from '@/components/NetworkForm';
 
-const ListItem = List.Item;
 const TreeNode = Tree.TreeNode;
 
 interface NetworkState {
@@ -76,7 +76,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     );
   };
 
-  protected renderListItemAction = (id: string) => {
+  protected renderAction = (id: string) => {
     return [
       <Popconfirm
         key="action.delete"
@@ -90,99 +90,77 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     ];
   };
 
-  protected renderListItemContent = (
-    title: string | React.ReactNode,
-    content: string | React.ReactNode,
-    col = 1
-  ) => {
-    return (
-      <div className={styles.column} style={{ flex: col }}>
-        <div className="title">{title}</div>
-        <div className="content">{content}</div>
-      </div>
-    );
-  };
-
-  protected renderListItem = (item: networkModels.Network) => {
-    const type =
-      item.isDPDKPort && item.type === networkModels.dataPathType.netdev
-        ? 'netdev with DPDK'
-        : (item.type as string);
-    return (
-      <ListItem key={item.id} actions={this.renderListItemAction(item.id)}>
-        <div className={styles.content}>
-          <div className={styles.leading}>
-            <h3 className="title" title={item.name}>
-              {item.name}
-            </h3>
-          </div>
-          <div className={styles.property}>
-            {this.renderListItemContent(
-              <FormattedMessage id={`network.type`} />,
-              type
-            )}
-
-            {this.renderListItemContent(
-              <FormattedMessage id={`network.bridgeName`} />,
-              item.bridgeName
-            )}
-
-            {this.renderListItemContent(
-              <FormattedMessage id={`network.nodes`} />,
-              <Tree showIcon={true} selectable={false}>
-                {item.nodes.map((node, idx) => (
-                  <TreeNode
-                    title={node.name}
-                    key={`${node.name}-${idx}`}
-                    icon={<FontAwesomeIcon icon="server" />}
-                  >
-                    {node.physicalInterfaces.map(physicalInterface => (
-                      <TreeNode
-                        key={`${node.name}-${idx}-${physicalInterface.name}-${
-                          physicalInterface.pciID
-                        }`}
-                        icon={<FontAwesomeIcon icon="plug" />}
-                        title={
-                          physicalInterface.name || physicalInterface.pciID
-                        }
-                      />
-                    ))}
-                  </TreeNode>
-                ))}
-              </Tree>,
-              2
-            )}
-
-            {this.renderListItemContent(
-              <FormattedMessage id={`network.vlanTags`} />,
-              item.vlanTags.length === 0 ? (
-                <FormattedMessage id="network.noTrunk" />
-              ) : (
-                this.renderTags(item.vlanTags)
-              ),
-              2
-            )}
-
-            {this.renderListItemContent(
-              <FormattedMessage id={'network.createdAt'} />,
-              moment(item.createdAt).calendar()
-            )}
-          </div>
-        </div>
-      </ListItem>
-    );
-  };
-
   public render() {
     const { networks } = this.props;
     const networkNames = networks.map(network => network.name);
+    const columns: Array<ColumnProps<networkModels.Network>> = [
+      {
+        title: <FormattedMessage id="network.name" />,
+        dataIndex: 'name'
+      },
+      {
+        title: <FormattedMessage id="network.type" />,
+        dataIndex: 'type'
+      },
+      {
+        title: <FormattedMessage id="network.bridgeName" />,
+        dataIndex: 'bridgeName'
+      },
+      {
+        title: <FormattedMessage id="network.nodes" />,
+        render: (_, record) => (
+          <Tree showIcon={true} selectable={false}>
+            {record.nodes.map((node, idx) => (
+              <TreeNode
+                title={node.name}
+                key={`${node.name}-${idx}`}
+                icon={<FontAwesomeIcon icon="server" />}
+              >
+                {node.physicalInterfaces.map(physicalInterface => (
+                  <TreeNode
+                    key={`${node.name}-${idx}-${physicalInterface.name}-${
+                      physicalInterface.pciID
+                    }`}
+                    icon={<FontAwesomeIcon icon="plug" />}
+                    title={physicalInterface.name || physicalInterface.pciID}
+                  />
+                ))}
+              </TreeNode>
+            ))}
+          </Tree>
+        )
+      },
+      {
+        title: <FormattedMessage id={`network.vlanTags`} />,
+        render: (_, record) =>
+          record.vlanTags.length === 0 ? (
+            <FormattedMessage id="network.noTrunk" />
+          ) : (
+            this.renderTags(record.vlanTags)
+          )
+      },
+      {
+        title: <FormattedMessage id="network.createdAt" />,
+        render: (_, record) => moment(record.createdAt).calendar()
+      },
+      {
+        title: 'Action',
+        key: 'action',
+        render: (_, record) => (
+          <div className={styles.drawerBottom}>
+            {this.renderAction(record.id)}
+          </div>
+        )
+      }
+    ];
     return (
       <div>
         <Card title="Network">
-          <List
-            bordered={true}
+          <Table
+            className={styles.table}
+            columns={columns}
             dataSource={networks}
-            renderItem={this.renderListItem}
+            size="small"
           />
           <Button
             type="dashed"
@@ -191,16 +169,16 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           >
             <Icon type="plus" /> <FormattedMessage id="network.add" />
           </Button>
+          <NetworkFrom
+            visible={this.state.isCreating}
+            isLoading={this.props.isLoading}
+            onCancel={() => this.setState({ isCreating: false })}
+            onSubmit={this.handleSubmit}
+            networkNames={networkNames}
+            nodes={this.props.nodes}
+            nodesWithUsedInterfaces={this.props.nodesWithUsedInterfaces}
+          />
         </Card>
-        <NetworkFrom
-          visible={this.state.isCreating}
-          isLoading={this.props.isLoading}
-          onCancel={() => this.setState({ isCreating: false })}
-          onSubmit={this.handleSubmit}
-          networkNames={networkNames}
-          nodes={this.props.nodes}
-          nodesWithUsedInterfaces={this.props.nodesWithUsedInterfaces}
-        />
       </div>
     );
   }

@@ -47,9 +47,9 @@ $tag-gutter: 8px;
 }
 
 .table {
-  background-color: #fafafa;
-  padding-left: $padding-md;;
-  padding-right: $padding-md;;
+  th, td {
+    padding: $padding-md !important;
+  }
 }
 
 .label {

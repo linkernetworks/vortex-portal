@@ -11,6 +11,8 @@ import { FlattenUser } from '@/models/User';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { userOperations, userSelectors } from '@/store/ducks/user';
 
+import * as styles from './styles.module.scss';
+
 type UsersProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
 
 interface OwnProps extends ColumnProps<FlattenUser> {
@@ -90,8 +92,13 @@ class Users extends React.PureComponent<UsersProps, object> {
     const { users } = this.props;
     return (
       <div>
-        <Card title={<FormattedMessage id="user" />}>
-          <Table rowKey="id" columns={this.columns} dataSource={users.data} />
+        <Card title="Users">
+          <Table
+            className={styles.table}
+            columns={this.columns}
+            dataSource={users.data}
+            size="small"
+          />
         </Card>
       </div>
     );
