@@ -10,7 +10,8 @@ import {
   Drawer,
   Tag,
   notification,
-  Popconfirm
+  Popconfirm,
+  Card
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
@@ -332,18 +333,12 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
                 hideMorePod={this.hideMorePod}
                 removePod={this.props.removePod}
               />
-<<<<<<< HEAD
+              <div className={styles.drawerBottom}>
+                {this.renderAction(deployments[currentDeployment].id)}
+              </div>
             </Drawer>
           )}
         </Card>
-=======
-            )}
-            <div className={styles.drawerBottom}>
-              {this.renderAction(deployments[currentDeployment].id)}
-            </div>
-          </Drawer>
-        )}
->>>>>>> Add delete deployment
       </div>
     );
   }

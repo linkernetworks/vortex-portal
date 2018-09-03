@@ -3,7 +3,7 @@ import * as PodModel from '@/models/Pod';
 import * as NetworkModel from '@/models/Network';
 import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
-import { Input, Select, Table } from 'antd';
+import { Input, Select, Table, Card } from 'antd';
 import * as moment from 'moment';
 import { ColumnProps } from 'antd/lib/table';
 import { filter, includes } from 'lodash';
