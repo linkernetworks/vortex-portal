@@ -4,7 +4,7 @@ import { Card, Button, Icon, Table } from 'antd';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { mapValues } from 'lodash';
+import { mapValues, find } from 'lodash';
 import { Dispatch } from 'redux';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
@@ -15,6 +15,7 @@ import ItemActions from '@/components/ItemActions';
 import { RootState, RTDispatch, RootAction } from '@/store/ducks';
 import { storageOperations, storageActions } from '@/store/ducks/storage';
 import { volumeOperations, volumeActions } from '@/store/ducks/volume';
+import { userOperations } from '@/store/ducks/user';
 import {
   Storage as StorageModel,
   StorageFields,
@@ -24,6 +25,7 @@ import {
 } from '@/models/Storage';
 import * as NamespaceModel from '@/models/Namespace';
 import * as namespaceAPI from '@/services/namespace';
+import * as UserModel from '@/models/User';
 import { FormField } from '@/utils/types';
 
 type StorageProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
@@ -47,6 +49,8 @@ interface OwnProps {
   removeVolume: (id: string) => any;
   clearStorageError: () => any;
   clearVolumeError: () => any;
+  users: Array<UserModel.User>;
+  fetchUsers: () => any;
 }
 
 interface StorageState {
@@ -90,7 +94,13 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
     {
       title: this.props.intl.formatMessage({ id: 'name' }),
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      width: 200
+    },
+    {
+      title: this.props.intl.formatMessage({ id: 'storage.owner' }),
+      dataIndex: 'owner',
+      key: 'owner'
     },
     {
       title: this.props.intl.formatMessage({ id: 'storage.type' }),
@@ -125,7 +135,13 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
     {
       title: this.props.intl.formatMessage({ id: 'volume.name' }),
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      width: 200
+    },
+    {
+      title: this.props.intl.formatMessage({ id: 'storage.owner' }),
+      dataIndex: 'owner',
+      key: 'owner'
     },
     {
       title: this.props.intl.formatMessage({ id: 'volume.storageName' }),
@@ -198,6 +214,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
   public componentWillMount() {
     this.props.fetchStorages();
     this.props.fetchVolumes();
+    this.props.fetchUsers();
   }
 
   protected getFlatFormFieldValue = (target: string) => {
@@ -305,6 +322,41 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
     );
   };
 
+  protected getStorageInfo = (storages: Array<StorageModel>) => {
+    return storages.map(storage => {
+      const owner = find(this.props.users, user => {
+        return user.id === storage.ownerID;
+      });
+      const displayName = owner === undefined ? 'none' : owner.displayName;
+      return {
+        id: storage.id,
+        name: storage.name,
+        owner: displayName,
+        type: storage.type,
+        storageClassName: storage.storageClassName,
+        ip: storage.id,
+        path: storage.ip
+      };
+    });
+  };
+
+  protected getVoulmeInfo = (voulmes: Array<VolumeModel>) => {
+    return voulmes.map(volumes => {
+      const owner = find(this.props.users, user => {
+        return user.id === volumes.ownerID;
+      });
+      const displayName = owner === undefined ? 'none' : owner.displayName;
+      return {
+        id: volumes.id,
+        name: volumes.name,
+        storageName: volumes.storageName,
+        owner: displayName,
+        accessMode: volumes.accessMode,
+        capacity: volumes.capacity
+      };
+    });
+  };
+
   public renderTabContent = () => {
     const {
       storages,
@@ -331,7 +383,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
             <Table
               rowKey="id"
               columns={this.storageColumns}
-              dataSource={storages.data}
+              dataSource={this.getStorageInfo(storages.data)}
               className="main-table"
             />
             <StorageForm
@@ -352,7 +404,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
             <Table
               rowKey="id"
               columns={this.volumeColumns}
-              dataSource={volumes.data}
+              dataSource={this.getVoulmeInfo(volumes.data)}
               className="main-table"
             />
             <VolumeForm
@@ -407,7 +459,8 @@ const mapStateToProps = (state: RootState) => {
       data: state.volume.volumes,
       isLoading: state.volume.isLoading,
       error: state.volume.error
-    }
+    },
+    users: state.user.users
   };
 };
 
@@ -420,7 +473,8 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
   removeStorage: (id: string) => dispatch(storageOperations.removeStorage(id)),
   removeVolume: (id: string) => dispatch(volumeOperations.removeVolume(id)),
   clearStorageError: () => dispatch(storageActions.clearStorageError()),
-  clearVolumeError: () => dispatch(volumeActions.clearVolumeError())
+  clearVolumeError: () => dispatch(volumeActions.clearVolumeError()),
+  fetchUsers: () => dispatch(userOperations.fetchUsers())
 });
 
 export default connect(
