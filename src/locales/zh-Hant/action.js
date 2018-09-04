@@ -1,5 +1,15 @@
 export default {
+  'action': 'action',
   'action.edit': '編輯',
   'action.delete': '刪除',
   'action.save': '儲存',
+  'action.add': 'add',
+  'action.confirm': '確認',
+  'action.cancel': '取消',
+  'action.create': 'create',
+  'action.removeAll': 'remove all',
+  'action.next': '下一步',
+  'action.previous': '上一步',
+  'action.done': 'done',
+  'action.confirmToDelete': 'Are you sure delete this?',
 }
