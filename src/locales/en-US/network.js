@@ -1,4 +1,5 @@
 export default {
+  'network.owner': 'owner',
   'network.bridgeName': 'bridge',
   'network.interfaceName': 'interface name',
   'network.type': 'datapath type',

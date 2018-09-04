@@ -154,8 +154,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
         type: service.type,
         namespace: service.namespace,
         selector: service.selector,
-        ports: service.ports,
-        age: moment(service.createdAt).calendar()
+        ports: service.ports
       };
     });
   };
