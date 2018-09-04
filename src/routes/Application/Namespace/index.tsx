@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Button, Icon, Card, Table } from 'antd';
+import { Button, Icon, Card, Table, Popconfirm } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
@@ -9,7 +9,12 @@ import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
+import { userOperations } from '@/store/ducks/user';
 import * as NamespaceModel from '@/models/Namespace';
+import * as UserModel from '@/models/User';
+
+import { find } from 'lodash';
+
 import NamespaceForm from '@/components/NamespaceForm';
 import ItemActions from '@/components/ItemActions';
 
@@ -24,6 +29,8 @@ interface OwnProps {
   fetchNamespaces: () => any;
   addNamespace: (data: NamespaceModel.Namespace) => any;
   removeNamespace: (id: string) => any;
+  users: Array<UserModel.User>;
+  fetchUsers: () => any;
 }
 
 class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
@@ -32,6 +39,10 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
       title: <FormattedMessage id="name" />,
       dataIndex: 'name',
       width: 300
+    },
+    {
+      title: <FormattedMessage id="namespace.owner" />,
+      dataIndex: 'owner'
     },
     {
       title: <FormattedMessage id="createdAt" />,
@@ -62,6 +73,7 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
 
   public componentDidMount() {
     this.props.fetchNamespaces();
+    this.props.fetchUsers();
   }
 
   protected showCreate = () => {
@@ -75,6 +87,36 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
   protected handleSubmit = (namespace: NamespaceModel.Namespace) => {
     this.props.addNamespace(namespace);
     this.setState({ visibleModal: false });
+  };
+
+  protected renderAction = (id: string | undefined) => {
+    return [
+      <Popconfirm
+        key="action.delete"
+        title={<FormattedMessage id="action.confirmToDelete" />}
+        onConfirm={this.props.removeNamespace.bind(this, id)}
+      >
+        <a href="javascript:;">
+          <FormattedMessage id="action.delete" />
+        </a>
+      </Popconfirm>
+    ];
+  };
+
+  protected getNamespaceInfo = (
+    namespaces: Array<NamespaceModel.Namespace>
+  ) => {
+    return namespaces.map(namespace => {
+      const owner = find(this.props.users, user => {
+        return user.id === namespace.ownerID;
+      });
+      const displayName = owner === undefined ? 'none' : owner.displayName;
+      return {
+        name: namespace.name,
+        owner: displayName,
+        age: moment(namespace.createdAt).calendar()
+      };
+    });
   };
 
   public render() {
@@ -109,7 +151,8 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
 
 const mapStateToProps = (state: RootState) => {
   return {
-    namespaces: state.cluster.namespaces
+    namespaces: state.cluster.namespaces,
+    users: state.user.users
   };
 };
 
@@ -120,7 +163,8 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
   },
   removeNamespace: (id: string) => {
     dispatch(clusterOperations.removeNamespace(id));
-  }
+  },
+  fetchUsers: () => dispatch(userOperations.fetchUsers())
 });
 
 export default connect(
