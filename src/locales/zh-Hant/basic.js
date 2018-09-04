@@ -12,4 +12,4 @@ export default {
   'compute': '運算資源',
   'overview': '概覽',
   'createdAt': 'created at'
-};
+}

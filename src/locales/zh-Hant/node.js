@@ -29,4 +29,4 @@ export default {
   'node.nics.pciID': 'PCI ID',
   'node.nics.TXRXMegabyteTotal': 'Receive/Transmit MB Total',
   'node.nics.TXRXPacketsTotal': 'Receive/Transmit Packets Total',
-};
+}
