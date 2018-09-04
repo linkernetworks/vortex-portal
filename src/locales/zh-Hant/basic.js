@@ -7,6 +7,9 @@ export default {
   'dpdk': '資料平台開放套件',
   'service': '服務',
   'user': '使用者',
+  'storage': 'storage',
+  'volume': 'volume',
   'compute': '運算資源',
-  'overview': '概覽'
+  'overview': '概覽',
+  'createdAt': 'created at'
 };
