@@ -1,19 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Button, Icon, Card, Table, Popconfirm } from 'antd';
+import { Button, Icon, Card, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import { Dispatch } from 'redux';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
+import { find } from 'lodash';
 
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
 import { userOperations } from '@/store/ducks/user';
-import * as NamespaceModel from '@/models/Namespace';
 import * as UserModel from '@/models/User';
-
-import { find } from 'lodash';
+import * as NamespaceModel from '@/models/Namespace';
 
 import NamespaceForm from '@/components/NamespaceForm';
 import ItemActions from '@/components/ItemActions';
@@ -39,10 +38,6 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
       title: <FormattedMessage id="name" />,
       dataIndex: 'name',
       width: 300
-    },
-    {
-      title: <FormattedMessage id="namespace.owner" />,
-      dataIndex: 'owner'
     },
     {
       title: <FormattedMessage id="createdAt" />,
@@ -89,20 +84,6 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
     this.setState({ visibleModal: false });
   };
 
-  protected renderAction = (id: string | undefined) => {
-    return [
-      <Popconfirm
-        key="action.delete"
-        title={<FormattedMessage id="action.confirmToDelete" />}
-        onConfirm={this.props.removeNamespace.bind(this, id)}
-      >
-        <a href="javascript:;">
-          <FormattedMessage id="action.delete" />
-        </a>
-      </Popconfirm>
-    ];
-  };
-
   protected getNamespaceInfo = (
     namespaces: Array<NamespaceModel.Namespace>
   ) => {
@@ -118,10 +99,8 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
       };
     });
   };
-
   public render() {
     const { namespaces } = this.props;
-
     return (
       <div>
         <Card
@@ -135,7 +114,7 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
           <Table
             className="main-table"
             columns={this.columns}
-            dataSource={namespaces}
+            dataSource={this.getNamespaceInfo(this.props.namespaces)}
           />
           <NamespaceForm
             namespaces={namespaces}
