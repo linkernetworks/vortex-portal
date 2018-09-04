@@ -180,7 +180,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         }
         const deployment: DeploymentModel.Deployment = {
           name: values.name,
-          namespace: 'default',
+          namespace: values.namespace,
           labels,
           envVars,
           containers,
@@ -588,6 +588,29 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
               }
             ]
           })(<Input placeholder="Give a unique pod name" />)}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label={<FormattedMessage id="deployment.namespace" />}
+        >
+          {getFieldDecorator('namespace', {
+            rules: [
+              {
+                required: true
+              }
+            ]
+          })(
+            <Select style={{ width: 200 }} placeholder="Select a namespace">
+              <Option value="default">default</Option>
+              {this.props.namespaces.map(namespace => {
+                return (
+                  <Option key={namespace.name} value={namespace.name}>
+                    {namespace.name}
+                  </Option>
+                );
+              })}
+            </Select>
+          )}
         </FormItem>
         {!this.props.network && (
           <FormItem
