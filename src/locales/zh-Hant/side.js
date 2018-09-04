@@ -12,6 +12,6 @@ export default {
   'side.service': '服務',
   'side.user': '使用者',
   'side.compute': '運算資源',
-  'side.overview': '概覽'
+  'side.overview': '概覽',
   'side.storage': '儲存'
 };
