@@ -5,7 +5,7 @@ import * as NamespaceModel from '@/models/Namespace';
 import { networkModels, networkOperations } from '@/store/ducks/network';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Card } from 'antd';
+import { Card, notification } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
@@ -71,6 +71,10 @@ class CreateDeployment extends React.Component<
   protected handleSubmit = (deployment: DeploymentModel.Deployment) => {
     this.props.addDeployment(deployment);
     this.props.push('/application/deployment');
+    return notification.success({
+      message: 'Success',
+      description: 'Create the deployment successfully.'
+    });
   };
 
   public renderTabContent = () => {

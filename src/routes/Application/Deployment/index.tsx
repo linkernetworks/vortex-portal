@@ -182,21 +182,25 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
     );
   };
 
-  protected renderStatusIcon = (status: string) => {
-    switch (status) {
-      case 'running':
-      case 'ready':
-      case 'Completed':
-        return <Icon type="check-circle" className={styles.readyIcon} />;
-      case 'ContainerCreating':
-        return <Icon type="clock-circle" className={styles.pendIcon} />;
-      default:
-        return <Icon type="close-circle" className={styles.errorIcon} />;
+  protected renderStatusIcon = (deployment: DeploymentModel.Controller) => {
+    if (
+      deployment.desiredPod === deployment.currentPod &&
+      deployment.currentPod === deployment.availablePod
+    ) {
+      return <Icon type="check-circle" className={styles.readyIcon} />;
+    } else if (
+      deployment.desiredPod === deployment.currentPod &&
+      deployment.currentPod !== deployment.availablePod
+    ) {
+      return <Icon type="clock-circle" className={styles.pendingIcon} />;
+    } else {
+      return <Icon type="close-circle" className={styles.errorIcon} />;
     }
   };
 
   protected handleRemoveDeployment = (id: string) => {
     this.props.removeDeployment(id);
+    clearInterval(this.intervalPodId);
     return notification.success({
       message: 'Success',
       description: 'Delete the deployment successfully.'
@@ -331,7 +335,7 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
                 <h2 style={{ display: 'inline' }}>
                   {deployments[currentDeployment].controllerName}
                 </h2>
-                {this.renderStatusIcon('running')}
+                {this.renderStatusIcon(deployments[currentDeployment])}
               </div>
 
               <div className={styles.contentSection}>
