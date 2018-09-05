@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Button, Tag, Icon, Tree, Card, Table } from 'antd';
+import { Button, Tag, Icon, Tree, Card, Table, notification } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
@@ -109,7 +109,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           items={[
             {
               type: 'delete',
-              onConfirm: this.props.removeNetwork.bind(this, record.id)
+              onConfirm: this.handleRemoveNetwork.bind(this, record.id)
             }
           ]}
         />
@@ -136,6 +136,18 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     this.props.addNetwork(data).then(() => {
       this.setState({ isCreating: false });
       successCB();
+    });
+    return notification.success({
+      message: 'Success',
+      description: 'Create the network successfully.'
+    });
+  };
+
+  protected handleRemoveNetwork = (id: string) => {
+    this.props.removeNetwork(id);
+    return notification.success({
+      message: 'Success',
+      description: 'Delete the network successfully.'
     });
   };
 
