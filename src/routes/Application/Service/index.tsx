@@ -137,20 +137,20 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     ];
     return (
       <div>
-        <Card title={<FormattedMessage id="service" />}>
+        <Card
+          title={<FormattedMessage id="service" />}
+          extra={
+            <Button onClick={this.showCreate}>
+              <Icon type="plus" /> <FormattedMessage id="service.add" />
+            </Button>
+          }
+        >
           <Table
             className={styles.table}
             columns={columns}
             dataSource={services}
             size="small"
           />
-          <Button
-            type="dashed"
-            className={styles.add}
-            onClick={this.showCreate}
-          >
-            <Icon type="plus" /> <FormattedMessage id="service.add" />
-          </Button>
           <ServiceForm
             services={services}
             visible={this.state.visibleModal}

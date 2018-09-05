@@ -90,7 +90,14 @@ class Namespace extends React.Component<NamespaceProps, NamespaceState> {
     ];
     return (
       <div>
-        <Card title={<FormattedMessage id="namespace" />}>
+        <Card
+          title={<FormattedMessage id="namespace" />}
+          extra={
+            <Button onClick={this.showCreate}>
+              <Icon type="plus" /> <FormattedMessage id="namespace.add" />
+            </Button>
+          }
+        >
           <Table
             className={styles.table}
             columns={columns}
@@ -98,13 +105,6 @@ class Namespace extends React.Component<NamespaceProps, NamespaceState> {
             size="small"
             bordered={false}
           />
-          <Button
-            type="dashed"
-            className={styles.add}
-            onClick={this.showCreate}
-          >
-            <Icon type="plus" /> <FormattedMessage id="namespace.add" />
-          </Button>
           <NamespaceForm
             namespaces={namespaces}
             visible={this.state.visibleModal}
