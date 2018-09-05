@@ -3,7 +3,7 @@ import * as UserModel from '@/models/User';
 import * as ServiceModel from '@/models/Service';
 import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
-import { Button, Icon, Tree, Tag, Card, Table } from 'antd';
+import { Button, Icon, Tree, Tag, Card, Table, notification } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
@@ -105,7 +105,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
           items={[
             {
               type: 'delete',
-              onConfirm: this.props.removeService.bind(this, record.id)
+              onConfirm: this.handleRemoveService.bind(this, record.id)
             }
           ]}
         />
@@ -139,6 +139,18 @@ class Service extends React.Component<ServiceProps, ServiceState> {
   protected handleSubmit = (service: ServiceModel.Service) => {
     this.props.addService(service);
     this.setState({ visibleModal: false });
+    return notification.success({
+      message: 'Success',
+      description: 'Create the namespace successfully.'
+    });
+  };
+
+  protected handleRemoveService = (id: string) => {
+    this.props.removeService(id);
+    return notification.success({
+      message: 'Success',
+      description: 'Delete the service successfully.'
+    });
   };
 
   protected getServiceInfo = (services: Array<ServiceModel.Service>) => {
@@ -158,6 +170,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
       };
     });
   };
+
   public render() {
     const { services } = this.props;
     return (
