@@ -1,9 +1,9 @@
 export default {
-  'user.displayName': 'Display Name',
-  'user.firstName': 'First Name',
-  'user.lastName': 'Last Name',
-  'user.username': 'Username',
-  'user.role': 'Role',
-  'user.phoneNumber': 'Phone Number',
-  'user.add': 'Create User'
-};
+  'user.displayName': 'display name',
+  'user.firstName': 'first name',
+  'user.lastName': 'last name',
+  'user.username': 'username',
+  'user.role': 'role',
+  'user.phoneNumber': 'phone number',
+  'user.add': 'Create user'
+}

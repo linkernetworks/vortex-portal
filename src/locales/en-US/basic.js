@@ -11,4 +11,4 @@ export default {
   'volume': 'volume',
   'overview': 'overview',
   'createdAt': 'created at'
-};
+}

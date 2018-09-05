@@ -1,18 +1,18 @@
 export default {
-  'container.detail.name': 'Name',
-  'container.detail.createAt': 'Created At',
-  'container.detail.pod': 'Pod',
-  'container.detail.namespace': 'Namespace',
-  'container.detail.node': 'Node',
-  'container.detail.image': 'Image',
-  'container.detail.command': 'Command',
-  'container.detail.newCommand': 'New Command',
-  'container.detail.status': 'Status',
+  'container.detail.name': 'name',
+  'container.detail.createAt': 'created at',
+  'container.detail.pod': 'pod',
+  'container.detail.namespace': 'namespace',
+  'container.detail.node': 'node',
+  'container.detail.image': 'image',
+  'container.detail.command': 'command',
+  'container.detail.newCommand': 'new command',
+  'container.detail.status': 'status',
 
-  'container.status.waitingReason': 'Waiting Reason',
-  'container.status.terminatedReason': 'Terminated Reason',
-  'container.status.restartTime': 'Restart Time',
+  'container.status.waitingReason': 'Waiting reason',
+  'container.status.terminatedReason': 'Terminated reason',
+  'container.status.restartTime': 'Restart rime',
 
-  'container.resource.cpuUsagePercentage': 'CPU Usage Percentage',
-  'container.resource.memoryUsageMegabyte': 'Memory Usage MB',
-};
+  'container.resource.cpuUsagePercentage': 'CPU usage percentage',
+  'container.resource.memoryUsageMegabyte': 'memory usage MB',
+}
