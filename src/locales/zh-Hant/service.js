@@ -11,4 +11,4 @@ export default {
   'service.ports.port': 'Port',
   'service.ports.targetPort': 'Target Port',
   'service.ports.nodePort': 'Node Port',
-};
+}

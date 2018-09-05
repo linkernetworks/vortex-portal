@@ -6,6 +6,7 @@ export default {
   'auth.displayName': '顯示名稱',
   'auth.firstName': '名',
   'auth.lastName': '姓',
+  'auth.role': '角色',
   'auth.signin': '登入',
   'auth.signup': '註冊',
   'auth.signin.subtitle': 'to acccess your service',
@@ -23,4 +24,5 @@ export default {
   'auth.hint.signup.success.description': 'Please sign in with your email and password',
   'auth.hint.signup.failure': '註冊失敗',
   'auth.hint.signin.failure': 'Failed to Signin',
-};
+  'auth.help.password': 'This is one-time password, please send to your user.'
+}

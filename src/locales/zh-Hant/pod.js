@@ -9,16 +9,16 @@ export default {
   'pod.createByName': 'Created By Name',
   'pod.ip': 'IP',
   'pod.labels': 'Labels',
-  'pod.envVars': 'Env Vars',
+  'pod.envVars': '環境變數',
   'pod.addLabel': 'New Label',
   'pod.restartCount': 'Restart Count',
   'pod.containers': '容器',
   'pod.add': '新增 Pod',
   'pod.delete': '刪除 Pod',
   'pod.undeletable': 'Can not delete this Pod',
-  'pod.restartPolicy': 'Restart Policy',
+  'pod.restartPolicy': '重啟政策',
   'pod.capability': 'Capability',
 
   'pod.nicNetworkTraffic.TXRXMegabyteTotal': 'Receive/Transmit MB Total',
   'pod.nicNetworkTraffic.TXRXPacketsTotal': 'Receive/Transmit Packets Total',
-};
+}

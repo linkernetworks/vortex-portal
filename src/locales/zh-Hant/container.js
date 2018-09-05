@@ -4,7 +4,7 @@ export default {
   'container.detail.pod': 'Pod',
   'container.detail.namespace': 'Namespace',
   'container.detail.node': '節點',
-  'container.detail.image': 'Image',
+  'container.detail.image': '映像檔',
   'container.detail.command': 'Command',
   'container.detail.newCommand': 'New Command',
   'container.detail.status': '狀態',
@@ -15,4 +15,4 @@ export default {
 
   'container.resource.cpuUsagePercentage': 'CPU Usage Percentage',
   'container.resource.memoryUsageMegabyte': '記憶體使用 MB',
-};
+}

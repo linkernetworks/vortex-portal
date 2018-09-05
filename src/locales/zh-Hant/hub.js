@@ -1,6 +1,6 @@
 export default {
-  'hub.imageHub': 'Image Hub',
+  'hub.imageHub': '映像倉庫',
   'hub.login': 'Login to unlock private image registry',
-  'hub.image': 'Image',
+  'hub.image': '映像檔',
   'hub.tags': 'Tags'
 }

@@ -1,8 +1,8 @@
 export default {
   'deployment.name': '名稱',
-  'deployment.restartPolicy': 'Restart Policy',
+  'deployment.restartPolicy': '重啟政策',
   'deployment.labels': '標籤',
-  'deployment.envVars': 'Env Vars',
+  'deployment.envVars': '環境變數',
   'deployment.capability': 'Run as privileged',
   'deployment.type': 'Type',
   'deployment.namespace': 'Namespace',
@@ -10,10 +10,10 @@ export default {
   'deployment.currentPod': 'Current Pod',
   'deployment.availablePod': 'Available Pod',
   'deployment.age': 'Age',
-  'deployment.add': 'Create Deployment',
-  'deployment.addWithNetwork': 'Create Deployment with Network',
-  'deployment.replicas': 'Number of pods',
+  'deployment.add': '建立 Deployment',
+  'deployment.addWithNetwork': '建立 Deployment with Network',
+  'deployment.replicas': 'pod 數量',
   'deployment.volumes': 'Volumes',
-  'deployment.delete': 'Delete the Deployment',
-  'deployment.undeletable': 'Can not delete this Deployment',
-};
+  'deployment.delete': '刪除 Deployment',
+  'deployment.undeletable': '不能刪除這個 Deployment',
+}

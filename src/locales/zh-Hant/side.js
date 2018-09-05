@@ -14,4 +14,4 @@ export default {
   'side.compute': '運算資源',
   'side.overview': '概覽',
   'side.storage': '儲存'
-};
+}
