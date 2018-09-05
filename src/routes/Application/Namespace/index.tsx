@@ -90,7 +90,7 @@ class Namespace extends React.Component<NamespaceProps, NamespaceState> {
     ];
     return (
       <div>
-        <Card>
+        <Card title={<FormattedMessage id="namespace" />}>
           <Table
             className={styles.table}
             columns={columns}

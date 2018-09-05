@@ -137,7 +137,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     ];
     return (
       <div>
-        <Card>
+        <Card title={<FormattedMessage id="service" />}>
           <Table
             className={styles.table}
             columns={columns}

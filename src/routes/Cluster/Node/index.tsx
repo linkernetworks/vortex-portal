@@ -486,7 +486,7 @@ class Node extends React.Component<NodeProps, NodeState> {
     ];
     return (
       <div>
-        <Card>
+        <Card title={<FormattedMessage id="node" />}>
           <Table
             className={styles.table}
             columns={columns}
@@ -495,7 +495,7 @@ class Node extends React.Component<NodeProps, NodeState> {
           />
           {this.props.nodes.hasOwnProperty(currentNode) && (
             <Drawer
-              title="Node"
+              title={<FormattedMessage id="node" />}
               width={720}
               placement="right"
               closable={false}

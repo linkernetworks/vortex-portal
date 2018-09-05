@@ -155,7 +155,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     ];
     return (
       <div>
-        <Card>
+        <Card title={<FormattedMessage id="network" />}>
           <Table
             className={styles.table}
             columns={columns}
