@@ -32,7 +32,8 @@
     "redux-thunk": "^2.3.0",
     "rxjs": "^6.2.2",
     "sass-mq": "^5.0.0",
-    "typesafe-actions": "^2.0.4"
+    "typesafe-actions": "^2.0.4",
+    "xterm": "^3.6.0"
   },
   "scripts": {
     "start": "react-app-rewired start --scripts-version react-scripts-ts",
