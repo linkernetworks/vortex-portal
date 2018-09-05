@@ -141,7 +141,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     this.setState({ visibleModal: false });
     return notification.success({
       message: 'Success',
-      description: 'Create the namespace successfully.'
+      description: 'Create the service successfully.'
     });
   };
 
