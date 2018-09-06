@@ -1,6 +1,6 @@
 export default {
   'storage.type': 'type',
-  'storage.storageClassName': 'storage class name',
+  'storage.storageClassName': 'storageClass name',
   'storage.ip': 'IP',
   'storage.path': 'path',
   'storage.add': 'Add Storage',
