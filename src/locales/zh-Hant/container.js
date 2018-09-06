@@ -1,18 +1,12 @@
 export default {
-  'container.detail.name': '名稱',
-  'container.detail.createAt': 'Created At',
-  'container.detail.pod': 'Pod',
-  'container.detail.namespace': 'Namespace',
-  'container.detail.node': '節點',
   'container.detail.image': '映像檔',
-  'container.detail.command': 'Command',
-  'container.detail.newCommand': 'New Command',
-  'container.detail.status': '狀態',
+  'container.detail.command': '指令',
+  'container.detail.newCommand': '新指令',
 
-  'container.status.waitingReason': 'Waiting Reason',
-  'container.status.terminatedReason': 'Terminated Reason',
-  'container.status.restartTime': 'Restart Time',
+  'container.status.waitingReason': '等待原因',
+  'container.status.terminatedReason': '結束原因',
+  'container.status.restartTime': '重啟次數',
 
-  'container.resource.cpuUsagePercentage': 'CPU Usage Percentage',
+  'container.resource.cpuUsagePercentage': 'CPU 使用百分比',
   'container.resource.memoryUsageMegabyte': '記憶體使用 MB',
 }

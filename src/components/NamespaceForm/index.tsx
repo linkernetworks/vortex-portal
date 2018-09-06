@@ -63,10 +63,7 @@ class NamespaceForm extends React.PureComponent<NamespaceFormProps, any> {
         onCancel={this.handleClose}
       >
         <Form>
-          <FormItem
-            {...formItemLayout}
-            label={<FormattedMessage id="namespace.name" />}
-          >
+          <FormItem {...formItemLayout} label={<FormattedMessage id="name" />}>
             {getFieldDecorator('name', {
               rules: [
                 {

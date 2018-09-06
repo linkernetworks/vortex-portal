@@ -70,16 +70,16 @@ class Namespace extends React.Component<NamespaceProps, NamespaceState> {
     const { namespaces } = this.props;
     const columns: Array<ColumnProps<NamespaceModel.Namespace>> = [
       {
-        title: <FormattedMessage id="namespace.name" />,
+        title: <FormattedMessage id="name" />,
         dataIndex: 'name',
         width: 300
       },
       {
-        title: <FormattedMessage id="namespace.createdAt" />,
+        title: <FormattedMessage id="createdAt" />,
         render: (_, record) => moment(record.createdAt).calendar()
       },
       {
-        title: 'Action',
+        title: <FormattedMessage id="action" />,
         key: 'action',
         render: (_, record) => (
           <div className={styles.drawerBottom}>

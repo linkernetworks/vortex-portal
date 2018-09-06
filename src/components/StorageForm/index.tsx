@@ -68,10 +68,7 @@ class StorageForm extends React.PureComponent<
           />
         )}
         <Form>
-          <FormItem
-            label={<FormattedMessage id="storage.name" />}
-            required={true}
-          >
+          <FormItem label={<FormattedMessage id="name" />} required={true}>
             {getFieldDecorator('name', {
               rules: [fieldRequiredRule('name')]
             })(<Input />)}

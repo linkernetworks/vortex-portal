@@ -50,7 +50,7 @@ interface PodInfo {
   status: string;
   node: string;
   restarts: number;
-  age: string;
+  createdAt: string;
 }
 
 class Pod extends React.Component<PodProps, PodState> {
@@ -120,7 +120,7 @@ class Pod extends React.Component<PodProps, PodState> {
       node: this.props.pods[pod].node,
       status: this.props.pods[pod].status,
       restarts: this.props.pods[pod].restartCount,
-      age: moment(this.props.pods[pod].createAt * 1000).fromNow()
+      createdAt: moment(this.props.pods[pod].createAt * 1000).fromNow()
     }));
   };
 
@@ -146,30 +146,32 @@ class Pod extends React.Component<PodProps, PodState> {
     });
     const columns: Array<ColumnProps<PodInfo>> = [
       {
-        title: <FormattedMessage id="pod.name" />,
+        title: <FormattedMessage id="name" />,
         dataIndex: 'name',
         width: 300
       },
       {
-        title: <FormattedMessage id="pod.namespace" />,
+        title: <FormattedMessage id="namespace" />,
         dataIndex: 'namespace'
       },
       {
-        title: <FormattedMessage id="pod.node" />,
+        title: <FormattedMessage id="node" />,
         dataIndex: 'node'
       },
       {
-        title: <FormattedMessage id="pod.status" />,
+        title: <FormattedMessage id="status" />,
         dataIndex: 'status'
       },
       {
-        title: <FormattedMessage id="pod.age" />,
-        dataIndex: 'age'
+        title: <FormattedMessage id="createdAt" />,
+        dataIndex: 'createdAt'
       },
       {
-        title: 'Action',
+        title: <FormattedMessage id="action" />,
         render: (_, record) => (
-          <a onClick={() => this.showMorePod(record.name)}>More</a>
+          <a onClick={() => this.showMorePod(record.name)}>
+            {<FormattedMessage id="action.more" />}
+          </a>
         )
       }
     ];

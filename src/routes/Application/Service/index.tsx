@@ -71,11 +71,11 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     const { services } = this.props;
     const columns: Array<ColumnProps<ServiceModel.Service>> = [
       {
-        title: <FormattedMessage id="service.name" />,
+        title: <FormattedMessage id="name" />,
         dataIndex: 'name'
       },
       {
-        title: <FormattedMessage id="service.namespace" />,
+        title: <FormattedMessage id="namespace" />,
         dataIndex: 'namespace'
       },
       {
@@ -122,11 +122,11 @@ class Service extends React.Component<ServiceProps, ServiceState> {
         )
       },
       {
-        title: <FormattedMessage id="service.createdAt" />,
+        title: <FormattedMessage id="createdAt" />,
         render: (_, record) => moment(record.createdAt).calendar()
       },
       {
-        title: 'Action',
+        title: <FormattedMessage id="action" />,
         key: 'action',
         render: (_, record) => (
           <div className={styles.drawerBottom}>

@@ -1,5 +1,5 @@
 export default {
-  'user.displayName': 'Display Name',
+  'user.displayName': '顯示名稱',
   'user.firstName': '名',
   'user.lastName': '姓',
   'user.username': '使用者名稱',

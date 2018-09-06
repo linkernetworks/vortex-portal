@@ -235,13 +235,13 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
         <Row>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="pod.status" />,
+              <FormattedMessage id="status" />,
               pod.status
             )}
           </Col>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="pod.createAt" />,
+              <FormattedMessage id="createdAt" />,
               moment(pod.createAt * 1000).calendar()
             )}
           </Col>
@@ -255,7 +255,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
         <Row>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="pod.namespace" />,
+              <FormattedMessage id="namespace" />,
               pod.namespace
             )}
           </Col>
@@ -275,7 +275,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
         <Row>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="pod.node" />,
+              <FormattedMessage id="node" />,
               pod.node
             )}
           </Col>
@@ -313,10 +313,12 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
         key: 'image'
       },
       {
-        title: 'Action',
+        title: <FormattedMessage id="action" />,
         key: 'action',
         render: (text: string, record: ContainerModel.Container) => (
-          <a onClick={() => this.showMoreContainer(record)}>More</a>
+          <a onClick={() => this.showMoreContainer(record)}>
+            {<FormattedMessage id="action.more" />}
+          </a>
         )
       }
     ];
@@ -336,13 +338,13 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
         <Row>
           <Col span={6}>
             {this.renderListItemContent(
-              <FormattedMessage id={`container.detail.status`} />,
+              <FormattedMessage id={`status`} />,
               container.status
             )}
           </Col>
           <Col span={6}>
             {this.renderListItemContent(
-              <FormattedMessage id={`container.detail.namespace`} />,
+              <FormattedMessage id={`namespace`} />,
               container.namespace
             )}
           </Col>
@@ -354,7 +356,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
           </Col>
           <Col span={6}>
             {this.renderListItemContent(
-              <FormattedMessage id={`container.detail.createAt`} />,
+              <FormattedMessage id={`createdAt`} />,
               moment(container.createAt * 1000).calendar()
             )}
           </Col>
@@ -362,7 +364,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
         <Row>
           <Col span={6}>
             {this.renderListItemContent(
-              <FormattedMessage id={`container.detail.node`} />,
+              <FormattedMessage id={`node`} />,
               container.node
             )}
           </Col>

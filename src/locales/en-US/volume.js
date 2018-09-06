@@ -1,7 +1,6 @@
 export default {
-  'volume.name': 'name',
-  'volume.storageName': 'storage name',
-  'volume.accessMode': 'access mode',
+  'volume.storageName': 'storage Name',
+  'volume.accessMode': 'access Mode',
   'volume.add': 'Add Volume',
   'volume.form.createNewVolume': 'Create Volume',
   'volume.hint.invalidatedIP': 'It\'s not a validated IPv4.',

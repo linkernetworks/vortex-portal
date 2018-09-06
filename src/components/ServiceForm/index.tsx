@@ -251,10 +251,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
         onCancel={this.handleClose}
       >
         <Form>
-          <FormItem
-            {...formItemLayout}
-            label={<FormattedMessage id="service.name" />}
-          >
+          <FormItem {...formItemLayout} label={<FormattedMessage id="name" />}>
             {getFieldDecorator('name', {
               rules: [
                 {
@@ -360,7 +357,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
                   <TabPane tab={'Port' + (index + 1)} key={port.key}>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="service.ports.name" />}
+                      label={<FormattedMessage id="name" />}
                     >
                       {getFieldDecorator(`port-${port.key}-name`, {
                         rules: [

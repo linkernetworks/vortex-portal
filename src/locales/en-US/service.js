@@ -1,11 +1,8 @@
 export default {
-  'service.name': 'name',
-  'service.namespace': 'namespace',
   'service.type': 'type',
   'service.selectors': 'selectors',
   'service.ports': 'ports',
-  'service.add': 'Add Service',
-  'service.createdAt': 'created at',
+  'service.add': 'add Service',
 
   'service.ports.name': 'name',
   'service.ports.port': 'port',

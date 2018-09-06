@@ -1,15 +1,11 @@
 export default {
-  'network.name': 'name',
   'network.bridgeName': 'bridge',
   'network.interfaceName': 'interface name',
-  'network.nodes': 'nodes',
   'network.type': 'datapath type',
   'network.selectType': 'type',
   'network.physicalInterface': 'physical interface',
   'network.trunk': 'trunk',
-  'network.createdAt': 'created at',
   'network.vlanTags': 'VLAN tags',
-  'network.VLANTag': 'VLAN tag',
   'network.newVLANTag': 'New VLAN tag',
   'network.noTrunk': 'none trunk',
   'network.createNewNetwork': 'Create new network!',
@@ -28,5 +24,5 @@ export default {
   'network.hint.uniqueName': '{name} has been used! Try a new name.',
   'network.hint.selectNode': 'Select a node',
   'network.hint.selectInterfaces': 'Select interfaces',
-  'network.hint.VLANTag': 'Please enter a number between 0 ~ 4095.',
-}
+  'network.hint.vlanTags': 'Please enter a number between 0 ~ 4095.',
+};
