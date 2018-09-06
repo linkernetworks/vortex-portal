@@ -11,4 +11,4 @@ export default {
   'side.container': 'Container',
   'side.users': 'Users',
   'side.storage': 'Storage'
-};
+}

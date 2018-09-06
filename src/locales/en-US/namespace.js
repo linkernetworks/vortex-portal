@@ -1,5 +1,5 @@
 export default {
-  'namespace.name': 'Name',
+  'namespace.name': 'name',
   'namespace.add': 'Add Namespace',
-  'namespace.createdAt': 'Created At',
-};
+  'namespace.createdAt': 'created at',
+}

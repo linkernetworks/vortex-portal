@@ -1,14 +1,14 @@
 export default {
-  'service.name': 'Name',
-  'service.namespace': 'Namespace',
-  'service.type': 'Type',
-  'service.selectors': 'Selectors',
-  'service.ports': 'Ports',
+  'service.name': 'name',
+  'service.namespace': 'namespace',
+  'service.type': 'type',
+  'service.selectors': 'selectors',
+  'service.ports': 'ports',
   'service.add': 'Add Service',
-  'service.createdAt': 'Created At',
+  'service.createdAt': 'created at',
 
-  'service.ports.name': 'Name',
-  'service.ports.port': 'Port',
-  'service.ports.targetPort': 'Target Port',
-  'service.ports.nodePort': 'Node Port',
-};
+  'service.ports.name': 'name',
+  'service.ports.port': 'port',
+  'service.ports.targetPort': 'target port',
+  'service.ports.nodePort': 'node port',
+}

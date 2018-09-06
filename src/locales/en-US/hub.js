@@ -1,6 +1,6 @@
 export default {
-  'hub.imageHub': 'Image Hub',
+  'hub.imageHub': 'image hub',
   'hub.login': 'Login to unlock private image registry',
-  'hub.image': 'Image',
-  'hub.tags': 'Tags'
+  'hub.image': 'image',
+  'hub.tags': 'tags'
 }
