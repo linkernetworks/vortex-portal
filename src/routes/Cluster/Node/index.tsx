@@ -262,9 +262,8 @@ class Node extends React.Component<NodeProps, NodeState> {
     const { currentNode } = this.state;
     const timeUnit = e.target.value;
     if (timeUnit !== 'now') {
-      console.log(timeUnit);
-      nodeAPI.getNodes(timeUnit).then(res => {
-        this.setState({ nodeNics: res.data[currentNode].nics, timeUnit });
+      nodeAPI.getNode(currentNode, timeUnit).then(res => {
+        this.setState({ nodeNics: res.data.nics, timeUnit });
       });
     } else {
       this.setState({ timeUnit });
@@ -315,6 +314,7 @@ class Node extends React.Component<NodeProps, NodeState> {
         <Tooltip />
         <Legend />
         <Line
+          dot={false}
           type="monotone"
           name="Receive Usage"
           dataKey="y1"
@@ -322,6 +322,7 @@ class Node extends React.Component<NodeProps, NodeState> {
           activeDot={{ r: 8 }}
         />
         <Line
+          dot={false}
           type="monotone"
           name="Transmit Usage"
           dataKey="y2"
