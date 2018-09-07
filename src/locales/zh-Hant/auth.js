@@ -21,8 +21,8 @@ export default {
   'auth.hint.doNotHaveAnAccount': '還沒有帳號?',
   'auth.hint.reason.wrongUsernameAndPassword': '帳號密碼錯誤，請重新嘗試或者聯絡管理人員。',
   'auth.hint.signup.success': '註冊成功',
-  'auth.hint.signup.success.description': '請使你的帳號密碼來登入',
+  'auth.hint.signup.success.description': '請使用你的帳號密碼來登入',
   'auth.hint.signup.failure': '註冊失敗',
   'auth.hint.signin.failure': '登入失敗',
-  'auth.help.password': '此為一次性的密碼，請交給使用者。'
+  'auth.help.password': '此為一次性的密碼，請提供給使用者。'
 }

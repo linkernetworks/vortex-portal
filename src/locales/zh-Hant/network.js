@@ -7,8 +7,7 @@ export default {
   'network.selectType': '選擇類型',
   'network.physicalInterface': '實體介面',
   'network.trunk': 'Trunk',
-  'network.vlanTags': '虛擬區域網路標籤',
-  'network.vlanTags': '虛擬區域網路標籤',
+  'network.VLANTags': '虛擬區域網路標籤',
   'network.newVLANTag': '新虛擬區域網路標籤',
   'network.noTrunk': '無 Trunk',
   'network.createNewNetwork': '新增新網路!',
@@ -27,5 +26,5 @@ export default {
   'network.hint.uniqueName': '{name} 已經被使用! 使用新名稱。',
   'network.hint.selectNode': '選擇節點',
   'network.hint.selectInterfaces': '選擇介面',
-  'network.hint.vlanTags': '請輸入一個數字介於 0~4095',
+  'network.hint.VLANTags': '請輸入一個數字介於 0~4095',
 }

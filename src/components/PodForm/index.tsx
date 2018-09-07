@@ -828,7 +828,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                       </FormItem>
                       <FormItem
                         {...formItemLayout}
-                        label={<FormattedMessage id="network.vlanTags" />}
+                        label={<FormattedMessage id="network.VLANTags" />}
                       >
                         {getFieldDecorator(`network-${network.key}-vlan`, {
                           rules: [
@@ -883,7 +883,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                                     >
                                       {getFieldDecorator(
                                         `network-${network.key}-route-${
-                                          route.key
+                                        route.key
                                         }-dstCIDR`,
                                         {
                                           rules: [
@@ -906,7 +906,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                                     >
                                       {getFieldDecorator(
                                         `network-${network.key}-route-${
-                                          route.key
+                                        route.key
                                         }-gateway`,
                                         {
                                           rules: [

@@ -131,7 +131,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
         )
       },
       {
-        title: <FormattedMessage id={`network.vlanTags`} />,
+        title: <FormattedMessage id={`network.VLANTags`} />,
         render: (_, record) =>
           record.vlanTags.length === 0 ? (
             <FormattedMessage id="network.noTrunk" />

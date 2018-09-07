@@ -5,7 +5,7 @@ export default {
   'network.selectType': 'type',
   'network.physicalInterface': 'physical interface',
   'network.trunk': 'trunk',
-  'network.vlanTags': 'VLAN tags',
+  'network.VLANTags': 'VLAN tags',
   'network.newVLANTag': 'New VLAN tag',
   'network.noTrunk': 'none trunk',
   'network.createNewNetwork': 'Create new network!',
@@ -24,5 +24,5 @@ export default {
   'network.hint.uniqueName': '{name} has been used! Try a new name.',
   'network.hint.selectNode': 'Select a node',
   'network.hint.selectInterfaces': 'Select interfaces',
-  'network.hint.vlanTags': 'Please enter a number between 0 ~ 4095.',
+  'network.hint.VLANTags': 'Please enter a number between 0 ~ 4095.',
 };

@@ -2,7 +2,7 @@ export default {
   'service.type': 'type',
   'service.selectors': 'selectors',
   'service.ports': 'ports',
-  'service.add': 'add Service',
+  'service.add': 'Add Service',
 
   'service.ports.name': 'name',
   'service.ports.port': 'port',

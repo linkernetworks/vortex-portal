@@ -28,12 +28,12 @@ interface NetworkFormProps {
   onSubmit: (data: any, successCB?: () => void) => void;
 }
 
-interface NetworkFormState extends FormField<Network.NetworkFields> {}
+interface NetworkFormState extends FormField<Network.NetworkFields> { }
 
 class NetworkForm extends React.PureComponent<
   NetworkFormProps,
   NetworkFormState
-> {
+  > {
   constructor(props: NetworkFormProps) {
     super(props);
     this.state = this.stateFactory();
@@ -93,11 +93,11 @@ class NetworkForm extends React.PureComponent<
     return nodeName === ''
       ? []
       : map(nodes[nodeName].nics, (item, key) => ({
-          name: key,
-          pciID: item.pciID,
-          dpdk: item.dpdk
-        }))
-          .filter(
+        name: key,
+        pciID: item.pciID,
+        dpdk: item.dpdk
+      }))
+        .filter(
             // filter out dpdk
             physicalInterface => isDPDKPort.value === physicalInterface.dpdk
           )
@@ -180,7 +180,7 @@ class NetworkForm extends React.PureComponent<
       vlanTags: {
         ...this.state.vlanTags,
         validateStatus: result ? 'success' : 'error',
-        errorMsg: result ? '' : <FormattedMessage id="network.hint.vlanTags" />
+        errorMsg: result ? '' : <FormattedMessage id="network.hint.VLANTags" />
       }
     });
     return result;
@@ -443,7 +443,7 @@ class NetworkForm extends React.PureComponent<
           </FormItem>
           <FormItem
             className={styles['last-form-item']}
-            label={<FormattedMessage id="network.vlanTags" />}
+            label={<FormattedMessage id="network.VLANTags" />}
             validateStatus={this.state.vlanTags.validateStatus}
             help={this.state.vlanTags.errorMsg}
           >
