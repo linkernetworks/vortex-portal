@@ -952,7 +952,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                   <TabPane tab={'Container' + (index + 1)} key={container.key}>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="container.detail.name" />}
+                      label={<FormattedMessage id="name" />}
                     >
                       {getFieldDecorator(`container-${container.key}-name`, {
                         rules: [
@@ -965,7 +965,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                     </FormItem>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="container.detail.image" />}
+                      label={<FormattedMessage id="image" />}
                     >
                       {getFieldDecorator(`container-${container.key}-image`, {
                         rules: [

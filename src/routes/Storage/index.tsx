@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-<<<<<<< HEAD
-import { Card, Button, Icon, Table } from 'antd';
-=======
-import { Card, Button, Icon, Table, Popconfirm, notification } from 'antd';
->>>>>>> create/delete notification of storage
+import { Card, Button, Icon, Table, notification } from 'antd';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
@@ -235,9 +231,15 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
         this.props.removeVolume(id);
         break;
     }
-    return notification.success({
-      message: 'Success',
-      description: 'Delete successfully.'
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'Delete successfully.'
+      })
     });
   };
 
@@ -320,9 +322,14 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
         break;
     }
 
-    return notification.success({
-      message: 'Success',
-      description: 'Create successfully.'
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'Create successfully.'
+      })
     });
   };
 

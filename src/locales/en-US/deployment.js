@@ -14,4 +14,8 @@ export default {
   'deployment.volumes': 'volumes',
   'deployment.delete': 'Delete the Deployment',
   'deployment.undeletable': 'Can not delete this Deployment',
+  'deployment.hint.create.success': 'Success to create deployment.',
+  'deployment.hint.create.failure': 'Failed to create deployment.',
+  'deployment.hint.delete.success': 'Success to delete deployment.',
+  'deployment.hint.delete.failure': 'Failed to delete deployment.'
 }

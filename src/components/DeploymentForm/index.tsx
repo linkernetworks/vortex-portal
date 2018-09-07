@@ -576,10 +576,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
     });
     return (
       <Form>
-        <FormItem
-          {...formItemLayout}
-          label={<FormattedMessage id="deployment.name" />}
-        >
+        <FormItem {...formItemLayout} label={<FormattedMessage id="name" />}>
           {getFieldDecorator('name', {
             rules: [
               {
@@ -1082,7 +1079,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                 <TabPane tab={'Container' + (index + 1)} key={container.key}>
                   <FormItem
                     {...formItemLayout}
-                    label={<FormattedMessage id="container.detail.name" />}
+                    label={<FormattedMessage id="name" />}
                   >
                     {getFieldDecorator(`container-${container.key}-name`, {
                       rules: [

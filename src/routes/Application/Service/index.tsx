@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { Button, Icon, Tree, Tag, Card, Table, notification } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { FormattedMessage } from 'react-intl';
 import { Dispatch } from 'redux';
+import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import { find } from 'lodash';
 
@@ -26,7 +26,7 @@ interface ServiceState {
   namespaces: Array<NamespaceModel.Namespace>;
 }
 
-type ServiceProps = OwnProps & InjectedAuthRouterProps;
+type ServiceProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
 interface OwnProps {
   services: Array<ServiceModel.Service>;
   fetchServices: () => any;
@@ -139,17 +139,29 @@ class Service extends React.Component<ServiceProps, ServiceState> {
   protected handleSubmit = (service: ServiceModel.Service) => {
     this.props.addService(service);
     this.setState({ visibleModal: false });
-    return notification.success({
-      message: 'Success',
-      description: 'Create the service successfully.'
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'service.hint.create.success'
+      })
     });
   };
 
   protected handleRemoveService = (id: string) => {
     this.props.removeService(id);
-    return notification.success({
-      message: 'Success',
-      description: 'Delete the service successfully.'
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'service.hint.delete.success'
+      })
     });
   };
 
@@ -220,4 +232,4 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Service);
+)(injectIntl(Service));

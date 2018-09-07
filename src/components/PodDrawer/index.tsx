@@ -204,7 +204,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
 
   protected handleRemovePod = (namespace: string, id: string) => {
     this.props.removePodByName(namespace, id);
-    return notification.success({
+    notification.success({
       message: 'Success',
       description: 'Delete the pod successfully.'
     });
