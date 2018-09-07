@@ -883,7 +883,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                                     >
                                       {getFieldDecorator(
                                         `network-${network.key}-route-${
-                                        route.key
+                                          route.key
                                         }-dstCIDR`,
                                         {
                                           rules: [
@@ -906,7 +906,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                                     >
                                       {getFieldDecorator(
                                         `network-${network.key}-route-${
-                                        route.key
+                                          route.key
                                         }-gateway`,
                                         {
                                           rules: [

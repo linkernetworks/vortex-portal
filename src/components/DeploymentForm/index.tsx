@@ -1010,7 +1010,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                                   >
                                     {getFieldDecorator(
                                       `network-${network.key}-route-${
-                                      route.key
+                                        route.key
                                       }-dstCIDR`,
                                       {
                                         rules: [
@@ -1031,7 +1031,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                                   >
                                     {getFieldDecorator(
                                       `network-${network.key}-route-${
-                                      route.key
+                                        route.key
                                       }-gateway`,
                                       {
                                         rules: [
