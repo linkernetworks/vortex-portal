@@ -95,7 +95,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     const networkNames = networks.map(network => network.name);
     const columns: Array<ColumnProps<networkModels.Network>> = [
       {
-        title: <FormattedMessage id="network.name" />,
+        title: <FormattedMessage id="name" />,
         dataIndex: 'name'
       },
       {
@@ -107,7 +107,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
         dataIndex: 'bridgeName'
       },
       {
-        title: <FormattedMessage id="network.nodes" />,
+        title: <FormattedMessage id="node" />,
         render: (_, record) => (
           <Tree showIcon={true} selectable={false}>
             {record.nodes.map((node, idx) => (
@@ -131,7 +131,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
         )
       },
       {
-        title: <FormattedMessage id={`network.vlanTags`} />,
+        title: <FormattedMessage id={`network.VLANTags`} />,
         render: (_, record) =>
           record.vlanTags.length === 0 ? (
             <FormattedMessage id="network.noTrunk" />
@@ -140,11 +140,11 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           )
       },
       {
-        title: <FormattedMessage id="network.createdAt" />,
+        title: <FormattedMessage id="createdAt" />,
         render: (_, record) => moment(record.createdAt).calendar()
       },
       {
-        title: 'Action',
+        title: <FormattedMessage id="action" />,
         key: 'action',
         render: (_, record) => (
           <div className={styles.drawerBottom}>
@@ -167,7 +167,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
             className={styles.add}
             onClick={() => this.setState({ isCreating: true })}
           >
-            <Icon type="plus" /> <FormattedMessage id="network.add" />
+            <Icon type="plus" /> <FormattedMessage id="action.add" />
           </Button>
           <NetworkFrom
             visible={this.state.isCreating}

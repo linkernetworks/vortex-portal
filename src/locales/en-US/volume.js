@@ -1,5 +1,4 @@
 export default {
-  'volume.name': 'name',
   'volume.storageName': 'storage name',
   'volume.accessMode': 'access mode',
   'volume.add': 'Add Volume',

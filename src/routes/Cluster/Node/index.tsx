@@ -49,7 +49,7 @@ interface NodeInfo {
   cpiLimits: string;
   memoryRequests: string;
   memoryLimits: string;
-  age: string;
+  createdAt: string;
 }
 
 const TabPane = Tabs.TabPane;
@@ -125,7 +125,7 @@ class Node extends React.Component<NodeProps, NodeState> {
         <Row>
           <Col span={12}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.detail.createdAt" />,
+              <FormattedMessage id="createdAt" />,
               time.toISOString()
             )}
           </Col>
@@ -139,7 +139,7 @@ class Node extends React.Component<NodeProps, NodeState> {
         <Row>
           <Col span={12}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.detail.status" />,
+              <FormattedMessage id="status" />,
               this.props.nodes[node].detail.status
             )}
           </Col>
@@ -440,7 +440,7 @@ class Node extends React.Component<NodeProps, NodeState> {
         this.props.nodes[node].resource.memoryLimits,
         this.props.nodes[node].resource.capacityMemory
       ),
-      age: moment(this.props.nodes[node].detail.createAt * 1000).fromNow()
+      createdAt: moment(this.props.nodes[node].detail.createAt * 1000).fromNow()
     }));
   };
 
@@ -448,11 +448,11 @@ class Node extends React.Component<NodeProps, NodeState> {
     const { currentNode } = this.state;
     const columns: Array<ColumnProps<NodeInfo>> = [
       {
-        title: <FormattedMessage id="node.detail.name" />,
+        title: <FormattedMessage id="name" />,
         dataIndex: 'name'
       },
       {
-        title: <FormattedMessage id="node.detail.status" />,
+        title: <FormattedMessage id="status" />,
         dataIndex: 'status'
       },
       {
@@ -472,13 +472,15 @@ class Node extends React.Component<NodeProps, NodeState> {
         dataIndex: 'memoryLimits'
       },
       {
-        title: <FormattedMessage id="node.detail.age" />,
-        dataIndex: 'age'
+        title: <FormattedMessage id="createdAt" />,
+        dataIndex: 'createdAt'
       },
       {
-        title: 'Action',
+        title: <FormattedMessage id="action" />,
         render: (_, record) => (
-          <a onClick={() => this.showMore(record.name)}>More</a>
+          <a onClick={() => this.showMore(record.name)}>
+            {<FormattedMessage id="action.more" />}
+          </a>
         )
       }
     ];

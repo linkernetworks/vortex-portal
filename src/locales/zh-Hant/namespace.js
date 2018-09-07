@@ -1,5 +1,3 @@
 export default {
-  'namespace.name': '名稱',
-  'namespace.add': 'Add Namespace',
-  'namespace.createdAt': 'Created At',
+  'namespace.add': '創建命名空間'
 }

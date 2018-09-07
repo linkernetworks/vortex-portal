@@ -180,7 +180,7 @@ class NetworkForm extends React.PureComponent<
       vlanTags: {
         ...this.state.vlanTags,
         validateStatus: result ? 'success' : 'error',
-        errorMsg: result ? '' : <FormattedMessage id="network.hint.VLANTag" />
+        errorMsg: result ? '' : <FormattedMessage id="network.hint.VLANTags" />
       }
     });
     return result;
@@ -391,7 +391,7 @@ class NetworkForm extends React.PureComponent<
       >
         <Form>
           <FormItem
-            label={<FormattedMessage id="network.name" />}
+            label={<FormattedMessage id="name" />}
             required={true}
             hasFeedback={true}
             validateStatus={this.state.name.validateStatus}
@@ -443,7 +443,7 @@ class NetworkForm extends React.PureComponent<
           </FormItem>
           <FormItem
             className={styles['last-form-item']}
-            label={<FormattedMessage id="network.vlanTags" />}
+            label={<FormattedMessage id="network.VLANTags" />}
             validateStatus={this.state.vlanTags.validateStatus}
             help={this.state.vlanTags.errorMsg}
           >

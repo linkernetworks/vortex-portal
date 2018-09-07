@@ -550,10 +550,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
       >
         <Form>
           <h2>Pod</h2>
-          <FormItem
-            {...formItemLayout}
-            label={<FormattedMessage id="pod.name" />}
-          >
+          <FormItem {...formItemLayout} label={<FormattedMessage id="pod" />}>
             {getFieldDecorator('name', {
               rules: [
                 {
@@ -764,7 +761,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                     <TabPane tab={'Network' + (index + 1)} key={network.key}>
                       <FormItem
                         {...formItemLayout}
-                        label={<FormattedMessage id="network.name" />}
+                        label={<FormattedMessage id="name" />}
                       >
                         {getFieldDecorator(`network-${network.key}-name`, {
                           rules: [
@@ -831,7 +828,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                       </FormItem>
                       <FormItem
                         {...formItemLayout}
-                        label={<FormattedMessage id="network.VLANTag" />}
+                        label={<FormattedMessage id="network.VLANTags" />}
                       >
                         {getFieldDecorator(`network-${network.key}-vlan`, {
                           rules: [

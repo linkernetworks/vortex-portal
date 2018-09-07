@@ -52,7 +52,7 @@ interface PodInfo {
   status: string;
   node: string;
   restarts: number;
-  age: string;
+  createdAt: string;
 }
 
 interface DeploymentInfo {
@@ -62,7 +62,7 @@ interface DeploymentInfo {
   desiredPod: number;
   currentPod: number;
   availablePod: number;
-  age: string;
+  createdAt: string;
 }
 
 class Deployment extends React.Component<DeploymentProps, DeploymentState> {
@@ -118,19 +118,19 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
       desiredPod: deployments[deployment].desiredPod,
       currentPod: deployments[deployment].currentPod,
       availablePod: deployments[deployment].availablePod,
-      age: moment(deployments[deployment].createAt * 1000).fromNow()
+      createdAt: moment(deployments[deployment].createAt * 1000).fromNow()
     }));
   };
 
   public renderTable = () => {
     const columns: Array<ColumnProps<DeploymentInfo>> = [
       {
-        title: <FormattedMessage id="deployment.name" />,
+        title: <FormattedMessage id="name" />,
         dataIndex: 'name',
         width: 300
       },
       {
-        title: <FormattedMessage id="deployment.namespace" />,
+        title: <FormattedMessage id="namespace" />,
         dataIndex: 'namespace'
       },
       {
@@ -146,13 +146,15 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
         dataIndex: 'availablePod'
       },
       {
-        title: <FormattedMessage id="deployment.age" />,
-        dataIndex: 'age'
+        title: <FormattedMessage id="createdAt" />,
+        dataIndex: 'createdAt'
       },
       {
-        title: 'Action',
+        title: <FormattedMessage id="action" />,
         render: (_, record) => (
-          <a onClick={() => this.showMoreDeployment(record.name)}>More</a>
+          <a onClick={() => this.showMoreDeployment(record.name)}>
+            {<FormattedMessage id="action.more" />}
+          </a>
         )
       }
     ];
@@ -223,7 +225,7 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
       node: this.props.pods[pod].node,
       status: this.props.pods[pod].status,
       restarts: this.props.pods[pod].restartCount,
-      age: moment(this.props.pods[pod].createAt * 1000).fromNow()
+      createdAt: moment(this.props.pods[pod].createAt * 1000).fromNow()
     }));
   };
 
@@ -232,24 +234,24 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
     const { currentDeployment } = this.state;
     const columns: Array<ColumnProps<PodInfo>> = [
       {
-        title: <FormattedMessage id="pod.name" />,
+        title: <FormattedMessage id="name" />,
         dataIndex: 'name',
         key: 'name'
       },
       {
-        title: <FormattedMessage id="pod.namespace" />,
+        title: <FormattedMessage id="namespace" />,
         dataIndex: 'namespace'
       },
       {
-        title: <FormattedMessage id="pod.node" />,
+        title: <FormattedMessage id="node" />,
         dataIndex: 'node'
       },
       {
-        title: <FormattedMessage id="pod.status" />,
+        title: <FormattedMessage id="status" />,
         dataIndex: 'status'
       },
       {
-        title: 'Action',
+        title: <FormattedMessage id="action" />,
         key: 'action',
         render: (_, record) => (
           <a onClick={() => this.showMorePod(record.name)}>More</a>

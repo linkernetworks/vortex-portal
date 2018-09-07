@@ -1,8 +1,4 @@
 export default {
-  'node.detail.name': 'name',
-  'node.detail.createdAt': 'created at',
-  'node.detail.age': 'age',
-  'node.detail.status': 'status',
   'node.detail.os': 'OS',
   'node.detail.kernelVersion': 'Kernel version',
   'node.detail.dockerVersion': 'Docker version',

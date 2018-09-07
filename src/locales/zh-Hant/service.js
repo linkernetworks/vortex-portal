@@ -1,14 +1,10 @@
 export default {
-  'service.name': '名稱',
-  'service.namespace': 'Namespace',
-  'service.type': 'Type',
-  'service.selectors': 'Selectors',
-  'service.ports': 'Ports',
-  'service.add': 'Add Service',
-  'service.createdAt': 'Created At',
+  'service.type': '類型',
+  'service.selectors': '所選標籤',
+  'service.ports': '通訊埠號',
+  'service.add': '新增服務',
 
-  'service.ports.name': '名稱',
-  'service.ports.port': 'Port',
-  'service.ports.targetPort': 'Target Port',
-  'service.ports.nodePort': 'Node Port',
+  'service.ports.port': '通訊埠號',
+  'service.ports.targetPort': '目標通訊埠號',
+  'service.ports.nodePort': '節點通訊埠號',
 }

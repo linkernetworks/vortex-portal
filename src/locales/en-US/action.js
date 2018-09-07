@@ -1,5 +1,6 @@
 export default {
   'action': 'action',
+  'action.more': 'more',
   'action.edit': 'edit',
   'action.delete': 'delete',
   'action.save': 'save',
@@ -7,7 +8,7 @@ export default {
   'action.confirm': 'confirm',
   'action.cancel': 'cancel',
   'action.create': 'create',
-  'action.removeAll': 'remove all',
+  'action.removeAll': 'remove All',
   'action.next': 'next',
   'action.previous': 'previous',
   'action.done': 'done',

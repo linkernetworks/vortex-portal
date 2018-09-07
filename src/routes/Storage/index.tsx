@@ -84,7 +84,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
 
   private storageColumns: Array<ColumnProps<StorageModel>> = [
     {
-      title: this.props.intl.formatMessage({ id: 'storage.name' }),
+      title: this.props.intl.formatMessage({ id: 'name' }),
       dataIndex: 'name',
       key: 'name'
     },

@@ -888,7 +888,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                   <TabPane tab={'Network' + (index + 1)} key={network.key}>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="network.name" />}
+                      label={<FormattedMessage id="name" />}
                     >
                       {getFieldDecorator(`network-${network.key}-name`, {
                         rules: [
@@ -955,7 +955,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                     </FormItem>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="network.VLANTag" />}
+                      label={<FormattedMessage id="network.VLANTags" />}
                     >
                       {getFieldDecorator(`network-${network.key}-vlan`, {
                         rules: [

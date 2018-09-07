@@ -1,9 +1,11 @@
 export default {
+  'name': '名稱',
   'node': '節點',
-  'pod': '群',
+  'pod': 'pod',
   'container': '容器',
   'network': '網路',
-  'ovs': '開放虛擬交換機',
+  'namespace': '命名空間',
+  'ovs': 'open vSwitch',
   'dpdk': '資料平台開放套件',
   'service': '服務',
   'user': '使用者',
@@ -11,5 +13,6 @@ export default {
   'volume': 'volume',
   'compute': '運算資源',
   'overview': '概覽',
-  'createdAt': 'created at'
+  'status': '狀態',
+  'createdAt': '創建於'
 }
