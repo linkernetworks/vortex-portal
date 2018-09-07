@@ -12,10 +12,12 @@ import {
   Tabs,
   Table,
   notification,
-  Popconfirm
+  Popconfirm,
+  Radio
 } from 'antd';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
+import * as podAPI from '@/services/pod';
 import * as containerAPI from '@/services/container';
 
 import {
@@ -31,6 +33,8 @@ import {
 import * as styles from './styles.module.scss';
 
 const TabPane = Tabs.TabPane;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 interface PodDrawerProps {
   pod: PodModel.Pod;
@@ -41,10 +45,14 @@ interface PodDrawerProps {
 }
 
 interface PodDrawerState {
+  podNics: PodModel.NICS;
   visibleContainerDrawer: boolean;
   currentContainer: ContainerModel.Container;
   containers: Array<ContainerModel.Container>;
   deletable: boolean;
+  podTimeUnit: string;
+  containerTimeUnit: string;
+  resource: ContainerModel.Resource;
 }
 
 class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
@@ -71,7 +79,14 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
         }
       } as ContainerModel.Container,
       containers: [],
-      deletable: true
+      deletable: true,
+      podNics: {},
+      podTimeUnit: 'now',
+      containerTimeUnit: 'now',
+      resource: {
+        cpuUsagePercentage: [],
+        memoryUsageBytes: []
+      }
     };
   }
 
@@ -134,6 +149,9 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
               data.timestamp > cpuUsagePercentage.timestamp
             ) {
               originContainer.resource.cpuUsagePercentage.push(data);
+              if (originContainer.resource.cpuUsagePercentage.length > 15) {
+                originContainer.resource.cpuUsagePercentage.shift();
+              }
             }
           });
         }
@@ -148,6 +166,9 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
               data.timestamp > memoryUsageBytes.timestamp
             ) {
               originContainer.resource.memoryUsageBytes.push(data);
+              if (originContainer.resource.memoryUsageBytes.length > 15) {
+                originContainer.resource.memoryUsageBytes.shift();
+              }
             }
           });
         }
@@ -364,15 +385,28 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
     );
   };
 
-  protected renderResource = (container: ContainerModel.Resource) => {
+  protected renderResource = (resource: ContainerModel.Resource) => {
+    if (this.state.containerTimeUnit !== 'now') {
+      resource = this.state.resource;
+    }
     return (
       <div>
+        <RadioGroup
+          className={styles.radioGroup}
+          defaultValue="now"
+          buttonStyle="solid"
+          onChange={this.handleSwitchContainerTimeUnit}
+        >
+          <RadioButton value="week">Week</RadioButton>
+          <RadioButton value="day">Day</RadioButton>
+          <RadioButton value="now">Now</RadioButton>
+        </RadioGroup>
         <Row>
           <Col span={24}>
             {this.renderListItemContent(
               <FormattedMessage id={`container.resource.cpuUsagePercentage`} />,
               <div>
-                {this.renderContainerChart(container.cpuUsagePercentage, false)}
+                {this.renderContainerChart(resource.cpuUsagePercentage, false)}
               </div>
             )}
           </Col>
@@ -382,13 +416,25 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
                 id={`container.resource.memoryUsageMegabyte`}
               />,
               <div>
-                {this.renderContainerChart(container.memoryUsageBytes, true)}
+                {this.renderContainerChart(resource.memoryUsageBytes, true)}
               </div>
             )}
           </Col>
         </Row>
       </div>
     );
+  };
+
+  protected handleSwitchPodTimeUnit = (e: any) => {
+    const { pod } = this.props;
+    const podTimeUnit = e.target.value;
+    if (podTimeUnit !== 'now') {
+      podAPI.getPod(pod.podName, podTimeUnit).then(res => {
+        this.setState({ podNics: res.data.nics, podTimeUnit });
+      });
+    } else {
+      this.setState({ podTimeUnit });
+    }
   };
 
   protected renderPodChart(
@@ -429,6 +475,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
         <Tooltip />
         <Legend />
         <Line
+          dot={false}
           type="monotone"
           name="Receive Usage"
           dataKey="y1"
@@ -436,6 +483,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
           activeDot={{ r: 8 }}
         />
         <Line
+          dot={false}
           type="monotone"
           name="Transmit Usage"
           dataKey="y2"
@@ -444,6 +492,27 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
       </LineChart>
     );
   }
+
+  protected handleSwitchContainerTimeUnit = (e: any) => {
+    const containerTimeUnit = e.target.value;
+
+    const { pod } = this.props;
+    const { currentContainer } = this.state;
+
+    if (containerTimeUnit !== 'now') {
+      containerAPI
+        .getContainer(
+          pod.podName,
+          currentContainer.detail.containerName,
+          containerTimeUnit
+        )
+        .then(res => {
+          this.setState({ resource: res.data.resource, containerTimeUnit });
+        });
+    } else {
+      this.setState({ containerTimeUnit });
+    }
+  };
 
   protected renderContainerChart(
     data: Array<{ timestamp: number; value: string }>,
@@ -479,6 +548,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
         <Tooltip />
         <Legend />
         <Line
+          dot={false}
           type="monotone"
           name="Usage"
           dataKey="y1"
@@ -493,11 +563,23 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
     if (!nics) {
       return <div />;
     }
+    if (this.state.podTimeUnit !== 'now') {
+      nics = this.state.podNics;
+    }
     return (
       <Tabs>
         {Object.keys(nics).map(name => (
           <TabPane tab={name} key={name}>
-            <div>{name}</div>
+            <RadioGroup
+              className={styles.radioGroup}
+              defaultValue="now"
+              buttonStyle="solid"
+              onChange={this.handleSwitchPodTimeUnit}
+            >
+              <RadioButton value="week">Week</RadioButton>
+              <RadioButton value="day">Day</RadioButton>
+              <RadioButton value="now">Now</RadioButton>
+            </RadioGroup>
             <Row>
               <Col span={24}>
                 {this.renderListItemContent(
@@ -560,7 +642,10 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
         title="Pod"
         width={720}
         closable={false}
-        onClose={this.props.hideMorePod}
+        onClose={() => {
+          this.props.hideMorePod();
+          this.setState({ podTimeUnit: 'now' });
+        }}
         visible={this.props.visiblePodDrawer}
       >
         <div className={styles.contentSection}>

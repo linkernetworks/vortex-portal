@@ -100,6 +100,9 @@ export function clusterReducer(
                   data.timestamp > receiveBytesTotal.timestamp
                 ) {
                   originNetworkTraffic.receiveBytesTotal.push(data);
+                  if (originNetworkTraffic.receiveBytesTotal.length > 15) {
+                    originNetworkTraffic.receiveBytesTotal.shift();
+                  }
                 }
               });
 
@@ -112,6 +115,9 @@ export function clusterReducer(
                   data.timestamp > transmitBytesTotal.timestamp
                 ) {
                   originNetworkTraffic.transmitBytesTotal.push(data);
+                  if (originNetworkTraffic.transmitBytesTotal.length > 15) {
+                    originNetworkTraffic.transmitBytesTotal.shift();
+                  }
                 }
               });
 
@@ -124,6 +130,9 @@ export function clusterReducer(
                   data.timestamp > receivePacketsTotal.timestamp
                 ) {
                   originNetworkTraffic.receivePacketsTotal.push(data);
+                  if (originNetworkTraffic.receivePacketsTotal.length > 15) {
+                    originNetworkTraffic.receivePacketsTotal.shift();
+                  }
                 }
               });
 
@@ -136,6 +145,9 @@ export function clusterReducer(
                   data.timestamp > transmitPacketsTotal.timestamp
                 ) {
                   originNetworkTraffic.transmitPacketsTotal.push(data);
+                  if (originNetworkTraffic.transmitPacketsTotal.length > 15) {
+                    originNetworkTraffic.transmitPacketsTotal.shift();
+                  }
                 }
               });
             } else {
@@ -180,6 +192,9 @@ export function clusterReducer(
                 data.timestamp > receiveBytesTotal.timestamp
               ) {
                 originNetworkTraffic.receiveBytesTotal.push(data);
+                if (originNetworkTraffic.receiveBytesTotal.length > 15) {
+                  originNetworkTraffic.receiveBytesTotal.shift();
+                }
               }
             });
 
@@ -192,6 +207,9 @@ export function clusterReducer(
                 data.timestamp > transmitBytesTotal.timestamp
               ) {
                 originNetworkTraffic.transmitBytesTotal.push(data);
+                if (originNetworkTraffic.transmitBytesTotal.length > 15) {
+                  originNetworkTraffic.transmitBytesTotal.shift();
+                }
               }
             });
 
@@ -204,6 +222,9 @@ export function clusterReducer(
                 data.timestamp > receivePacketsTotal.timestamp
               ) {
                 originNetworkTraffic.receivePacketsTotal.push(data);
+                if (originNetworkTraffic.receivePacketsTotal.length > 15) {
+                  originNetworkTraffic.receivePacketsTotal.shift();
+                }
               }
             });
 
@@ -216,6 +237,9 @@ export function clusterReducer(
                 data.timestamp > transmitPacketsTotal.timestamp
               ) {
                 originNetworkTraffic.transmitPacketsTotal.push(data);
+                if (originNetworkTraffic.transmitPacketsTotal.length > 15) {
+                  originNetworkTraffic.transmitPacketsTotal.shift();
+                }
               }
             });
           } else {

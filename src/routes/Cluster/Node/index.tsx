@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Tag, Drawer, Tabs, Card, Table, Icon } from 'antd';
+import { Row, Col, Tag, Drawer, Tabs, Card, Table, Icon, Radio } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
@@ -11,6 +11,7 @@ import * as NodeModel from '@/models/Node';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
 
+import * as nodeAPI from '@/services/node';
 import * as styles from './styles.module.scss';
 
 import {
@@ -28,6 +29,8 @@ import { formatBytes } from '@/utils/bytes';
 interface NodeState {
   visible: boolean;
   currentNode: string;
+  nodeNics: NodeModel.NetworkInterfaceController;
+  timeUnit: string;
 }
 
 type NodeProps = OwnProps & InjectedAuthRouterProps;
@@ -50,6 +53,8 @@ interface NodeInfo {
 }
 
 const TabPane = Tabs.TabPane;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 class Node extends React.Component<NodeProps, NodeState> {
   private intervalId: number;
@@ -57,7 +62,9 @@ class Node extends React.Component<NodeProps, NodeState> {
     super(props);
     this.state = {
       visible: false,
-      currentNode: ''
+      currentNode: '',
+      nodeNics: {},
+      timeUnit: 'now'
     };
   }
 
@@ -251,6 +258,18 @@ class Node extends React.Component<NodeProps, NodeState> {
     );
   };
 
+  protected handleSwitchTimeUnit = (e: any) => {
+    const { currentNode } = this.state;
+    const timeUnit = e.target.value;
+    if (timeUnit !== 'now') {
+      nodeAPI.getNode(currentNode, timeUnit).then(res => {
+        this.setState({ nodeNics: res.data.nics, timeUnit });
+      });
+    } else {
+      this.setState({ timeUnit });
+    }
+  };
+
   protected renderChart(
     data1: Array<{ timestamp: number; value: string }>,
     data2: Array<{ timestamp: number; value: string }>,
@@ -295,6 +314,7 @@ class Node extends React.Component<NodeProps, NodeState> {
         <Tooltip />
         <Legend />
         <Line
+          dot={false}
           type="monotone"
           name="Receive Usage"
           dataKey="y1"
@@ -302,6 +322,7 @@ class Node extends React.Component<NodeProps, NodeState> {
           activeDot={{ r: 8 }}
         />
         <Line
+          dot={false}
           type="monotone"
           name="Transmit Usage"
           dataKey="y2"
@@ -318,6 +339,10 @@ class Node extends React.Component<NodeProps, NodeState> {
         defaultKey = name;
         break;
       }
+    }
+    let nics = this.props.nodesNics[node];
+    if (this.state.timeUnit !== 'now') {
+      nics = this.state.nodeNics;
     }
     return (
       <Tabs defaultActiveKey={defaultKey}>
@@ -342,15 +367,23 @@ class Node extends React.Component<NodeProps, NodeState> {
                   this.props.nodes[node].nics[name].pciID
                 )}
               </Col>
+              <RadioGroup
+                className={styles.radioGroup}
+                defaultValue="now"
+                buttonStyle="solid"
+                onChange={this.handleSwitchTimeUnit}
+              >
+                <RadioButton value="week">Week</RadioButton>
+                <RadioButton value="day">Day</RadioButton>
+                <RadioButton value="now">Now</RadioButton>
+              </RadioGroup>
               <div>
                 {this.renderListItemContent(
                   <FormattedMessage id="node.nics.TXRXMegabyteTotal" />,
                   <div>
                     {this.renderChart(
-                      this.props.nodesNics[node][name].nicNetworkTraffic
-                        .receiveBytesTotal,
-                      this.props.nodesNics[node][name].nicNetworkTraffic
-                        .transmitBytesTotal,
+                      nics[name].nicNetworkTraffic.receiveBytesTotal,
+                      nics[name].nicNetworkTraffic.transmitBytesTotal,
                       true
                     )}
                   </div>
@@ -361,10 +394,8 @@ class Node extends React.Component<NodeProps, NodeState> {
                   <FormattedMessage id="node.nics.TXRXPacketsTotal" />,
                   <div>
                     {this.renderChart(
-                      this.props.nodesNics[node][name].nicNetworkTraffic
-                        .receivePacketsTotal,
-                      this.props.nodesNics[node][name].nicNetworkTraffic
-                        .transmitPacketsTotal,
+                      nics[name].nicNetworkTraffic.receivePacketsTotal,
+                      nics[name].nicNetworkTraffic.transmitPacketsTotal,
                       false
                     )}
                   </div>
