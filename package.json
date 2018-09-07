@@ -32,6 +32,7 @@
     "redux-thunk": "^2.3.0",
     "rxjs": "^6.2.2",
     "sass-mq": "^5.0.0",
+    "sockjs-client": "^1.1.5",
     "typesafe-actions": "^2.0.4",
     "xterm": "^3.6.0"
   },
@@ -72,6 +73,7 @@
     "@types/recompose": "^0.26.4",
     "@types/redux-auth-wrapper": "^2.0.8",
     "@types/redux-logger": "^3.0.6",
+    "@types/sockjs-client": "^1.1.0",
     "@types/webpack-env": "^1.13.6",
     "husky": "1.0.0-rc.13",
     "less-loader": "^4.1.0",
