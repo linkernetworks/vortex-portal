@@ -182,15 +182,9 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
   };
 
   protected renderStatusIcon = (deployment: DeploymentModel.Controller) => {
-    if (
-      deployment.desiredPod === deployment.currentPod &&
-      deployment.currentPod === deployment.availablePod
-    ) {
+    if (deployment.availablePod > 0) {
       return <Icon type="check-circle" className={styles.readyIcon} />;
-    } else if (
-      deployment.desiredPod === deployment.currentPod &&
-      deployment.currentPod !== deployment.availablePod
-    ) {
+    } else if (deployment.currentPod > 0) {
       return <Icon type="clock-circle" className={styles.pendingIcon} />;
     } else {
       return <Icon type="close-circle" className={styles.errorIcon} />;
