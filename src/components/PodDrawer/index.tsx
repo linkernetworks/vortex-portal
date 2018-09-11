@@ -90,6 +90,29 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
     };
   }
 
+  public componentDidUpdate(prevProps: PodDrawerProps) {
+    const { pod } = this.props;
+    if (pod.podName !== prevProps.pod.podName) {
+      this.intervalContainersId.map(id => {
+        clearInterval(id);
+      });
+      this.intervalContainersId = [];
+      pod.containers.map(container => {
+        // Only show in pod's container drawer so get container data without flow
+        const containers: Array<ContainerModel.Container> = [];
+        containerAPI.getContainer(pod.podName, container).then(res => {
+          containers.push(res.data);
+          this.setState({ containers });
+        });
+        const id = window.setInterval(
+          () => this.fetchContainer(pod.podName, container),
+          5000
+        );
+        this.intervalContainersId.push(id);
+      });
+    }
+  }
+
   public componentDidMount() {
     const tmpId = window.setInterval(() => {
       const { pod } = this.props;
