@@ -31,7 +31,6 @@ interface DeploymentState {
   visibleModal: boolean;
   currentPod: string;
   currentDeployment: string;
-  deletable: boolean;
 }
 
 type DeploymentProps = OwnProps & InjectedAuthRouterProps;
@@ -39,7 +38,7 @@ interface OwnProps {
   pods: PodModel.Pods;
   podsNics: PodModel.PodsNics;
   fetchPods: () => any;
-  removePod: (id: string) => any;
+  removePodByName: (namespace: string, id: string) => any;
   deployments: DeploymentModel.Controllers;
   allDeployments: Array<string>;
   fetchDeployments: () => any;
@@ -74,8 +73,7 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
       visibleDeploymentDrawer: false,
       visibleModal: false,
       currentPod: '',
-      currentDeployment: '',
-      deletable: true
+      currentDeployment: ''
     };
   }
 
@@ -183,7 +181,6 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
   };
 
   protected handleRemoveDeployment = (id: string) => {
-    this.setState({ deletable: false });
     this.props.removeDeployment(id);
     return notification.success({
       message: 'Success',
@@ -269,7 +266,7 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
   };
 
   protected renderAction = (id: string | undefined) => {
-    if (!!id && this.state.deletable === true) {
+    if (!!id) {
       return (
         <Popconfirm
           key="action.delete"
@@ -336,7 +333,7 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
                 podNics={podsNics[currentPod]}
                 visiblePodDrawer={this.state.visiblePodDrawer}
                 hideMorePod={this.hideMorePod}
-                removePod={this.props.removePod}
+                removePodByName={this.props.removePodByName}
               />
               <div className={styles.drawerBottom}>
                 {this.renderAction(deployments[currentDeployment].id)}
@@ -365,7 +362,8 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchPods: () => dispatch(clusterOperations.fetchPods()),
-  removePod: (id: string) => dispatch(clusterOperations.removePod(id)),
+  removePodByName: (namespace: string, id: string) =>
+    dispatch(clusterOperations.removePodByName(namespace, id)),
   fetchDeployments: () => dispatch(clusterOperations.fetchDeployments()),
   fetchDeploymentsFromMongo: () =>
     dispatch(clusterOperations.fetchDeploymentsFromMongo()),

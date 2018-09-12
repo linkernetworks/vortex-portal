@@ -11,7 +11,7 @@ import { FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { RootState, RTDispatch } from '@/store/ducks';
-import { clusterOperations } from '@/store/ducks/cluster';
+import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
 
 import * as networkAPI from '@/services/network';
 import * as namespaceAPI from '@/services/namespace';
@@ -42,7 +42,7 @@ interface OwnProps {
   fetchPods: () => any;
   fetchPodsFromMongo: () => any;
   addPod: (data: PodModel.PodRequest) => any;
-  removePod: (id: string) => any;
+  removePodByName: (namespace: string, id: string) => any;
 }
 
 interface PodInfo {
@@ -209,7 +209,7 @@ class Pod extends React.Component<PodProps, PodState> {
               podNics={this.props.podsNics[currentPod]}
               visiblePodDrawer={this.state.visiblePodDrawer}
               hideMorePod={this.hideMorePod}
-              removePod={this.props.removePod}
+              removePodByName={this.props.removePodByName}
             />
           )}
 
@@ -238,8 +238,8 @@ const mapStateToProps = (state: RootState) => {
     }
   });
   return {
-    pods: state.cluster.pods,
-    allPods: state.cluster.allPods,
+    pods: clusterSelectors.getPodsInAvailableNamespace(state.cluster),
+    allPods: clusterSelectors.getAllPodsInAvailableNamespace(state.cluster),
     podsNics: state.cluster.podsNics
   };
 };
@@ -250,7 +250,8 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
   addPod: (data: PodModel.PodRequest) => {
     dispatch(clusterOperations.addPod(data));
   },
-  removePod: (id: string) => dispatch(clusterOperations.removePod(id))
+  removePodByName: (namespace: string, id: string) =>
+    dispatch(clusterOperations.removePodByName(namespace, id))
 });
 
 export default connect(
