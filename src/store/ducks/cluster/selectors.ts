@@ -20,3 +20,21 @@ export const getNodesWithPhysicalInterfaces = (duck: ClusterStateType) => {
     };
   }, {});
 };
+
+export const getAllPodsInAvailableNamespace = (duck: ClusterStateType) => {
+  const { pods, allPods } = duck;
+  return allPods.filter(podName => {
+    const pod = pods[podName];
+    return pod.namespace !== 'vortex' && pod.namespace !== 'kube-system';
+  });
+};
+
+export const getPodsInAvailableNamespace = (duck: ClusterStateType) => {
+  const { pods } = duck;
+  const filteredPods = pickBy(
+    pods,
+    (_, key) =>
+      pods[key].namespace !== 'vortex' && pods[key].namespace !== 'kube-system'
+  );
+  return filteredPods;
+};
