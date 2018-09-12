@@ -11,9 +11,13 @@ export const getSocketSession = (
   );
 };
 
-export const getSock = (id: string) => {
-  console.log(`/v1/sockjs?${id}`);
+export const getSock = (id: string, receiveMessage: (data: string) => void) => {
   const sock = new SockJS(`/v1/sockjs?${id}`);
+
+  const sendMessage = (command: string) => {
+    sock.send(JSON.stringify({ Op: 'stdin', Data: command }));
+  };
+
   sock.onopen = function() {
     console.log('sock open');
     sock.send(JSON.stringify({ Op: 'bind', SessionID: id }));
@@ -26,17 +30,11 @@ export const getSock = (id: string) => {
 
   sock.onmessage = function(event) {
     const msg = JSON.parse(event.data);
-    console.log(msg.Data);
-  };
-
-  console.log(sock.onopen, sock);
-
-  const sendMessage = (command: string) => {
-    sock.send(JSON.stringify({ Op: 'stdin', Data: command }));
+    receiveMessage(msg.Data);
   };
 
   return {
-    onmessage: sock.onmessage,
-    onsend: sendMessage
+    sock,
+    sendMessage
   };
 };

@@ -12,25 +12,41 @@ interface ExecTerminalProps {
 
 class ExecTerminal extends React.PureComponent<ExecTerminalProps, object> {
   private xterm: Terminal;
+  private sock: WebSocket;
   private termRef = React.createRef<HTMLDivElement>();
+
+  protected handleRecieveMessage = (msg: string) => {
+    this.xterm.write(msg);
+  };
+
+  protected handleTerminalInput = (sendMessage: (command: string) => void) => (
+    key: string,
+    event: KeyboardEvent
+  ) => {
+    sendMessage(key);
+  };
 
   public async componentDidMount() {
     const { namespace, podName, containerName } = this.props;
-    this.xterm = new Terminal();
-    this.xterm.open(this.termRef.current!);
 
     const session = await getSocketSession(namespace, podName, containerName);
-    const sock = getSock(session.data.id);
-    // sock.onmessage = event => {
-    //   const msg = JSON.parse(event.data);
-    //   console.log(msg);
-    //   this.xterm.write(msg.Data);
-    // };
+    const { sock, sendMessage } = getSock(
+      session.data.id,
+      this.handleRecieveMessage
+    );
+    this.sock = sock;
+
+    this.xterm = new Terminal();
+    this.xterm.open(this.termRef.current!);
+    this.xterm.on('key', this.handleTerminalInput(sendMessage));
   }
 
   public componentWillUnmount() {
     if (this.xterm) {
       this.xterm.dispose();
+    }
+    if (this.sock) {
+      this.sock.close();
     }
   }
 
