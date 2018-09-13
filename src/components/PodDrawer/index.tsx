@@ -734,11 +734,13 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
             {this.renderResource(currentContainer.resource)}
           </div>
 
-          <ExecTerminal
-            namespace={pod.namespace}
-            podName={pod.podName}
-            containerName={currentContainer.detail.containerName}
-          />
+          {pod && (
+            <ExecTerminal
+              namespace={pod.namespace}
+              podName={pod.podName}
+              containerName={currentContainer.detail.containerName}
+            />
+          )}
         </Drawer>
         <div className={styles.drawerBottom}>
           {!!pod && this.renderAction(pod.metadata)}

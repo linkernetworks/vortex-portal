@@ -7,7 +7,7 @@ import { Input, Select, Table, Card } from 'antd';
 import * as moment from 'moment';
 import { ColumnProps } from 'antd/lib/table';
 import { filter, includes } from 'lodash';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { RootState, RTDispatch } from '@/store/ducks';
@@ -16,9 +16,8 @@ import { clusterOperations } from '@/store/ducks/cluster';
 import * as networkAPI from '@/services/network';
 import * as namespaceAPI from '@/services/namespace';
 
-import * as styles from './styles.module.scss';
-
 import PodDrawer from '@/components/PodDrawer';
+import ItemActions from '@/components/ItemActions';
 
 const InputGroup = Input.Group;
 const Search = Input.Search;
@@ -34,7 +33,7 @@ interface PodState {
   searchText: string;
 }
 
-type PodProps = OwnProps & InjectedAuthRouterProps;
+type PodProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
 interface OwnProps {
   pods: PodModel.Pods;
   allPods: Array<string>;
@@ -55,6 +54,42 @@ interface PodInfo {
 
 class Pod extends React.Component<PodProps, PodState> {
   private intervalPodId: number;
+  private columns: Array<ColumnProps<PodInfo>> = [
+    {
+      title: <FormattedMessage id="name" />,
+      dataIndex: 'name',
+      width: 300
+    },
+    {
+      title: <FormattedMessage id="namespace" />,
+      dataIndex: 'namespace'
+    },
+    {
+      title: <FormattedMessage id="node" />,
+      dataIndex: 'node'
+    },
+    {
+      title: <FormattedMessage id="status" />,
+      dataIndex: 'status'
+    },
+    {
+      title: <FormattedMessage id="createdAt" />,
+      dataIndex: 'createdAt'
+    },
+    {
+      title: <FormattedMessage id="action" />,
+      render: (_, record) => (
+        <ItemActions
+          items={[
+            {
+              type: 'more',
+              onConfirm: this.showMorePod.bind(this, record.name)
+            }
+          ]}
+        />
+      )
+    }
+  ];
   constructor(props: PodProps) {
     super(props);
     this.state = {
@@ -144,64 +179,52 @@ class Pod extends React.Component<PodProps, PodState> {
           return includes(this.props.pods[name].namespace, searchText);
       }
     });
-    const columns: Array<ColumnProps<PodInfo>> = [
-      {
-        title: <FormattedMessage id="name" />,
-        dataIndex: 'name',
-        width: 300
-      },
-      {
-        title: <FormattedMessage id="namespace" />,
-        dataIndex: 'namespace'
-      },
-      {
-        title: <FormattedMessage id="node" />,
-        dataIndex: 'node'
-      },
-      {
-        title: <FormattedMessage id="status" />,
-        dataIndex: 'status'
-      },
-      {
-        title: <FormattedMessage id="createdAt" />,
-        dataIndex: 'createdAt'
-      },
-      {
-        title: <FormattedMessage id="action" />,
-        render: (_, record) => (
-          <a onClick={() => this.showMorePod(record.name)}>
-            {<FormattedMessage id="action.more" />}
-          </a>
-        )
-      }
-    ];
+
     return (
       <div>
         <Card title={<FormattedMessage id="pod" />}>
-          <InputGroup compact={true}>
-            <Select
-              style={{ width: '15%' }}
-              defaultValue="Pod Name"
-              onChange={this.handleChangeSearchType}
-            >
-              <Option value="pod">Pod Name</Option>
-              <Option value="container">Container Name</Option>
-              <Option value="node">Node Name</Option>
-              <Option value="namespace">Namespace</Option>
-            </Select>
-            <Search
-              style={{ width: '20%' }}
-              placeholder="Input search text"
-              value={this.state.searchText}
-              onChange={this.handleSearch}
-            />
-          </InputGroup>
-          <br />
+          <div className="table-controls">
+            <InputGroup compact={true}>
+              <Select
+                style={{ width: '15%' }}
+                defaultValue="pod"
+                onChange={this.handleChangeSearchType}
+              >
+                <Option value="pod">
+                  <FormattedMessage id="pod.filter.podName" />
+                </Option>
+                <Option value="container">
+                  <FormattedMessage id="pod.filter.containerName" />
+                </Option>
+                <Option value="node">
+                  <FormattedMessage id="pod.filter.nodeName" />
+                </Option>
+                <Option value="namespace">
+                  <FormattedMessage id="pod.filter.namespaceName" />
+                </Option>
+              </Select>
+              <Search
+                style={{ width: '25%' }}
+                placeholder={this.props.intl.formatMessage(
+                  {
+                    id: 'form.filter.placeholder'
+                  },
+                  {
+                    field: this.props.intl.formatMessage({
+                      id: 'pod'
+                    })
+                  }
+                )}
+                value={this.state.searchText}
+                onChange={this.handleSearch}
+              />
+            </InputGroup>
+          </div>
           <Table
-            className={styles.table}
-            columns={columns}
+            rowKey="name"
+            className="main-table"
+            columns={this.columns}
             dataSource={this.getPodInfo(filterPods)}
-            size="small"
           />
           {this.props.pods.hasOwnProperty(currentPod) && (
             <PodDrawer
@@ -212,19 +235,6 @@ class Pod extends React.Component<PodProps, PodState> {
               removePod={this.props.removePod}
             />
           )}
-
-          {/* <Button type="dashed" className={styles.add} onClick={this.showCreate}>
-          <Icon type="plus" /> <FormattedMessage id="pod.add" />
-        </Button>
-        <PodForm
-          allPods={this.props.allPods}
-          pods={this.props.pods}
-          networks={this.state.networks}
-          namespaces={this.state.namespaces}
-          visible={this.state.visibleModal}
-          onCancel={this.hideCreate}
-          onSubmit={this.handleSubmit}
-        /> */}
         </Card>
       </div>
     );
@@ -256,4 +266,4 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Pod);
+)(injectIntl(Pod));

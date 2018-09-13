@@ -334,7 +334,6 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
                 <h3>Pods</h3>
                 {this.renderPod()}
               </div>
-
               <PodDrawer
                 pod={pods[currentPod]}
                 podNics={podsNics[currentPod]}

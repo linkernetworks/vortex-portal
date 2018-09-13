@@ -13,5 +13,6 @@ export default {
   'storage': 'storage',
   'volume': 'volume',
   'overview': 'overview',
-  'createdAt': 'created at'
+  'status': 'status',
+  'createdAt': 'created at',
 }
