@@ -296,16 +296,20 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
     const { currentDeployment, currentPod } = this.state;
     return (
       <div>
-        <Card>
+        <Card
+          title={<FormattedMessage id="deployment" />}
+          extra={
+            <Link className={styles.action} to="/application/deployment/create">
+              <Button>
+                <Icon type="plus" /> <FormattedMessage id="deployment.add" />
+              </Button>
+            </Link>
+          }
+        >
           {this.renderTable()}
-          <Link className={styles.action} to="/application/deployment/create">
-            <Button type="dashed" className={styles.add}>
-              <Icon type="plus" /> <FormattedMessage id="deployment.add" />
-            </Button>
-          </Link>
           {deployments.hasOwnProperty(currentDeployment) && (
             <Drawer
-              title="Deployment"
+              title={<FormattedMessage id="deployment" />}
               width={720}
               closable={false}
               onClose={this.hideMoreDeployment}

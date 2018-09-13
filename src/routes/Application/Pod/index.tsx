@@ -177,7 +177,7 @@ class Pod extends React.Component<PodProps, PodState> {
     ];
     return (
       <div>
-        <Card>
+        <Card title={<FormattedMessage id="pod" />}>
           <InputGroup compact={true}>
             <Select
               style={{ width: '15%' }}

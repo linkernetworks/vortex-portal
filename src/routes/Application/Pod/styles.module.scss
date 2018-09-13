@@ -1,6 +1,5 @@
 
-@import '../../../styles/variables';
-$tag-gutter: 8px;
+@import '../../../styles/global';$tag-gutter: 8px;
 
 .column {
   flex: 2;
@@ -48,12 +47,6 @@ $tag-gutter: 8px;
 
 .pendingIcon{
   padding-left: $padding-xs;
-}
-
-.table {
-  th, td {
-    padding: $padding-md !important;
-  }
 }
 
 .contentSection{

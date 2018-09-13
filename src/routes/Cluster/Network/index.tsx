@@ -155,20 +155,20 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     ];
     return (
       <div>
-        <Card>
+        <Card
+          title={<FormattedMessage id="network" />}
+          extra={
+            <Button onClick={() => this.setState({ isCreating: true })}>
+              <Icon type="plus" /> <FormattedMessage id="network.add" />
+            </Button>
+          }
+        >
           <Table
             className={styles.table}
             columns={columns}
             dataSource={networks}
             size="small"
           />
-          <Button
-            type="dashed"
-            className={styles.add}
-            onClick={() => this.setState({ isCreating: true })}
-          >
-            <Icon type="plus" /> <FormattedMessage id="action.add" />
-          </Button>
           <NetworkFrom
             visible={this.state.isCreating}
             isLoading={this.props.isLoading}

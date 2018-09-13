@@ -285,10 +285,10 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
     }
   };
 
-  public renderTableFooter = () => {
+  public renderTableHeader = () => {
     const { tabKey } = this.state;
     return (
-      <Button type="dashed" className={styles.add} onClick={this.handleAddItem}>
+      <Button onClick={this.handleAddItem}>
         <Icon type="plus" /> <FormattedMessage id={`${tabKey}.add`} />
       </Button>
     );
@@ -320,7 +320,8 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
               rowKey="id"
               columns={this.storageColumns}
               dataSource={storages.data}
-              footer={this.renderTableFooter}
+              size="small"
+              className={styles.table}
             />
             <StorageForm
               {...storageFields}
@@ -341,7 +342,8 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
               rowKey="id"
               columns={this.volumeColumns}
               dataSource={volumes.data}
-              footer={this.renderTableFooter}
+              size="small"
+              className={styles.table}
             />
             <VolumeForm
               {...volumeFields}
@@ -373,6 +375,8 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
           onTabChange={key => {
             this.setState({ tabKey: key });
           }}
+          title={<FormattedMessage id="storage" />}
+          extra={this.renderTableHeader()}
         >
           {this.renderTabContent()}
         </Card>

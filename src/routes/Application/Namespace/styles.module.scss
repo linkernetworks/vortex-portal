@@ -1,5 +1,4 @@
-@import '../../../styles/variables';
-
+@import '../../../styles/global';
 $tag-gutter: 8px;
 
 .content {
@@ -9,12 +8,6 @@ $tag-gutter: 8px;
 
 .property {
   display: flex;
-}
-
-.table {
-  th, td {
-    padding: $padding-md !important;
-  }
 }
 
 .column {

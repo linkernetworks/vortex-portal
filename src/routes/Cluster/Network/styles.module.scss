@@ -1,4 +1,4 @@
-@import '../../../styles/variables';
+@import '../../../styles/global';
 
 $tag-gutter: 8px;
 
@@ -60,12 +60,6 @@ $tag-gutter: 8px;
     .name {
       font-size: $font-size-sm;
     }
-  }
-}
-
-.table {
-  th, td {
-    padding: $padding-md !important;
   }
 }
 

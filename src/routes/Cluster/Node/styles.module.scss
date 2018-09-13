@@ -1,5 +1,6 @@
 
-@import '../../../styles/variables';
+@import '../../../styles/global';
+
 $tag-gutter: 8px;
 
 .column {
@@ -44,12 +45,6 @@ $tag-gutter: 8px;
 
 .labels {
   margin-bottom: -$tag-gutter;
-}
-
-.table {
-  th, td {
-    padding: $padding-md !important;
-  }
 }
 
 .label {
