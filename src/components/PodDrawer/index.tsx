@@ -17,7 +17,7 @@ import {
 } from 'antd';
 import * as moment from 'moment';
 import { get } from 'lodash';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import * as podAPI from '@/services/pod';
 import * as containerAPI from '@/services/container';
 import ExecTerminal from '@/components/ExecTerminal';
@@ -38,7 +38,9 @@ const TabPane = Tabs.TabPane;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-interface PodDrawerProps {
+type PodDrawerProps = OwnProps & InjectedIntlProps;
+
+interface OwnProps {
   pod: PodModel.Pod;
   podNics: PodModel.NICS;
   visiblePodDrawer: boolean;
@@ -204,9 +206,14 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
 
   protected handleRemovePod = (namespace: string, id: string) => {
     this.props.removePodByName(namespace, id);
+    const { formatMessage } = this.props.intl;
     notification.success({
-      message: 'Success',
-      description: 'Delete the pod successfully.'
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'pod.hint.delete.success'
+      })
     });
   };
 
@@ -752,4 +759,4 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
   }
 }
 
-export default PodDrawer;
+export default injectIntl(PodDrawer);

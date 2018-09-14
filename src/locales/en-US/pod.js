@@ -20,4 +20,7 @@ export default {
   'pod.filter.containerName': 'container name',
   'pod.filter.nodeName': 'node name',
   'pod.filter.namespaceName': 'namespace name',
+
+  'pod.hint.delete.success': 'Success to delete pod.',
+  'pod.hint.delete.failure': 'Failed to delete pod.'
 }

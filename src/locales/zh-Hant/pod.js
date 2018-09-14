@@ -20,4 +20,7 @@ export default {
   'pod.filter.containerName': '容器名稱',
   'pod.filter.nodeName': '節點名稱',
   'pod.filter.namespaceName': '命名空間名稱',
+
+  'pod.hint.delete.success': '成功刪除 pod 。',
+  'pod.hint.delete.failure': '刪除 pod 失敗。'
 }
