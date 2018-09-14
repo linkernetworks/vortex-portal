@@ -12,6 +12,8 @@ export default {
   'deployment.addWithNetwork': 'Create Deployment with network',
   'deployment.replicas': 'number of pods',
   'deployment.volumes': 'volumes',
+  'deployment.addByYAML': 'Create Deployment by YAML File',
+  'deployment.replicas': 'Number of pods',
   'deployment.delete': 'Delete the Deployment',
   'deployment.undeletable': 'Can not delete this Deployment',
   'deployment.hint.create.success': 'Success to create deployment.',

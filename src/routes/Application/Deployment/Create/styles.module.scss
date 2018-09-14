@@ -1,5 +1,9 @@
 .card {
+  height: 100%;
   margin-bottom: 2em;
+  .ant-card-body {
+    height: 100% !important;
+  }
 }
 
 .add {
