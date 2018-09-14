@@ -11,6 +11,10 @@ export interface ContainersResource {
   [name: string]: Resource;
 }
 
+export interface ContainerLogs {
+  logs: Array<{ timestamp: string; content: string }>;
+}
+
 export interface Detail {
   containerName: string;
   createAt: number;
