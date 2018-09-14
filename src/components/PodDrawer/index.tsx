@@ -16,6 +16,7 @@ import {
   Radio
 } from 'antd';
 import * as moment from 'moment';
+import { get } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import * as podAPI from '@/services/pod';
 import * as containerAPI from '@/services/container';
@@ -93,7 +94,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
 
   public componentDidUpdate(prevProps: PodDrawerProps) {
     const { pod } = this.props;
-    if (pod.podName !== prevProps.pod.podName) {
+    if (pod.podName !== get(prevProps.pod, 'podName')) {
       this.intervalContainersId.map(id => {
         clearInterval(id);
       });
