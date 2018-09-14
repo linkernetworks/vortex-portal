@@ -40,6 +40,10 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
       width: 300
     },
     {
+      title: <FormattedMessage id="owner" />,
+      dataIndex: 'owner'
+    },
+    {
       title: <FormattedMessage id="createdAt" />,
       render: (_, record) => moment(record.createdAt).calendar()
     },

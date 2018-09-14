@@ -55,11 +55,12 @@ interface OwnProps {
 interface DeploymentInfo {
   name: string;
   type: string;
+  owner: string;
   namespace: string;
   desiredPod: number;
   currentPod: number;
   availablePod: number;
-  createdAt: string;
+  age: string;
 }
 
 class Deployment extends React.Component<DeploymentProps, DeploymentState> {

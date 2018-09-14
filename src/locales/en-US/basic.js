@@ -1,5 +1,6 @@
 export default {
   'name': 'name',
+  'owner': 'owner',
   'node': 'node',
   'pod': 'pod',
   'container': 'container',

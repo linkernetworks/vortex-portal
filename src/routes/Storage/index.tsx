@@ -98,7 +98,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
       width: 200
     },
     {
-      title: this.props.intl.formatMessage({ id: 'storage.owner' }),
+      title: this.props.intl.formatMessage({ id: 'owner' }),
       dataIndex: 'owner',
       key: 'owner'
     },
@@ -133,13 +133,13 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
 
   private volumeColumns: Array<ColumnProps<VolumeModel>> = [
     {
-      title: this.props.intl.formatMessage({ id: 'volume.name' }),
+      title: this.props.intl.formatMessage({ id: 'name' }),
       dataIndex: 'name',
       key: 'name',
       width: 200
     },
     {
-      title: this.props.intl.formatMessage({ id: 'storage.owner' }),
+      title: this.props.intl.formatMessage({ id: 'owner' }),
       dataIndex: 'owner',
       key: 'owner'
     },

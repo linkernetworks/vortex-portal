@@ -1,5 +1,4 @@
 export default {
-  'service.owner': 'owner',
   'service.type': 'type',
   'service.selectors': 'selectors',
   'service.ports': 'ports',
