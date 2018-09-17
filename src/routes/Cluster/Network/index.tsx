@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Button, Tag, Icon, Tree, Popconfirm, Card, Table } from 'antd';
+import { Button, Tag, Icon, Tree, Card, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
@@ -16,8 +16,8 @@ import {
   networkOperations
 } from '@/store/ducks/network';
 import { Nodes } from '@/models/Node';
-
 import NetworkFrom from '@/components/NetworkForm';
+import ItemActions from '@/components/ItemActions';
 
 const TreeNode = Tree.TreeNode;
 
@@ -42,6 +42,71 @@ interface OwnProps {
 }
 
 class Network extends React.Component<NetworkProps, NetworkState> {
+  private columns: Array<ColumnProps<networkModels.Network>> = [
+    {
+      title: <FormattedMessage id="name" />,
+      dataIndex: 'name'
+    },
+    {
+      title: <FormattedMessage id="network.type" />,
+      dataIndex: 'type'
+    },
+    {
+      title: <FormattedMessage id="network.bridgeName" />,
+      dataIndex: 'bridgeName'
+    },
+    {
+      title: <FormattedMessage id="node" />,
+      render: (_, record) => (
+        <Tree showIcon={true} selectable={false}>
+          {record.nodes.map((node, idx) => (
+            <TreeNode
+              title={node.name}
+              key={`${node.name}-${idx}`}
+              icon={<FontAwesomeIcon icon="server" />}
+            >
+              {node.physicalInterfaces.map(physicalInterface => (
+                <TreeNode
+                  key={`${node.name}-${idx}-${physicalInterface.name}-${
+                    physicalInterface.pciID
+                  }`}
+                  icon={<FontAwesomeIcon icon="plug" />}
+                  title={physicalInterface.name || physicalInterface.pciID}
+                />
+              ))}
+            </TreeNode>
+          ))}
+        </Tree>
+      )
+    },
+    {
+      title: <FormattedMessage id={`network.VLANTags`} />,
+      render: (_, record) =>
+        record.vlanTags.length === 0 ? (
+          <FormattedMessage id="network.noTrunk" />
+        ) : (
+          this.renderTags(record.vlanTags)
+        )
+    },
+    {
+      title: <FormattedMessage id="createdAt" />,
+      render: (_, record) => moment(record.createdAt).calendar()
+    },
+    {
+      title: <FormattedMessage id="action" />,
+      key: 'action',
+      render: (_, record) => (
+        <ItemActions
+          items={[
+            {
+              type: 'delete',
+              onConfirm: this.props.removeNetwork.bind(this, record.id)
+            }
+          ]}
+        />
+      )
+    }
+  ];
   constructor(props: NetworkProps) {
     super(props);
     this.state = {
@@ -76,83 +141,10 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     );
   };
 
-  protected renderAction = (id: string) => {
-    return [
-      <Popconfirm
-        key="action.delete"
-        title={<FormattedMessage id="action.confirmToDelete" />}
-        onConfirm={this.props.removeNetwork.bind(this, id)}
-      >
-        <a href="javascript:;">
-          <FormattedMessage id="action.delete" />
-        </a>
-      </Popconfirm>
-    ];
-  };
-
   public render() {
     const { networks } = this.props;
     const networkNames = networks.map(network => network.name);
-    const columns: Array<ColumnProps<networkModels.Network>> = [
-      {
-        title: <FormattedMessage id="name" />,
-        dataIndex: 'name'
-      },
-      {
-        title: <FormattedMessage id="network.type" />,
-        dataIndex: 'type'
-      },
-      {
-        title: <FormattedMessage id="network.bridgeName" />,
-        dataIndex: 'bridgeName'
-      },
-      {
-        title: <FormattedMessage id="node" />,
-        render: (_, record) => (
-          <Tree showIcon={true} selectable={false}>
-            {record.nodes.map((node, idx) => (
-              <TreeNode
-                title={node.name}
-                key={`${node.name}-${idx}`}
-                icon={<FontAwesomeIcon icon="server" />}
-              >
-                {node.physicalInterfaces.map(physicalInterface => (
-                  <TreeNode
-                    key={`${node.name}-${idx}-${physicalInterface.name}-${
-                      physicalInterface.pciID
-                    }`}
-                    icon={<FontAwesomeIcon icon="plug" />}
-                    title={physicalInterface.name || physicalInterface.pciID}
-                  />
-                ))}
-              </TreeNode>
-            ))}
-          </Tree>
-        )
-      },
-      {
-        title: <FormattedMessage id={`network.VLANTags`} />,
-        render: (_, record) =>
-          record.vlanTags.length === 0 ? (
-            <FormattedMessage id="network.noTrunk" />
-          ) : (
-            this.renderTags(record.vlanTags)
-          )
-      },
-      {
-        title: <FormattedMessage id="createdAt" />,
-        render: (_, record) => moment(record.createdAt).calendar()
-      },
-      {
-        title: <FormattedMessage id="action" />,
-        key: 'action',
-        render: (_, record) => (
-          <div className={styles.drawerBottom}>
-            {this.renderAction(record.id)}
-          </div>
-        )
-      }
-    ];
+
     return (
       <div>
         <Card
@@ -164,10 +156,9 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           }
         >
           <Table
-            className={styles.table}
-            columns={columns}
+            className="main-table"
+            columns={this.columns}
             dataSource={networks}
-            size="small"
           />
           <NetworkFrom
             visible={this.state.isCreating}

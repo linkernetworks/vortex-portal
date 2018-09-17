@@ -126,12 +126,16 @@ class Users extends React.PureComponent<UsersProps, UserState> {
           title={<FormattedMessage id="user" />}
           extra={
             <Button onClick={this.handleFormToggle}>
-              <Icon type="plus" />
-              <FormattedMessage id="user.add" />
+              <Icon type="plus" /> <FormattedMessage id="user.add" />
             </Button>
           }
         >
-          <Table rowKey="id" columns={this.columns} dataSource={users.data} />
+          <Table
+            rowKey="id"
+            className="main-table"
+            columns={this.columns}
+            dataSource={users.data}
+          />
           <UserForm
             visiable={this.state.isCreating}
             isLoading={users.isLoading}

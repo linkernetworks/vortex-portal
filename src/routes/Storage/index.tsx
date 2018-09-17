@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Card, Button, Icon, Table, Popconfirm } from 'antd';
+import { Card, Button, Icon, Table } from 'antd';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
@@ -11,6 +11,7 @@ import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import * as styles from './styles.module.scss';
 import StorageForm from '@/components/StorageForm';
 import VolumeForm from '@/components/VolumeForm';
+import ItemActions from '@/components/ItemActions';
 import { RootState, RTDispatch, RootAction } from '@/store/ducks';
 import { storageOperations, storageActions } from '@/store/ducks/storage';
 import { volumeOperations, volumeActions } from '@/store/ducks/volume';
@@ -70,14 +71,14 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
     title: this.props.intl.formatMessage({ id: 'action' }),
     render: (_, record) => {
       return (
-        <Popconfirm
-          title={<FormattedMessage id="action.confirmToDelete" />}
-          onConfirm={this.handleItemDelete.bind(this, record.id)}
-        >
-          <a href="javascript:;">
-            <FormattedMessage id="action.delete" />
-          </a>
-        </Popconfirm>
+        <ItemActions
+          items={[
+            {
+              type: 'delete',
+              onConfirm: this.handleItemDelete.bind(this, record.id)
+            }
+          ]}
+        />
       );
     }
   };
@@ -320,8 +321,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
               rowKey="id"
               columns={this.storageColumns}
               dataSource={storages.data}
-              size="small"
-              className={styles.table}
+              className="main-table"
             />
             <StorageForm
               {...storageFields}
@@ -342,8 +342,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
               rowKey="id"
               columns={this.volumeColumns}
               dataSource={volumes.data}
-              size="small"
-              className={styles.table}
+              className="main-table"
             />
             <VolumeForm
               {...volumeFields}

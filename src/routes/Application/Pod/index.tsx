@@ -6,15 +6,15 @@ import { connect } from 'react-redux';
 import { Input, Select, Table, Card } from 'antd';
 import * as moment from 'moment';
 import { ColumnProps } from 'antd/lib/table';
-import { filter, includes } from 'lodash';
+import { includes } from 'lodash';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
 
-import * as networkAPI from '@/services/network';
-import * as namespaceAPI from '@/services/namespace';
+// import * as networkAPI from '@/services/network';
+// import * as namespaceAPI from '@/services/namespace';
 
 import PodDrawer from '@/components/PodDrawer';
 import ItemActions from '@/components/ItemActions';
@@ -25,7 +25,7 @@ const Option = Select.Option;
 
 interface PodState {
   visiblePodDrawer: boolean;
-  visibleModal: boolean;
+  // visibleModal: boolean;
   currentPod: string;
   networks: Array<NetworkModel.Network>;
   namespaces: Array<NamespaceModel.Namespace>;
@@ -40,21 +40,14 @@ interface OwnProps {
   podsNics: PodModel.PodsNics;
   fetchPods: () => any;
   fetchPodsFromMongo: () => any;
-  addPod: (data: PodModel.PodRequest) => any;
   removePod: (id: string) => any;
-}
-
-interface PodInfo {
-  name: string;
-  status: string;
-  node: string;
-  restarts: number;
-  createdAt: string;
+  // Add Pod
+  // addPod: (data: PodModel.PodRequest) => any;
 }
 
 class Pod extends React.Component<PodProps, PodState> {
   private intervalPodId: number;
-  private columns: Array<ColumnProps<PodInfo>> = [
+  private columns: Array<ColumnProps<PodModel.PodInfo>> = [
     {
       title: <FormattedMessage id="name" />,
       dataIndex: 'name',
@@ -94,7 +87,7 @@ class Pod extends React.Component<PodProps, PodState> {
     super(props);
     this.state = {
       visiblePodDrawer: false,
-      visibleModal: false,
+      // visibleModal: false,
       currentPod: '',
       networks: [],
       namespaces: [],
@@ -113,6 +106,8 @@ class Pod extends React.Component<PodProps, PodState> {
     clearInterval(this.intervalPodId);
   }
 
+  // Add Pod
+  /*
   protected showCreate = () => {
     networkAPI.getNetworks().then(res => {
       this.setState({ networks: res.data });
@@ -131,13 +126,14 @@ class Pod extends React.Component<PodProps, PodState> {
     this.props.addPod(podRequest);
     this.setState({ visibleModal: false });
   };
+  */
 
   protected handleChangeSearchType = (type: string) => {
     this.setState({ searchType: type, searchText: '' });
   };
 
-  protected handleSearch = (e: any) => {
-    this.setState({ searchText: e.target.value });
+  protected handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
+    this.setState({ searchText: e.currentTarget.value });
   };
 
   protected showMorePod = (pod: string) => {
@@ -161,7 +157,7 @@ class Pod extends React.Component<PodProps, PodState> {
 
   public render() {
     const { currentPod, searchText } = this.state;
-    const filterPods = filter(this.props.allPods, name => {
+    const filterPods = this.props.allPods.filter(name => {
       switch (this.state.searchType) {
         default:
         case 'pod':

@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import * as DeploymentModel from '@/models/Deployment';
-import * as PodModel from '@/models/Pod';
 import { connect } from 'react-redux';
 import {
   Button,
@@ -18,12 +16,14 @@ import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
+import * as PodModel from '@/models/Pod';
+import * as DeploymentModel from '@/models/Deployment';
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
+import PodDrawer from '@/components/PodDrawer';
+import ItemActions from '@/components/ItemActions';
 
 import * as styles from './styles.module.scss';
-
-import PodDrawer from '@/components/PodDrawer';
 
 interface DeploymentState {
   visiblePodDrawer: boolean;
@@ -35,6 +35,7 @@ interface DeploymentState {
 }
 
 type DeploymentProps = OwnProps & InjectedAuthRouterProps;
+
 interface OwnProps {
   pods: PodModel.Pods;
   podsNics: PodModel.PodsNics;
@@ -45,14 +46,6 @@ interface OwnProps {
   fetchDeployments: () => any;
   fetchDeploymentsFromMongo: () => any;
   removeDeployment: (id: string) => any;
-}
-
-interface PodInfo {
-  name: string;
-  status: string;
-  node: string;
-  restarts: number;
-  createdAt: string;
 }
 
 interface DeploymentInfo {
@@ -67,6 +60,46 @@ interface DeploymentInfo {
 
 class Deployment extends React.Component<DeploymentProps, DeploymentState> {
   private intervalPodId: number;
+  private columns: Array<ColumnProps<DeploymentInfo>> = [
+    {
+      title: <FormattedMessage id="name" />,
+      dataIndex: 'name',
+      width: 300
+    },
+    {
+      title: <FormattedMessage id="namespace" />,
+      dataIndex: 'namespace'
+    },
+    {
+      title: <FormattedMessage id="deployment.desiredPod" />,
+      dataIndex: 'desiredPod'
+    },
+    {
+      title: <FormattedMessage id="deployment.currentPod" />,
+      dataIndex: 'currentPod'
+    },
+    {
+      title: <FormattedMessage id="deployment.availablePod" />,
+      dataIndex: 'availablePod'
+    },
+    {
+      title: <FormattedMessage id="createdAt" />,
+      dataIndex: 'createdAt'
+    },
+    {
+      title: <FormattedMessage id="action" />,
+      render: (_, record) => (
+        <ItemActions
+          items={[
+            {
+              type: 'more',
+              onConfirm: this.showMoreDeployment.bind(this, record.name)
+            }
+          ]}
+        />
+      )
+    }
+  ];
   constructor(props: DeploymentProps) {
     super(props);
     this.state = {
@@ -123,48 +156,11 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
   };
 
   public renderTable = () => {
-    const columns: Array<ColumnProps<DeploymentInfo>> = [
-      {
-        title: <FormattedMessage id="name" />,
-        dataIndex: 'name',
-        width: 300
-      },
-      {
-        title: <FormattedMessage id="namespace" />,
-        dataIndex: 'namespace'
-      },
-      {
-        title: <FormattedMessage id="deployment.desiredPod" />,
-        dataIndex: 'desiredPod'
-      },
-      {
-        title: <FormattedMessage id="deployment.currentPod" />,
-        dataIndex: 'currentPod'
-      },
-      {
-        title: <FormattedMessage id="deployment.availablePod" />,
-        dataIndex: 'availablePod'
-      },
-      {
-        title: <FormattedMessage id="createdAt" />,
-        dataIndex: 'createdAt'
-      },
-      {
-        title: <FormattedMessage id="action" />,
-        render: (_, record) => (
-          <a onClick={() => this.showMoreDeployment(record.name)}>
-            {<FormattedMessage id="action.more" />}
-          </a>
-        )
-      }
-    ];
-
     return (
       <Table
-        className={styles.table}
-        columns={columns}
+        className="main-table"
+        columns={this.columns}
         dataSource={this.getDeploymentInfo(this.props.allDeployments)}
-        size="small"
       />
     );
   };
@@ -232,7 +228,7 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
   protected renderPod = () => {
     const { deployments } = this.props;
     const { currentDeployment } = this.state;
-    const columns: Array<ColumnProps<PodInfo>> = [
+    const columns: Array<ColumnProps<PodModel.PodInfo>> = [
       {
         title: <FormattedMessage id="name" />,
         dataIndex: 'name',
