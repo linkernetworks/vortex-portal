@@ -1,5 +1,4 @@
 export default {
-  'volume.name': '名稱',
   'volume.storageName': 'Storage 名稱',
   'volume.accessMode': '存取模式',
   'volume.add': '新增 Volume',

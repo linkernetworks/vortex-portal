@@ -53,7 +53,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
       dataIndex: 'name'
     },
     {
-      title: <FormattedMessage id="network.owner" />,
+      title: <FormattedMessage id="owner" />,
       dataIndex: 'owner'
     },
     {

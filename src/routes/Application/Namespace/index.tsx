@@ -97,6 +97,7 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
       });
       const displayName = owner === undefined ? 'none' : owner.displayName;
       return {
+        id: namespace.id,
         name: namespace.name,
         owner: displayName,
         age: moment(namespace.createdAt).calendar()

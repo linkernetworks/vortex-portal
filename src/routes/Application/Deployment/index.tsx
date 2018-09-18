@@ -159,6 +159,7 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
       });
       const displayName = owner === undefined ? 'none' : owner.displayName;
       return {
+        id: deployments[deployment].id,
         name: deployments[deployment].controllerName,
         owner: displayName,
         type: deployments[deployment].type,

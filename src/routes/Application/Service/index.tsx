@@ -43,7 +43,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
       dataIndex: 'name'
     },
     {
-      title: <FormattedMessage id="service.owner" />,
+      title: <FormattedMessage id="owner" />,
       dataIndex: 'owner'
     },
     {

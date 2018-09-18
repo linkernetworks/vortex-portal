@@ -75,10 +75,7 @@ class VolumeForm extends React.PureComponent<
           />
         )}
         <Form>
-          <FormItem
-            label={<FormattedMessage id="volume.name" />}
-            required={true}
-          >
+          <FormItem label={<FormattedMessage id="volume" />} required={true}>
             {getFieldDecorator('name', {
               rules: [fieldRequiredRule('name')]
             })(<Input />)}
