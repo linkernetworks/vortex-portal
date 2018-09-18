@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as ServiceModel from '@/models/Service';
+import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
 import { Button, Icon, Tree, Tag, Card, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
@@ -7,17 +9,18 @@ import { FormattedMessage } from 'react-intl';
 import { Dispatch } from 'redux';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
-import * as ServiceModel from '@/models/Service';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
-
 import ServiceForm from '@/components/ServiceForm';
 import ItemActions from '@/components/ItemActions';
+
+import * as namespaceAPI from '@/services/namespace';
 
 const TreeNode = Tree.TreeNode;
 
 interface ServiceState {
   visibleModal: boolean;
+  namespaces: Array<NamespaceModel.Namespace>;
 }
 
 type ServiceProps = OwnProps & InjectedAuthRouterProps;
@@ -103,7 +106,8 @@ class Service extends React.Component<ServiceProps, ServiceState> {
   constructor(props: ServiceProps) {
     super(props);
     this.state = {
-      visibleModal: false
+      visibleModal: false,
+      namespaces: []
     };
   }
 
@@ -112,6 +116,9 @@ class Service extends React.Component<ServiceProps, ServiceState> {
   }
 
   protected showCreate = () => {
+    namespaceAPI.getNamespaces().then(res => {
+      this.setState({ namespaces: res.data });
+    });
     this.setState({ visibleModal: true });
   };
 
@@ -144,6 +151,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
           />
           <ServiceForm
             services={services}
+            namespaces={this.state.namespaces}
             visible={this.state.visibleModal}
             onCancel={this.hideCreate}
             onSubmit={this.handleSubmit}
