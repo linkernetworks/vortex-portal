@@ -203,7 +203,7 @@ class Pod extends React.Component<PodProps, PodState> {
                 style={{ width: '25%' }}
                 placeholder={this.props.intl.formatMessage(
                   {
-                    id: 'form.filter.placeholder'
+                    id: 'form.placeholder.filter'
                   },
                   {
                     field: this.props.intl.formatMessage({
