@@ -55,3 +55,10 @@ export const createPod = (
 export const deletePod = (id: string): AxiosPromise<Query.Response> => {
   return axios.delete(`/v1/pods/${id}`);
 };
+
+export const deletePodByName = (
+  namespace: string,
+  id: string
+): AxiosPromise<Query.Response> => {
+  return axios.delete(`/v1/pods/${namespace}/${id}`);
+};

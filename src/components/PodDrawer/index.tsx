@@ -43,7 +43,7 @@ interface PodDrawerProps {
   podNics: PodModel.NICS;
   visiblePodDrawer: boolean;
   hideMorePod: () => void;
-  removePod: (id: string) => any;
+  removePodByName: (namespace: string, id: string) => any;
 }
 
 interface PodDrawerState {
@@ -51,7 +51,6 @@ interface PodDrawerState {
   visibleContainerDrawer: boolean;
   currentContainer: ContainerModel.Container;
   containers: Array<ContainerModel.Container>;
-  deletable: boolean;
   podTimeUnit: string;
   containerTimeUnit: string;
   resource: ContainerModel.Resource;
@@ -81,7 +80,6 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
         }
       } as ContainerModel.Container,
       containers: [],
-      deletable: true,
       podNics: {},
       podTimeUnit: 'now',
       containerTimeUnit: 'now',
@@ -204,9 +202,8 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
     this.setState({ containers });
   };
 
-  protected handleRemovePod = (id: string) => {
-    this.setState({ deletable: false });
-    this.props.removePod(id);
+  protected handleRemovePod = (namespace: string, id: string) => {
+    this.props.removePodByName(namespace, id);
     return notification.success({
       message: 'Success',
       description: 'Delete the pod successfully.'
@@ -639,13 +636,17 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
     );
   };
 
-  protected renderAction = (podMetaData: PodModel.PodFromMongo) => {
-    if (podMetaData !== undefined && this.state.deletable === true) {
+  protected renderAction = (pod: PodModel.Pod) => {
+    if (pod !== undefined) {
       return (
         <Popconfirm
           key="action.delete"
           title={<FormattedMessage id="action.confirmToDelete" />}
-          onConfirm={this.handleRemovePod.bind(this, podMetaData.id)}
+          onConfirm={this.handleRemovePod.bind(
+            this,
+            pod.namespace,
+            pod.podName
+          )}
         >
           <Button>
             <Icon type="delete" /> <FormattedMessage id="pod.delete" />
@@ -744,7 +745,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
           )}
         </Drawer>
         <div className={styles.drawerBottom}>
-          {!!pod && this.renderAction(pod.metadata)}
+          {!!pod && this.renderAction(pod)}
         </div>
       </Drawer>
     );

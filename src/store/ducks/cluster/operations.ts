@@ -132,6 +132,27 @@ export const removePod = (id: string): RTAction<Promise<ClusterActionType>> => {
   };
 };
 
+export const removePodByName = (
+  namespace: string,
+  id: string
+): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.removePodByName.request());
+    try {
+      const res = await podAPI.deletePodByName(namespace, id);
+      if (!res.data.error) {
+        return dispatch(
+          clusterActions.removePodByName.success({ namespace, id })
+        );
+      } else {
+        throw new Error(res.data.message);
+      }
+    } catch (e) {
+      return dispatch(clusterActions.removePodByName.failure(e));
+    }
+  };
+};
+
 export const fetchServices = (): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
     dispatch(clusterActions.fetchServices.request());

@@ -60,6 +60,12 @@ export const removePod = createAsyncAction(
   'REMOVE_POD_FAILURE'
 )<void, { id: string }, Error>();
 
+export const removePodByName = createAsyncAction(
+  'REMOVE_POD_BY_NAME_REQUEST',
+  'REMOVE_POD_BY_NAME_SUCCESS',
+  'REMOVE_POD_BY_NAME_FAILURE'
+)<void, { namespace: string; id: string }, Error>();
+
 export const fetchServices = createAsyncAction(
   'FETCH_SERVICES_REQUEST',
   'FETCH_SERVICES_SUCCESS',
