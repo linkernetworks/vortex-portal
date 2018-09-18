@@ -18,10 +18,19 @@ const needPop = {
   more: false
 };
 
-const ActionLink: React.SFC<{ type: string; disable: boolean }> = props => (
+const ActionLink: React.SFC<{
+  type: string;
+  disable: boolean;
+  onClick?: (e?: React.MouseEvent<any>) => void;
+  onMouseEnter?: (e?: React.MouseEvent<any>) => void;
+  onMouseLeave?: (e?: React.MouseEvent<any>) => void;
+}> = props => (
   <a
     href="javascript:;"
     className={classnames({ [styles.disabled]: props.disable })}
+    onClick={props.onClick}
+    onMouseEnter={props.onMouseEnter}
+    onMouseLeave={props.onMouseLeave}
   >
     <FormattedMessage id={`action.${props.type}`} />
   </a>
