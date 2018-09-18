@@ -1,18 +1,17 @@
 import * as React from 'react';
-import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
-import * as styles from './styles.module.scss';
-import { Button, Icon, Popconfirm, Card, Table } from 'antd';
+import { Button, Icon, Card, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
+import { Dispatch } from 'redux';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
-import { Dispatch } from 'redux';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
-
+import * as NamespaceModel from '@/models/Namespace';
 import NamespaceForm from '@/components/NamespaceForm';
+import ItemActions from '@/components/ItemActions';
 
 interface NamespaceState {
   visibleModal: boolean;
@@ -27,7 +26,33 @@ interface OwnProps {
   removeNamespace: (id: string) => any;
 }
 
-class Namespace extends React.Component<NamespaceProps, NamespaceState> {
+class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
+  private columns: Array<ColumnProps<NamespaceModel.Namespace>> = [
+    {
+      title: <FormattedMessage id="name" />,
+      dataIndex: 'name',
+      width: 300
+    },
+    {
+      title: <FormattedMessage id="createdAt" />,
+      render: (_, record) => moment(record.createdAt).calendar()
+    },
+    {
+      title: <FormattedMessage id="action" />,
+      key: 'action',
+      render: (_, record) => (
+        <ItemActions
+          items={[
+            {
+              type: 'delete',
+              onConfirm: this.props.removeNamespace.bind(this, record.id)
+            }
+          ]}
+        />
+      )
+    }
+  ];
+
   constructor(props: NamespaceProps) {
     super(props);
     this.state = {
@@ -52,42 +77,9 @@ class Namespace extends React.Component<NamespaceProps, NamespaceState> {
     this.setState({ visibleModal: false });
   };
 
-  protected renderAction = (id: string | undefined) => {
-    return [
-      <Popconfirm
-        key="action.delete"
-        title={<FormattedMessage id="action.confirmToDelete" />}
-        onConfirm={this.props.removeNamespace.bind(this, id)}
-      >
-        <a href="javascript:;">
-          <FormattedMessage id="action.delete" />
-        </a>
-      </Popconfirm>
-    ];
-  };
-
   public render() {
     const { namespaces } = this.props;
-    const columns: Array<ColumnProps<NamespaceModel.Namespace>> = [
-      {
-        title: <FormattedMessage id="name" />,
-        dataIndex: 'name',
-        width: 300
-      },
-      {
-        title: <FormattedMessage id="createdAt" />,
-        render: (_, record) => moment(record.createdAt).calendar()
-      },
-      {
-        title: <FormattedMessage id="action" />,
-        key: 'action',
-        render: (_, record) => (
-          <div className={styles.drawerBottom}>
-            {this.renderAction(record.id)}
-          </div>
-        )
-      }
-    ];
+
     return (
       <div>
         <Card
@@ -99,11 +91,9 @@ class Namespace extends React.Component<NamespaceProps, NamespaceState> {
           }
         >
           <Table
-            className={styles.table}
-            columns={columns}
+            className="main-table"
+            columns={this.columns}
             dataSource={namespaces}
-            size="small"
-            bordered={false}
           />
           <NamespaceForm
             namespaces={namespaces}

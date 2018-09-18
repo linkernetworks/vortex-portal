@@ -68,6 +68,13 @@ export interface Pods {
 export interface PodsNics {
   [name: string]: NICS;
 }
+export interface PodInfo {
+  name: string;
+  status: string;
+  node: string;
+  restarts: number;
+  createdAt: string;
+}
 
 export interface NICS {
   [name: string]: {
