@@ -15,4 +15,9 @@ export default {
 
   'pod.nicNetworkTraffic.TXRXMegabyteTotal': 'Receive/Transmit MB Total',
   'pod.nicNetworkTraffic.TXRXPacketsTotal': 'Receive/Transmit Packets Total',
+
+  'pod.filter.podName': 'pod 名稱',
+  'pod.filter.containerName': '容器名稱',
+  'pod.filter.nodeName': '節點名稱',
+  'pod.filter.namespaceName': '命名空間名稱',
 }

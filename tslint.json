@@ -12,7 +12,8 @@
     "array-type": [true, "generic"],
     "no-console": false,
     "member-ordering": false,
-    "jsx-no-lambda": false
+    "jsx-no-lambda": false,
+    "only-arrow-functions": false
   },
   "rulesDirectory": ["tslint-plugin-prettier"],
   "linterOptions": {

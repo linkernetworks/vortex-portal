@@ -1,8 +1,16 @@
 import * as React from 'react';
-import * as NamespaceModel from '@/models/Namespace';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
+import { compose } from 'recompose';
 import { Form, Modal, Input } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
+
+import * as NamespaceModel from '@/models/Namespace';
+import withRequiredRule, {
+  InjectedProps as withRequiredRuleProps
+} from '@/containers/withRequiredRule';
+import withUniqueRule, {
+  InjectedProps as withUniqueRuleProps
+} from '@/containers/withUniqueRule';
 
 const FormItem = Form.Item;
 
@@ -11,32 +19,32 @@ const formItemLayout = {
   wrapperCol: { span: 14 }
 };
 
-interface NamespaceFormProps extends FormComponentProps {
+type NamespaceFormProps = OwnProps &
+  InjectedIntlProps &
+  FormComponentProps &
+  withRequiredRuleProps &
+  withUniqueRuleProps;
+
+interface OwnProps {
   namespaces: Array<NamespaceModel.Namespace>;
   visible: boolean;
   onCancel: () => void;
   onSubmit: (data: any) => void;
 }
 
-class NamespaceForm extends React.PureComponent<NamespaceFormProps, any> {
+class NamespaceForm extends React.PureComponent<NamespaceFormProps, object> {
   constructor(props: NamespaceFormProps) {
     super(props);
   }
 
-  protected checkNamespaceName = (rule: any, value: string, callback: any) => {
-    this.props.namespaces.map(namespace => {
-      if (namespace.name === value) {
-        callback(`Invalid Name! "${value}" is already exist`);
-        return;
-      }
-    });
-    const re = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
-    if (re.test(value)) {
+  protected checkNamespaceName = (_: any, value: string, callback: any) => {
+    // lower case and '-'
+    if (/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/.test(value)) {
       callback();
       return;
     }
     callback(
-      `Invalid Name! Must consist of lower case alphanumeric characters, '-' or '.'`
+      this.props.intl.formatMessage({ id: 'namespace.hint.nameFormat' })
     );
   };
 
@@ -54,7 +62,14 @@ class NamespaceForm extends React.PureComponent<NamespaceFormProps, any> {
   };
 
   public render() {
+    const {
+      requiredRule,
+      uniqueRule,
+      intl: { formatMessage },
+      namespaces
+    } = this.props;
     const { getFieldDecorator } = this.props.form;
+
     return (
       <Modal
         visible={this.props.visible}
@@ -66,12 +81,20 @@ class NamespaceForm extends React.PureComponent<NamespaceFormProps, any> {
           <FormItem {...formItemLayout} label={<FormattedMessage id="name" />}>
             {getFieldDecorator('name', {
               rules: [
+                requiredRule('name'),
+                uniqueRule(namespaces.map(namespace => namespace.name)),
                 {
-                  required: true,
                   validator: this.checkNamespaceName
                 }
               ]
-            })(<Input placeholder="Give a unique namespace name" />)}
+            })(
+              <Input
+                placeholder={formatMessage(
+                  { id: 'form.placeholder.unique' },
+                  { field: formatMessage({ id: 'namespace' }) }
+                )}
+              />
+            )}
           </FormItem>
         </Form>
       </Modal>
@@ -79,4 +102,9 @@ class NamespaceForm extends React.PureComponent<NamespaceFormProps, any> {
   }
 }
 
-export default Form.create()(NamespaceForm);
+export default compose<NamespaceFormProps, OwnProps>(
+  Form.create(),
+  injectIntl,
+  withRequiredRule,
+  withUniqueRule
+)(NamespaceForm);

@@ -1,73 +1,6 @@
-@import '../../../styles/variables';
+@import '../../../styles/global';
 
 $tag-gutter: 8px;
-
-.content {
-  flex-direction: column;
-  width: 100%;
-}
-
-.property {
-  display: flex;
-}
-
-
-.column {
-  :global {
-    .title {
-      color: $text-color-secondary;
-      font-size: $font-size-sm;
-    }
-
-    .content {
-      margin-bottom: 0;
-    }
-
-    .ant-tree > li:first-child {
-      padding-top: 0px;
-    }
-  }
-}
-
-
-.leading {
-  margin-bottom: 6px;
-  :global(.title) {
-    font-size: $font-size-lg;
-    margin-bottom: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-.nodes {
-  display: flex;
-  flex: 2;
-  overflow-x: auto;
-}
-
-.node {
-  margin-right: 1em;
-  min-width: 52px;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  :global {
-    .icon {
-      font-size: 2.4em;
-    }
-    .name {
-      font-size: $font-size-sm;
-    }
-  }
-}
-
-.table {
-  th, td {
-    padding: $padding-md !important;
-  }
-}
 
 .tags {
   margin-bottom: -$tag-gutter;
@@ -75,10 +8,5 @@ $tag-gutter: 8px;
 
 .tag {
   margin-bottom: $tag-gutter;
-}
-
-.add {
-  margin: 1em 0;
-  width: 100%;
 }
 

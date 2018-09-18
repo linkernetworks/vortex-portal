@@ -4,16 +4,6 @@ import { Row, Col, Tag, Drawer, Tabs, Card, Table, Icon, Radio } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
-import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
-
-import { Dispatch } from 'redux';
-import * as NodeModel from '@/models/Node';
-import { RootState, RootAction, RTDispatch } from '@/store/ducks';
-import { clusterOperations } from '@/store/ducks/cluster';
-
-import * as nodeAPI from '@/services/node';
-import * as styles from './styles.module.scss';
-
 import {
   LineChart,
   Line,
@@ -23,8 +13,17 @@ import {
   Tooltip,
   Legend
 } from 'recharts';
+import { Dispatch } from 'redux';
+import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
+import * as NodeModel from '@/models/Node';
+import { RootState, RootAction, RTDispatch } from '@/store/ducks';
+import { clusterOperations } from '@/store/ducks/cluster';
+
+import * as nodeAPI from '@/services/node';
 import { formatBytes } from '@/utils/bytes';
+
+import * as styles from './styles.module.scss';
 
 interface NodeState {
   visible: boolean;
@@ -486,16 +485,15 @@ class Node extends React.Component<NodeProps, NodeState> {
     ];
     return (
       <div>
-        <Card>
+        <Card title={<FormattedMessage id="node" />}>
           <Table
-            className={styles.table}
+            className="main-table"
             columns={columns}
             dataSource={this.getNodeInfo(this.props.allNodes)}
-            size="small"
           />
           {this.props.nodes.hasOwnProperty(currentNode) && (
             <Drawer
-              title="Node"
+              title={<FormattedMessage id="node" />}
               width={720}
               placement="right"
               closable={false}

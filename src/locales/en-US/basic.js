@@ -5,6 +5,7 @@ export default {
   'container': 'container',
   'network': 'network',
   'namespace': 'namespace',
+  'deployment': 'deployment',
   'ovs': 'ovs',
   'dpdk': 'dpdk',
   'service': 'service',
@@ -12,5 +13,6 @@ export default {
   'storage': 'storage',
   'volume': 'volume',
   'overview': 'overview',
-  'createdAt': 'created at'
+  'status': 'status',
+  'createdAt': 'created at',
 }

@@ -1,3 +1,18 @@
+
+@import './variables';
+
 .ant-card-head-wrapper {
   align-items: center;
+}
+
+.main-table {
+  .ant-table {
+    border: $border-width-base $border-style-base $border-color-split;
+    border-bottom: none;
+    border-radius: $border-radius-sm;
+  }
+}
+
+.table-controls {
+  margin-bottom: $padding-lg;
 }

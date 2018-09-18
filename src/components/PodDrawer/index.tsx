@@ -16,9 +16,11 @@ import {
   Radio
 } from 'antd';
 import * as moment from 'moment';
+import { get } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import * as podAPI from '@/services/pod';
 import * as containerAPI from '@/services/container';
+import ExecTerminal from '@/components/ExecTerminal';
 
 import {
   LineChart,
@@ -90,7 +92,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
 
   public componentDidUpdate(prevProps: PodDrawerProps) {
     const { pod } = this.props;
-    if (pod.podName !== prevProps.pod.podName) {
+    if (pod.podName !== get(prevProps.pod, 'podName')) {
       this.intervalContainersId.map(id => {
         clearInterval(id);
       });
@@ -663,6 +665,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
   public render() {
     const { currentContainer } = this.state;
     const { pod, podNics } = this.props;
+    console.log(pod);
     return (
       <Drawer
         title="Pod"
@@ -732,6 +735,14 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
             <h3>Resource</h3>
             {this.renderResource(currentContainer.resource)}
           </div>
+
+          {pod && (
+            <ExecTerminal
+              namespace={pod.namespace}
+              podName={pod.podName}
+              containerName={currentContainer.detail.containerName}
+            />
+          )}
         </Drawer>
         <div className={styles.drawerBottom}>
           {!!pod && this.renderAction(pod)}

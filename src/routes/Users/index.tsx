@@ -8,7 +8,7 @@ import { Dispatch } from 'redux';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { FlattenUser, UserBrief, UserFields, User } from '@/models/User';
-import ItemAction from '@/components/ItemAction';
+import ItemActions from '@/components/ItemActions';
 import UserForm from '@/components/UserForm';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { userOperations, userSelectors, userActions } from '@/store/ducks/user';
@@ -74,10 +74,14 @@ class Users extends React.PureComponent<UsersProps, UserState> {
       title: this.props.intl.formatMessage({ id: 'action' }),
       render: (_, record) => {
         return (
-          <ItemAction
-            type="delete"
-            disable={record.id === this.props.user.id}
-            onConfirm={this.handleItemDelete.bind(this, record.id)}
+          <ItemActions
+            items={[
+              {
+                type: 'delete',
+                disable: record.id === this.props.user.id,
+                onConfirm: this.handleItemDelete.bind(this, record.id)
+              }
+            ]}
           />
         );
       }
@@ -122,12 +126,16 @@ class Users extends React.PureComponent<UsersProps, UserState> {
           title={<FormattedMessage id="user" />}
           extra={
             <Button onClick={this.handleFormToggle}>
-              <Icon type="plus" />
-              <FormattedMessage id="user.add" />
+              <Icon type="plus" /> <FormattedMessage id="user.add" />
             </Button>
           }
         >
-          <Table rowKey="id" columns={this.columns} dataSource={users.data} />
+          <Table
+            rowKey="id"
+            className="main-table"
+            columns={this.columns}
+            dataSource={users.data}
+          />
           <UserForm
             visiable={this.state.isCreating}
             isLoading={users.isLoading}
