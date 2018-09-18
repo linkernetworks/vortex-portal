@@ -22,6 +22,8 @@ import {
   VolumeFields,
   AccessMode
 } from '@/models/Storage';
+import * as NamespaceModel from '@/models/Namespace';
+import * as namespaceAPI from '@/services/namespace';
 import { FormField } from '@/utils/types';
 
 type StorageProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
@@ -51,6 +53,7 @@ interface StorageState {
   isCreatingStorage: boolean;
   isCreatingVolume: boolean;
   tabKey: string;
+  namespaces: Array<NamespaceModel.Namespace>;
   storageFields: FormField<StorageFields>;
   volumeFields: FormField<VolumeFields>;
 }
@@ -165,6 +168,9 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
       name: {
         value: ''
       },
+      namespace: {
+        value: ''
+      },
       storageName: {
         value: ''
       },
@@ -183,6 +189,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
       isCreatingStorage: false,
       isCreatingVolume: false,
       tabKey: 'storage',
+      namespaces: [],
       storageFields: this.storageFactory(),
       volumeFields: this.volumeFactory()
     };
@@ -218,6 +225,9 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
             isCreatingStorage: true
           };
         case 'volume':
+          namespaceAPI.getNamespaces().then(res => {
+            this.setState({ namespaces: res.data });
+          });
           return {
             ...prevState,
             isCreatingVolume: true
@@ -307,6 +317,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
       tabKey,
       storageFields,
       volumeFields,
+      namespaces,
       isCreatingStorage,
       isCreatingVolume
     } = this.state;
@@ -349,6 +360,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
               visiable={isCreatingVolume}
               isLoading={volumes.isLoading}
               error={volumes.error}
+              namespaces={namespaces}
               storageNameOptions={storageOptions}
               onCancel={this.handleFormClose}
               onChange={this.handleFormChange('volumeFields')}

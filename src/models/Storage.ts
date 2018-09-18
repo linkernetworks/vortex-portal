@@ -18,6 +18,7 @@ export interface Volume {
   id: string;
   storageName: string;
   name: string;
+  namespace: string;
   accessMode: string;
   capacity: string;
   createdAt: Date;

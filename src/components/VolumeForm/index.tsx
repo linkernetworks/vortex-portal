@@ -4,6 +4,7 @@ import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { Modal, Form, Select, Input, Alert } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import { VolumeFields, AccessMode } from '@/models/Storage';
+import * as NamespaceModel from '@/models/Namespace';
 import { FormField } from '@/utils/types';
 
 const FormItem = Form.Item;
@@ -13,6 +14,7 @@ interface VolumeFormProps extends FormComponentProps, FormField<VolumeFields> {
   visiable: boolean;
   isLoading: boolean;
   error: Error | null;
+  namespaces: Array<NamespaceModel.Namespace>;
   storageNameOptions: Array<string>;
   onCancel: () => void;
   onChange: (changedFields: any) => void;
@@ -80,6 +82,26 @@ class VolumeForm extends React.PureComponent<
             {getFieldDecorator('name', {
               rules: [fieldRequiredRule('name')]
             })(<Input />)}
+          </FormItem>
+          <FormItem label={<FormattedMessage id="namespace" />}>
+            {getFieldDecorator('namespace', {
+              rules: [
+                {
+                  required: true
+                }
+              ]
+            })(
+              <Select>
+                <Option value="default">default</Option>
+                {this.props.namespaces.map(namespace => {
+                  return (
+                    <Option key={namespace.name} value={namespace.name}>
+                      {namespace.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            )}
           </FormItem>
           <FormItem
             label={<FormattedMessage id="volume.storageName" />}

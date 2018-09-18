@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ServiceModel from '@/models/Service';
+import * as NamespaceModel from '@/models/Namespace';
 import { findIndex } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import {
@@ -11,7 +12,8 @@ import {
   InputNumber,
   Row,
   Col,
-  Tabs
+  Tabs,
+  Select
 } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 
@@ -19,6 +21,7 @@ const FormItem = Form.Item;
 const TabPane = Tabs.TabPane;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+const Option = Select.Option;
 
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -27,6 +30,7 @@ const formItemLayout = {
 
 interface ServiceFormProps extends FormComponentProps {
   services: Array<ServiceModel.Service>;
+  namespaces: Array<NamespaceModel.Namespace>;
   visible: boolean;
   onCancel: () => void;
   onSubmit: (data: any) => void;
@@ -199,7 +203,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
         });
         const service: ServiceModel.Service = {
           name: values.name,
-          namespace: 'default',
+          namespace: values.namespace,
           type: values.type,
           selector,
           ports
@@ -260,6 +264,29 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
                 }
               ]
             })(<Input placeholder="Give a unique service name" />)}
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label={<FormattedMessage id="namespace" />}
+          >
+            {getFieldDecorator('namespace', {
+              rules: [
+                {
+                  required: true
+                }
+              ]
+            })(
+              <Select style={{ width: 200 }} placeholder="Select a namespace">
+                <Option value="default">default</Option>
+                {this.props.namespaces.map(namespace => {
+                  return (
+                    <Option key={namespace.name} value={namespace.name}>
+                      {namespace.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            )}
           </FormItem>
           <FormItem
             {...formItemLayout}
