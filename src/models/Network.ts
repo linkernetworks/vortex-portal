@@ -1,6 +1,8 @@
 import { Omit } from '@/utils/types';
 export interface Network {
   id: string;
+  owner: string;
+  ownerID: string;
   name: string;
   bridgeName: string;
   type: dataPathType;
@@ -10,7 +12,10 @@ export interface Network {
   createdAt?: Date;
 }
 
-export type NetworkFields = Omit<Network, 'id' | 'bridgeName' | 'createdAt'>;
+export type NetworkFields = Omit<
+  Network,
+  'id' | 'ownerID' | 'owner' | 'bridgeName' | 'createdAt'
+>;
 
 interface NetworkNode {
   name: string;

@@ -1,5 +1,6 @@
 export interface Deployment {
   id?: string;
+  ownerID?: string;
   name: string;
   namespace: string;
   labels: any;
@@ -48,6 +49,7 @@ export interface DeploymentNetwork {
 
 export interface Controller {
   id?: string;
+  ownerID?: string;
   controllerName: string;
   type: string;
   namespace: string;

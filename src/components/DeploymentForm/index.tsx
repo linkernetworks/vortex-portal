@@ -591,7 +591,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label={<FormattedMessage id="deployment.namespace" />}
+          label={<FormattedMessage id="namespace" />}
         >
           {getFieldDecorator('namespace', {
             rules: [

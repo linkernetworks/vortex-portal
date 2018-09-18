@@ -4,17 +4,20 @@ import { Button, Tag, Icon, Tree, Card, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
+import { find } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import * as styles from './styles.module.scss';
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
+import { userOperations } from '@/store/ducks/user';
 import {
   networkModels,
   networkSelectors,
   networkOperations
 } from '@/store/ducks/network';
+import * as UserModel from '@/models/User';
 import { Nodes } from '@/models/Node';
 import NetworkFrom from '@/components/NetworkForm';
 import ItemActions from '@/components/ItemActions';
@@ -39,6 +42,8 @@ interface OwnProps {
   fetchNetworks: () => any;
   addNetwork: (data: networkModels.NetworkFields) => any;
   removeNetwork: (id: string) => any;
+  users: Array<UserModel.User>;
+  fetchUsers: () => any;
 }
 
 class Network extends React.Component<NetworkProps, NetworkState> {
@@ -46,6 +51,10 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     {
       title: <FormattedMessage id="name" />,
       dataIndex: 'name'
+    },
+    {
+      title: <FormattedMessage id="owner" />,
+      dataIndex: 'owner'
     },
     {
       title: <FormattedMessage id="network.type" />,
@@ -117,6 +126,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   public componentDidMount() {
     this.props.fetchNodes();
     this.props.fetchNetworks();
+    this.props.fetchUsers();
   }
 
   protected handleSubmit = (
@@ -141,10 +151,27 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     );
   };
 
+  protected getNetworkInfo = (networks: Array<networkModels.Network>) => {
+    return networks.map(network => {
+      const owner = find(this.props.users, user => {
+        return user.id === network.ownerID;
+      });
+      const displayName = owner === undefined ? 'none' : owner.displayName;
+      return {
+        id: network.id,
+        name: network.name,
+        owner: displayName,
+        type: network.type,
+        bridgeName: network.bridgeName,
+        nodes: network.nodes,
+        vlanTags: network.vlanTags
+      };
+    });
+  };
+
   public render() {
     const { networks } = this.props;
     const networkNames = networks.map(network => network.name);
-
     return (
       <div>
         <Card
@@ -158,7 +185,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           <Table
             className="main-table"
             columns={this.columns}
-            dataSource={networks}
+            dataSource={this.getNetworkInfo(this.props.networks)}
           />
           <NetworkFrom
             visible={this.state.isCreating}
@@ -184,7 +211,8 @@ const mapStateToProps = (state: RootState) => {
     ),
     networks: state.network.networks,
     isLoading: state.network.isLoading,
-    networkError: state.network.error
+    networkError: state.network.error,
+    users: state.user.users
   };
 };
 
@@ -193,7 +221,8 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchNetworks: () => dispatch(networkOperations.fetchNetworks()),
   addNetwork: (data: networkModels.NetworkFields) =>
     dispatch(networkOperations.addNetwork(data)),
-  removeNetwork: (id: string) => dispatch(networkOperations.removeNetwork(id))
+  removeNetwork: (id: string) => dispatch(networkOperations.removeNetwork(id)),
+  fetchUsers: () => dispatch(userOperations.fetchUsers())
 });
 
 export default connect(

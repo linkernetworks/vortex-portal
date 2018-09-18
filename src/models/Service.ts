@@ -1,5 +1,6 @@
 export interface Service {
   id?: string;
+  ownerID?: string;
   name: string;
   namespace: string;
   type: string;

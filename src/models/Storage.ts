@@ -1,6 +1,8 @@
 import { Omit } from '@/utils/types';
 export interface Storage {
   id: string;
+  owner: string;
+  ownerID: string;
   type: string;
   name: string;
   createdAt: Date;
@@ -11,11 +13,13 @@ export interface Storage {
 
 export type StorageFields = Omit<
   Storage,
-  'id' | 'storageClassName' | 'createdAt'
+  'id' | 'owner' | 'ownerID' | 'storageClassName' | 'createdAt'
 >;
 
 export interface Volume {
   id: string;
+  owner: string;
+  ownerID: string;
   storageName: string;
   name: string;
   namespace: string;
@@ -24,7 +28,10 @@ export interface Volume {
   createdAt: Date;
 }
 
-export type VolumeFields = Omit<Volume, 'id' | 'createdAt'>;
+export type VolumeFields = Omit<
+  Volume,
+  'id' | 'owner' | 'ownerID' | 'createdAt'
+>;
 
 export enum AccessMode {
   ReadWriteOnce = 'ReadWriteOnce',

@@ -6,10 +6,14 @@ import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import { Dispatch } from 'redux';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
+import { find } from 'lodash';
 
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
+import { userOperations } from '@/store/ducks/user';
+import * as UserModel from '@/models/User';
 import * as NamespaceModel from '@/models/Namespace';
+
 import NamespaceForm from '@/components/NamespaceForm';
 import ItemActions from '@/components/ItemActions';
 
@@ -24,6 +28,8 @@ interface OwnProps {
   fetchNamespaces: () => any;
   addNamespace: (data: NamespaceModel.Namespace) => any;
   removeNamespace: (id: string) => any;
+  users: Array<UserModel.User>;
+  fetchUsers: () => any;
 }
 
 class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
@@ -32,6 +38,10 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
       title: <FormattedMessage id="name" />,
       dataIndex: 'name',
       width: 300
+    },
+    {
+      title: <FormattedMessage id="owner" />,
+      dataIndex: 'owner'
     },
     {
       title: <FormattedMessage id="createdAt" />,
@@ -62,6 +72,7 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
 
   public componentDidMount() {
     this.props.fetchNamespaces();
+    this.props.fetchUsers();
   }
 
   protected showCreate = () => {
@@ -77,9 +88,24 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
     this.setState({ visibleModal: false });
   };
 
+  protected getNamespaceInfo = (
+    namespaces: Array<NamespaceModel.Namespace>
+  ) => {
+    return namespaces.map(namespace => {
+      const owner = find(this.props.users, user => {
+        return user.id === namespace.ownerID;
+      });
+      const displayName = owner === undefined ? 'none' : owner.displayName;
+      return {
+        id: namespace.id,
+        name: namespace.name,
+        owner: displayName,
+        age: moment(namespace.createdAt).calendar()
+      };
+    });
+  };
   public render() {
     const { namespaces } = this.props;
-
     return (
       <div>
         <Card
@@ -94,7 +120,7 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
             className="main-table"
             rowKey="name"
             columns={this.columns}
-            dataSource={namespaces}
+            dataSource={this.getNamespaceInfo(this.props.namespaces)}
           />
           <NamespaceForm
             namespaces={namespaces}
@@ -110,7 +136,8 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
 
 const mapStateToProps = (state: RootState) => {
   return {
-    namespaces: state.cluster.namespaces
+    namespaces: state.cluster.namespaces,
+    users: state.user.users
   };
 };
 
@@ -121,7 +148,8 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
   },
   removeNamespace: (id: string) => {
     dispatch(clusterOperations.removeNamespace(id));
-  }
+  },
+  fetchUsers: () => dispatch(userOperations.fetchUsers())
 });
 
 export default connect(

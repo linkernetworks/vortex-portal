@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as UserModel from '@/models/User';
 import * as ServiceModel from '@/models/Service';
 import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
@@ -8,9 +9,11 @@ import * as moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 import { Dispatch } from 'redux';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
+import { find } from 'lodash';
 
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations } from '@/store/ducks/cluster';
+import { userOperations } from '@/store/ducks/user';
 import ServiceForm from '@/components/ServiceForm';
 import ItemActions from '@/components/ItemActions';
 
@@ -29,6 +32,8 @@ interface OwnProps {
   fetchServices: () => any;
   addService: (data: ServiceModel.Service) => any;
   removeService: (id: string) => any;
+  users: Array<UserModel.User>;
+  fetchUsers: () => any;
 }
 
 class Service extends React.Component<ServiceProps, ServiceState> {
@@ -36,6 +41,10 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     {
       title: <FormattedMessage id="name" />,
       dataIndex: 'name'
+    },
+    {
+      title: <FormattedMessage id="owner" />,
+      dataIndex: 'owner'
     },
     {
       title: <FormattedMessage id="namespace" />,
@@ -113,6 +122,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
 
   public componentDidMount() {
     this.props.fetchServices();
+    this.props.fetchUsers();
   }
 
   protected showCreate = () => {
@@ -131,9 +141,25 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     this.setState({ visibleModal: false });
   };
 
+  protected getServiceInfo = (services: Array<ServiceModel.Service>) => {
+    return services.map(service => {
+      const owner = find(this.props.users, user => {
+        return user.id === service.ownerID;
+      });
+      const displayName = owner === undefined ? 'none' : owner.displayName;
+      return {
+        id: service.id,
+        name: service.name,
+        owner: displayName,
+        type: service.type,
+        namespace: service.namespace,
+        selector: service.selector,
+        ports: service.ports
+      };
+    });
+  };
   public render() {
     const { services } = this.props;
-
     return (
       <div>
         <Card
@@ -147,7 +173,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
           <Table
             className="main-table"
             columns={this.columns}
-            dataSource={services}
+            dataSource={this.getServiceInfo(this.props.services)}
           />
           <ServiceForm
             services={services}
@@ -164,7 +190,8 @@ class Service extends React.Component<ServiceProps, ServiceState> {
 
 const mapStateToProps = (state: RootState) => {
   return {
-    services: state.cluster.services
+    services: state.cluster.services,
+    users: state.user.users
   };
 };
 
@@ -173,7 +200,8 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
   addService: (data: ServiceModel.Service) => {
     dispatch(clusterOperations.addService(data));
   },
-  removeService: (id: string) => dispatch(clusterOperations.removeService(id))
+  removeService: (id: string) => dispatch(clusterOperations.removeService(id)),
+  fetchUsers: () => dispatch(userOperations.fetchUsers())
 });
 
 export default connect(
