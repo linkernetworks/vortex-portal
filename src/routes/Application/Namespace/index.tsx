@@ -92,6 +92,7 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
         >
           <Table
             className="main-table"
+            rowKey="name"
             columns={this.columns}
             dataSource={namespaces}
           />
