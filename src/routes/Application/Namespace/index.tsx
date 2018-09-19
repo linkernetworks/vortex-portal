@@ -88,6 +88,7 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
     this.setState({ visibleModal: false });
   };
 
+  // TODO: Selector
   protected getNamespaceInfo = (
     namespaces: Array<NamespaceModel.Namespace>
   ) => {
@@ -104,6 +105,7 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
       };
     });
   };
+
   public render() {
     const { namespaces } = this.props;
     return (

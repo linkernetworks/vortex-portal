@@ -21,7 +21,7 @@ import * as UserModel from '@/models/User';
 import * as PodModel from '@/models/Pod';
 import * as DeploymentModel from '@/models/Deployment';
 import { RootState, RTDispatch } from '@/store/ducks';
-import { clusterOperations } from '@/store/ducks/cluster';
+import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
 import { userOperations } from '@/store/ducks/user';
 import PodDrawer from '@/components/PodDrawer';
 import ItemActions from '@/components/ItemActions';
@@ -176,6 +176,7 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
     return (
       <Table
         className="main-table"
+        rowKey="id"
         columns={this.columns}
         dataSource={this.getDeploymentInfo(this.props.allDeployments)}
       />
@@ -372,10 +373,14 @@ const mapStateToProps = (state: RootState) => {
     }
   });
   return {
-    pods: state.cluster.pods,
+    pods: clusterSelectors.getPodsInAvailableNamespace(state.cluster),
     podsNics: state.cluster.podsNics,
-    deployments: state.cluster.deployments,
-    allDeployments: state.cluster.allDeployments,
+    deployments: clusterSelectors.getDeploymentsInAvailableNamespace(
+      state.cluster
+    ),
+    allDeployments: clusterSelectors.getAllDeploymentsInAvailableNamespace(
+      state.cluster
+    ),
     users: state.user.users
   };
 };
