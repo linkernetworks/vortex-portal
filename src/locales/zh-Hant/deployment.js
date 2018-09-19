@@ -1,4 +1,5 @@
 export default {
+  'deployment.name': '名稱',
   'deployment.restartPolicy': '重啟政策',
   'deployment.labels': '標籤',
   'deployment.envVars': '環境變數',
