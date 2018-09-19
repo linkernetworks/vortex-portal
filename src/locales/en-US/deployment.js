@@ -1,4 +1,5 @@
 export default {
+  'deployment.name': 'name',
   'deployment.restartPolicy': 'restart policy',
   'deployment.labels': 'labels',
   'deployment.envVars': 'env vars',

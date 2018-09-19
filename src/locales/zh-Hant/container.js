@@ -1,4 +1,5 @@
 export default {
+  'container.detail.name': '名稱',
   'container.detail.image': '映像檔',
   'container.detail.command': '指令',
   'container.detail.newCommand': '新指令',
