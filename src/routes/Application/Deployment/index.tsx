@@ -91,7 +91,11 @@ class Deployment extends React.PureComponent<DeploymentProps, object> {
           items={[
             {
               type: 'link',
-              path: `/application/deployment/${record.name}`
+              link: {
+                to: {
+                  pathname: `/application/deployment/${record.name}`
+                }
+              }
             }
           ]}
         />
