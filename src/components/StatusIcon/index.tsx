@@ -10,7 +10,8 @@ const StatusIcon: React.SFC<{ status: string }> = props => {
     case 'Completed':
       return <Icon type="check-circle" className={styles.readyIcon} />;
     case 'ContainerCreating':
-      return <Icon type="clock-circle" className={styles.pendIcon} />;
+    case 'custom-loading':
+      return <Icon type="clock-circle" className={styles.pendingIcon} />;
     default:
       return <Icon type="close-circle" className={styles.errorIcon} />;
   }
