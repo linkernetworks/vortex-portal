@@ -33,11 +33,11 @@ export function RouteWithLayout({
   ...rest
 }: RouteWithLayoutProps) {
   const childComponent = (props: object) => (
-    <Layout {...props}>
+    <Layout>
       <Component {...props} />
     </Layout>
   );
-  return <Route {...rest} render={childComponent} />;
+  return <Route {...rest} render={matchProps => childComponent(matchProps)} />;
 }
 
 const locationHelper = locationHelperBuilder({});
@@ -99,13 +99,14 @@ const appRoutes = (
     />
     <RouteWithLayout
       layout={MainLayout}
+      exact={true}
       component={userIsAuthenticated(CreateDeployment)}
       path="/application/deployment/create"
     />
     <RouteWithLayout
       layout={MainLayout}
       component={userIsAuthenticated(Deployment)}
-      path="/application/deployment"
+      path="/application/deployment/:name?"
     />
     <RouteWithLayout
       layout={MainLayout}

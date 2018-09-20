@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { Link, LinkProps } from 'react-router-dom';
 import * as classnames from 'classnames';
+import { get } from 'lodash';
 import { Popconfirm } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
@@ -9,13 +11,15 @@ interface ItemActionProps {
   items: Array<{
     type: string;
     disable?: boolean;
+    link?: LinkProps;
     onConfirm?: () => any;
   }>;
 }
 
 const needPop = {
   delete: true,
-  more: false
+  more: false,
+  link: false
 };
 
 const ActionLink: React.SFC<{
@@ -38,12 +42,21 @@ const ActionLink: React.SFC<{
 
 const ItemActions: React.SFC<ItemActionProps> = props => (
   <React.Fragment>
-    {props.items.map(item => {
-      const { type, disable = false, onConfirm } = item;
+    {props.items.map((item, index) => {
+      const { type, disable = false, onConfirm, link } = item;
+
+      if (type === 'link') {
+        return (
+          <Link key={index} {...link!}>
+            <FormattedMessage id="action.more" />
+          </Link>
+        );
+      }
+
       if (needPop[type]) {
         return (
           <Popconfirm
-            key={`action.${type}`}
+            key={index}
             title={
               <FormattedMessage
                 id={`action.confirmTo${type.charAt(0).toUpperCase() +
@@ -57,7 +70,7 @@ const ItemActions: React.SFC<ItemActionProps> = props => (
         );
       } else {
         return (
-          <span key={`action.${type}`} onClick={onConfirm}>
+          <span key={index} onClick={onConfirm}>
             <ActionLink type={type} disable={disable} />
           </span>
         );

@@ -1,0 +1,15 @@
+@import '../../styles/variables';
+
+.readyIcon{
+  color: $success-color;
+  padding-left: $padding-xs;
+}
+
+.errorIcon{
+  color: $error-color;
+  padding-left: $padding-xs;
+}
+
+.pendingIcon{
+  padding-left: $padding-xs;
+}
