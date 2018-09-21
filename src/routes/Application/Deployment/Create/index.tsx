@@ -5,8 +5,8 @@ import * as NamespaceModel from '@/models/Namespace';
 import { networkModels, networkOperations } from '@/store/ducks/network';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Card } from 'antd';
-import { FormattedMessage } from 'react-intl';
+import { Card, notification } from 'antd';
+import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { RootState, RTDispatch } from '@/store/ducks';
@@ -22,7 +22,9 @@ interface CreateDeploymentState {
   tabKey: string;
 }
 
-type CreateDeploymentProps = OwnProps & InjectedAuthRouterProps;
+type CreateDeploymentProps = OwnProps &
+  InjectedAuthRouterProps &
+  InjectedIntlProps;
 
 interface OwnProps {
   deployments: DeploymentModel.Controllers;
@@ -71,6 +73,16 @@ class CreateDeployment extends React.Component<
   protected handleSubmit = (deployment: DeploymentModel.Deployment) => {
     this.props.addDeployment(deployment);
     this.props.push('/application/deployment');
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'deployment.hint.create.success'
+      })
+    });
   };
 
   public renderTabContent = () => {
@@ -156,4 +168,4 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CreateDeployment);
+)(injectIntl(CreateDeployment));

@@ -1,8 +1,6 @@
 export default {
-  'network.name': '名稱',
   'network.bridgeName': '橋接器',
   'network.interfaceName': '介面名稱',
-  'network.nodes': '節點',
   'network.type': 'Datapath 類型',
   'network.selectType': '選擇類型',
   'network.physicalInterface': '實體介面',
@@ -27,4 +25,8 @@ export default {
   'network.hint.selectNode': '選擇節點',
   'network.hint.selectInterfaces': '選擇介面',
   'network.hint.VLANTags': '請輸入一個數字介於 0~4095',
+  'network.hint.create.success': '成功創建網路。',
+  'network.hint.create.failure': '創建網路失敗。',
+  'network.hint.delete.success': '成功刪除網路。',
+  'network.hint.delete.failure': '刪除網路失敗。'
 }

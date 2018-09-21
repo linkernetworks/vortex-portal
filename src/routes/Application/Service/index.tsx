@@ -3,11 +3,11 @@ import * as UserModel from '@/models/User';
 import * as ServiceModel from '@/models/Service';
 import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
-import { Button, Icon, Tree, Tag, Card, Table } from 'antd';
+import { Button, Icon, Tree, Tag, Card, Table, notification } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { FormattedMessage } from 'react-intl';
 import { Dispatch } from 'redux';
+import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import { find } from 'lodash';
 
@@ -26,7 +26,7 @@ interface ServiceState {
   namespaces: Array<NamespaceModel.Namespace>;
 }
 
-type ServiceProps = OwnProps & InjectedAuthRouterProps;
+type ServiceProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
 interface OwnProps {
   services: Array<ServiceModel.Service>;
   fetchServices: () => any;
@@ -105,7 +105,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
           items={[
             {
               type: 'delete',
-              onConfirm: this.props.removeService.bind(this, record.id)
+              onConfirm: this.handleRemoveService.bind(this, record.id)
             }
           ]}
         />
@@ -139,6 +139,30 @@ class Service extends React.Component<ServiceProps, ServiceState> {
   protected handleSubmit = (service: ServiceModel.Service) => {
     this.props.addService(service);
     this.setState({ visibleModal: false });
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'service.hint.create.success'
+      })
+    });
+  };
+
+  protected handleRemoveService = (id: string) => {
+    this.props.removeService(id);
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'service.hint.delete.success'
+      })
+    });
   };
 
   protected getServiceInfo = (services: Array<ServiceModel.Service>) => {
@@ -158,6 +182,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
       };
     });
   };
+
   public render() {
     const { services } = this.props;
     return (
@@ -207,4 +232,4 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Service);
+)(injectIntl(Service));

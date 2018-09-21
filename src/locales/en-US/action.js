@@ -8,6 +8,7 @@ export default {
   'action.confirm': 'confirm',
   'action.cancel': 'cancel',
   'action.create': 'create',
+  'action.success': 'success',
   'action.removeAll': 'remove All',
   'action.next': 'next',
   'action.previous': 'previous',

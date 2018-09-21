@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Card, Button, Icon, Table } from 'antd';
+import { Card, Button, Icon, Table, notification } from 'antd';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
@@ -231,6 +231,16 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
         this.props.removeVolume(id);
         break;
     }
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'Delete successfully.'
+      })
+    });
   };
 
   protected handleAddItem = () => {
@@ -311,6 +321,16 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
           });
         break;
     }
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'Create successfully.'
+      })
+    });
   };
 
   public renderTableHeader = () => {

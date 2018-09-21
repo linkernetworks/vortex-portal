@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Button, Tag, Icon, Tree, Card, Table } from 'antd';
+import { Button, Tag, Icon, Tree, Card, Table, notification } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { FormattedMessage } from 'react-intl';
 import { find } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import * as styles from './styles.module.scss';
@@ -28,7 +28,7 @@ interface NetworkState {
   isCreating: boolean;
 }
 
-type NetworkProps = OwnProps & InjectedAuthRouterProps;
+type NetworkProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
 
 interface OwnProps {
   nodes: Nodes;
@@ -109,7 +109,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           items={[
             {
               type: 'delete',
-              onConfirm: this.props.removeNetwork.bind(this, record.id)
+              onConfirm: this.handleRemoveNetwork.bind(this, record.id)
             }
           ]}
         />
@@ -136,6 +136,30 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     this.props.addNetwork(data).then(() => {
       this.setState({ isCreating: false });
       successCB();
+    });
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'network.hint.create.success'
+      })
+    });
+  };
+
+  protected handleRemoveNetwork = (id: string) => {
+    this.props.removeNetwork(id);
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'network.hint.delete.success'
+      })
     });
   };
 
@@ -228,4 +252,4 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Network);
+)(injectIntl(Network));

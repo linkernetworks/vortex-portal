@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import { find } from 'lodash';
 
@@ -36,8 +36,7 @@ interface DeploymentState {
   currentDeployment: string;
 }
 
-type DeploymentProps = OwnProps & InjectedAuthRouterProps;
-
+type DeploymentProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
 interface OwnProps {
   pods: PodModel.Pods;
   podsNics: PodModel.PodsNics;
@@ -182,24 +181,28 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
     );
   };
 
-  protected renderStatusIcon = (status: string) => {
-    switch (status) {
-      case 'running':
-      case 'ready':
-      case 'Completed':
-        return <Icon type="check-circle" className={styles.readyIcon} />;
-      case 'ContainerCreating':
-        return <Icon type="clock-circle" className={styles.pendIcon} />;
-      default:
-        return <Icon type="close-circle" className={styles.errorIcon} />;
+  protected renderStatusIcon = (deployment: DeploymentModel.Controller) => {
+    if (deployment.availablePod > 0) {
+      return <Icon type="check-circle" className={styles.readyIcon} />;
+    } else if (deployment.currentPod > 0) {
+      return <Icon type="clock-circle" className={styles.pendingIcon} />;
+    } else {
+      return <Icon type="close-circle" className={styles.errorIcon} />;
     }
   };
 
   protected handleRemoveDeployment = (id: string) => {
     this.props.removeDeployment(id);
-    return notification.success({
-      message: 'Success',
-      description: 'Delete the deployment successfully.'
+    clearInterval(this.intervalPodId);
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'deployment.hint.delete.success'
+      })
     });
   };
 
@@ -331,7 +334,7 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
                 <h2 style={{ display: 'inline' }}>
                   {deployments[currentDeployment].controllerName}
                 </h2>
-                {this.renderStatusIcon('running')}
+                {this.renderStatusIcon(deployments[currentDeployment])}
               </div>
 
               <div className={styles.contentSection}>
@@ -395,4 +398,4 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Deployment);
+)(injectIntl(Deployment));

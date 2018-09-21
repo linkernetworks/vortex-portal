@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Button, Icon, Card, Table } from 'antd';
+import { Button, Icon, Card, Table, notification } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { FormattedMessage } from 'react-intl';
 import { Dispatch } from 'redux';
+import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import { find } from 'lodash';
 
@@ -21,7 +21,7 @@ interface NamespaceState {
   visibleModal: boolean;
 }
 
-type NamespaceProps = OwnProps & InjectedAuthRouterProps;
+type NamespaceProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
 
 interface OwnProps {
   namespaces: Array<NamespaceModel.Namespace>;
@@ -55,7 +55,7 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
           items={[
             {
               type: 'delete',
-              onConfirm: this.props.removeNamespace.bind(this, record.id)
+              onConfirm: this.handleRemoveNamespace.bind(this, record.id)
             }
           ]}
         />
@@ -86,6 +86,30 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
   protected handleSubmit = (namespace: NamespaceModel.Namespace) => {
     this.props.addNamespace(namespace);
     this.setState({ visibleModal: false });
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'namespace.hint.create.success'
+      })
+    });
+  };
+
+  protected handleRemoveNamespace = (id: string) => {
+    this.props.removeNamespace(id);
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'namespace.hint.delete.success'
+      })
+    });
   };
 
   protected getNamespaceInfo = (
@@ -155,4 +179,4 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Namespace);
+)(injectIntl(Namespace));
