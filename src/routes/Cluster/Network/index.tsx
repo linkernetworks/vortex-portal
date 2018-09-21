@@ -247,6 +247,9 @@ class Network extends React.Component<NetworkProps, NetworkState> {
             </Button>
           }
         >
+          <p>
+            * <FormattedMessage id="network.hint.exec" />
+          </p>
           <Table
             className="main-table"
             rowKey="id"
