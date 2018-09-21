@@ -1,4 +1,4 @@
-@import '../../../styles/global';
+@import '../../../styles/variables';
 
 $tag-gutter: 8px;
 
@@ -10,3 +10,14 @@ $tag-gutter: 8px;
   margin-bottom: $tag-gutter;
 }
 
+.terminal-modal {
+  :global {
+    .ant-modal-header {
+      background: $menu-dark-bg;
+      border-bottom: $menu-dark-submenu-bg;
+    }
+    .ant-modal-title, .ant-modal-close {
+      color: $text-color-dark;
+    }
+  }
+}

@@ -11,7 +11,11 @@ export const getSocketSession = (
   );
 };
 
-export const getSock = (id: string, receiveMessage: (data: string) => void) => {
+export const getSock = (
+  id: string,
+  receiveMessage: (data: string) => void,
+  closed: () => void
+) => {
   const sock = new SockJS(`/v1/sockjs?${id}`);
 
   const sendMessage = (command: string) => {
@@ -26,11 +30,15 @@ export const getSock = (id: string, receiveMessage: (data: string) => void) => {
   sock.onclose = function() {
     console.log('sock close');
     sock.close();
+    closed();
   };
 
   sock.onmessage = function(event) {
     const msg = JSON.parse(event.data);
-    receiveMessage(msg.Data);
+    // ignore error message when fallback various shell
+    if (!/^(rpc error\: code = 2)/.test(msg.Data)) {
+      receiveMessage(msg.Data);
+    }
   };
 
   return {
