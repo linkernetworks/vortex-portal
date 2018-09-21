@@ -1,23 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-  Button,
-  Tag,
-  Icon,
-  Tree,
-  Card,
-  Table,
-  notification,
-  Modal
-} from 'antd';
+import { Button, Tag, Icon, Tree, Card, Table, notification } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { find, get } from 'lodash';
+import { find } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
-import * as styles from './styles.module.scss';
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
 import { userOperations } from '@/store/ducks/user';
@@ -30,14 +20,16 @@ import * as UserModel from '@/models/User';
 import { Nodes } from '@/models/Node';
 import NetworkFrom from '@/components/NetworkForm';
 import ItemActions from '@/components/ItemActions';
-import ExecTerminal from '@/components/ExecTerminal';
+import ModalTerminal from '@/components/ModalTerminal';
+
+import * as styles from './styles.module.scss';
 
 const TreeNode = Tree.TreeNode;
 
 interface NetworkState {
   isCreating: boolean;
-  openingExec?: {
-    node: string;
+  execSelectedNode: string;
+  execIdentifier?: {
     namespace: string;
     podName: string;
     containerName: string;
@@ -134,7 +126,8 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   ];
 
   public readonly state: NetworkState = {
-    isCreating: false
+    isCreating: false,
+    execSelectedNode: ''
   };
 
   public componentDidMount() {
@@ -175,8 +168,8 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     console.log(selectedKeys);
 
     this.setState({
-      openingExec: {
-        node: selectedKeys[0].replace('[node]-', ''),
+      execSelectedNode: selectedKeys[0].replace('[node]-', ''),
+      execIdentifier: {
         namespace: 'vortex',
         podName: 'network-controller-server-unix-8jsbv',
         containerName: 'network-controller-server-unix'
@@ -199,7 +192,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   };
 
   protected handleCloseExec = () => {
-    this.setState({ openingExec: undefined });
+    this.setState({ execIdentifier: undefined });
   };
 
   protected renderTags = (tags: Array<string | number>) => {
@@ -234,7 +227,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
 
   public render() {
     const { networks } = this.props;
-    const { openingExec } = this.state;
+    const { execIdentifier, execSelectedNode } = this.state;
     const networkNames = networks.map(network => network.name);
 
     return (
@@ -266,25 +259,11 @@ class Network extends React.Component<NetworkProps, NetworkState> {
             nodesWithUsedInterfaces={this.props.nodesWithUsedInterfaces}
           />
         </Card>
-        <Modal
-          visible={!!openingExec}
-          title={get(this.state.openingExec, 'node')}
-          className={styles['terminal-modal']}
-          onCancel={this.handleCloseExec}
-          footer={null}
-          width={960}
-          bodyStyle={{ padding: 0 }}
-          destroyOnClose={true}
-        >
-          {openingExec && (
-            <ExecTerminal
-              namespace={openingExec.namespace}
-              podName={openingExec.podName}
-              containerName={openingExec.containerName}
-              onClose={this.handleCloseExec}
-            />
-          )}
-        </Modal>
+        <ModalTerminal
+          title={execSelectedNode}
+          execIdentifier={execIdentifier}
+          onCloseModal={this.handleCloseExec}
+        />
       </div>
     );
   }

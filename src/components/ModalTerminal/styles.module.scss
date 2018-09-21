@@ -1,0 +1,13 @@
+@import '../../styles/variables';
+
+.terminal-modal {
+  :global {
+    .ant-modal-header {
+      background: $menu-dark-bg;
+      border-bottom: $menu-dark-submenu-bg;
+    }
+    .ant-modal-title, .ant-modal-close {
+      color: $text-color-dark;
+    }
+  }
+}
