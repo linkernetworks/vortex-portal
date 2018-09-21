@@ -28,7 +28,7 @@ const TreeNode = Tree.TreeNode;
 
 interface NetworkState {
   isCreating: boolean;
-  execSelectedNode: string;
+  execSelectedNode: Array<string>;
   execIdentifier?: {
     namespace: string;
     podName: string;
@@ -75,7 +75,11 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     {
       title: <FormattedMessage id="node" />,
       render: (_, record) => (
-        <Tree showIcon={true} onSelect={this.handleOpenExec(record.bridgeName)}>
+        <Tree
+          showIcon={true}
+          selectedKeys={this.state.execSelectedNode}
+          onSelect={this.handleOpenExec(record.bridgeName)}
+        >
           {record.nodes.map(node => (
             <TreeNode
               title={node.name}
@@ -127,7 +131,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
 
   public readonly state: NetworkState = {
     isCreating: false,
-    execSelectedNode: ''
+    execSelectedNode: []
   };
 
   public componentDidMount() {
@@ -168,7 +172,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     console.log(selectedKeys);
 
     this.setState({
-      execSelectedNode: selectedKeys[0].replace('[node]-', ''),
+      execSelectedNode: selectedKeys,
       execIdentifier: {
         namespace: 'vortex',
         podName: 'network-controller-server-unix-8jsbv',
@@ -192,7 +196,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   };
 
   protected handleCloseExec = () => {
-    this.setState({ execIdentifier: undefined });
+    this.setState({ execIdentifier: undefined, execSelectedNode: [] });
   };
 
   protected renderTags = (tags: Array<string | number>) => {
@@ -229,6 +233,10 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     const { networks } = this.props;
     const { execIdentifier, execSelectedNode } = this.state;
     const networkNames = networks.map(network => network.name);
+    const execTitle =
+      execSelectedNode.length > 0
+        ? execSelectedNode[0].replace('[node]-', '')
+        : '';
 
     return (
       <div>
@@ -260,7 +268,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           />
         </Card>
         <ModalTerminal
-          title={execSelectedNode}
+          title={execTitle}
           execIdentifier={execIdentifier}
           onCloseModal={this.handleCloseExec}
         />
