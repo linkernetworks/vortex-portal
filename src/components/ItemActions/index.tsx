@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Link, LinkProps } from 'react-router-dom';
 import * as classnames from 'classnames';
-import { get } from 'lodash';
 import { Popconfirm } from 'antd';
 import { FormattedMessage } from 'react-intl';
 

@@ -665,7 +665,7 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
   public render() {
     const { currentContainer } = this.state;
     const { pod, podNics } = this.props;
-    console.log(pod);
+
     return (
       <Drawer
         title="Pod"

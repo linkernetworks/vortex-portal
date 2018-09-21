@@ -66,6 +66,7 @@ export interface Pods {
 }
 
 export interface PodsNics {
+  // Pod name
   [name: string]: NICS;
 }
 export interface PodInfo {
@@ -77,6 +78,7 @@ export interface PodInfo {
 }
 
 export interface NICS {
+  // NICS name
   [name: string]: {
     nicNetworkTraffic: {
       receiveBytesTotal: Array<{ timestamp: number; value: string }>;

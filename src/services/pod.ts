@@ -8,7 +8,6 @@ export const getPods = (option?: string): AxiosPromise<Pod.Pods> => {
       return axios.get(
         '/v1/monitoring/pods?interval=43200&resolution=7200&rate=60'
       );
-      break;
     case 'week':
       return axios.get(
         '/v1/monitoring/pods?interval=10080&resolution=1200&rate=20'
@@ -28,7 +27,6 @@ export const getPod = (pod: string, option?: string): AxiosPromise<Pod.Pod> => {
       return axios.get(
         `/v1/monitoring/pods/${pod}?interval=43200&resolution=7200&rate=60`
       );
-      break;
     case 'week':
       return axios.get(
         `/v1/monitoring/pods/${pod}?interval=10080&resolution=1200&rate=20`

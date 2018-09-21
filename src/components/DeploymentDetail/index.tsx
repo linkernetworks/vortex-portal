@@ -87,7 +87,7 @@ class DeploymentDetail extends React.PureComponent<
               {
                 type: 'link',
                 link: {
-                  to: { pathname: `/application/pod/${record.name}`},
+                  to: { pathname: `/application/pod/${record.name}` },
                   replace: true
                 }
               }

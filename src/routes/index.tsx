@@ -15,6 +15,7 @@ import Deployment from '@/routes/Application/Deployment';
 import CreateDeployment from '@/routes/Application/Deployment/Create';
 import Namespace from '@/routes/Application/Namespace';
 import Pod from '@/routes/Application/Pod';
+import PodDetail from '@/routes/Application/Pod/Detail';
 import Service from '@/routes//Application/Service';
 import Storage from '@/routes/Storage';
 import Auth from '@/routes/Auth';
@@ -115,8 +116,14 @@ const appRoutes = (
     />
     <RouteWithLayout
       layout={MainLayout}
+      exact={true}
       component={userIsAuthenticated(Pod)}
       path="/application/pod"
+    />
+    <RouteWithLayout
+      layout={MainLayout}
+      component={userIsAuthenticated(PodDetail)}
+      path="/application/pod/:name"
     />
     <RouteWithLayout
       layout={MainLayout}

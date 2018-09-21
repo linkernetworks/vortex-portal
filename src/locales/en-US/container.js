@@ -9,4 +9,6 @@ export default {
 
   'container.resource.cpuUsagePercentage': 'CPU usage percentage',
   'container.resource.memoryUsageMegabyte': 'memory usage MB',
+
+  'container.openTerminal': 'Open temerinal',
 }

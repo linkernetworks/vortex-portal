@@ -11,7 +11,6 @@ export const getContainer = (
       return axios.get(
         `/v1/monitoring/pods/${pod}/${container}?interval=43200&resolution=7200&rate=60`
       );
-      break;
     case 'week':
       return axios.get(
         `/v1/monitoring/pods/${pod}/${container}?interval=10080&resolution=1200&rate=20`

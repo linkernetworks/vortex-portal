@@ -1,0 +1,38 @@
+@import '../../../../styles/variables';
+$tag-gutter: 8px;
+
+.column {
+  flex: 2;
+  margin-bottom: $padding-md;
+
+  :global {
+    .title {
+      color: $text-color-secondary;
+      font-size: $font-size-sm;
+      line-height: 20px;
+    }
+    .content {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.labels {
+  margin-bottom: -$tag-gutter;
+}
+
+.label {
+  margin-bottom: $tag-gutter;
+}
+
+.contentSection{
+  padding-bottom: $padding-lg;
+}
+
+.chart {
+  margin: 0 auto;
+  .label {
+    transform: translateY(-2.4em);
+    fill: $text-color-secondary;
+  }
+}

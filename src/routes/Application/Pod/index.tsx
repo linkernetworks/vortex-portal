@@ -13,9 +13,6 @@ import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
 
-// import * as networkAPI from '@/services/network';
-// import * as namespaceAPI from '@/services/namespace';
-
 import PodDrawer from '@/components/PodDrawer';
 import ItemActions from '@/components/ItemActions';
 
@@ -25,7 +22,6 @@ const Option = Select.Option;
 
 interface PodState {
   visiblePodDrawer: boolean;
-  // visibleModal: boolean;
   currentPod: string;
   networks: Array<NetworkModel.Network>;
   namespaces: Array<NamespaceModel.Namespace>;
@@ -39,9 +35,6 @@ interface OwnProps {
   allPods: Array<string>;
   podsNics: PodModel.PodsNics;
   fetchPods: () => any;
-  fetchPodsFromMongo: () => any;
-  // Add Pod
-  // addPod: (data: PodModel.PodRequest) => any;
   removePod: (id: string) => any;
   removePodByName: (namespace: string, id: string) => any;
 }
@@ -88,7 +81,6 @@ class Pod extends React.Component<PodProps, PodState> {
     super(props);
     this.state = {
       visiblePodDrawer: false,
-      // visibleModal: false,
       currentPod: '',
       networks: [],
       namespaces: [],
@@ -100,34 +92,11 @@ class Pod extends React.Component<PodProps, PodState> {
   public componentDidMount() {
     this.props.fetchPods();
     this.intervalPodId = window.setInterval(this.props.fetchPods, 5000);
-    this.props.fetchPodsFromMongo();
   }
 
   public componentWillUnmount() {
     clearInterval(this.intervalPodId);
   }
-
-  // Add Pod
-  /*
-  protected showCreate = () => {
-    networkAPI.getNetworks().then(res => {
-      this.setState({ networks: res.data });
-    });
-    namespaceAPI.getNamespaces().then(res => {
-      this.setState({ namespaces: res.data });
-    });
-    this.setState({ visibleModal: true });
-  };
-
-  protected hideCreate = () => {
-    this.setState({ visibleModal: false });
-  };
-
-  protected handleSubmit = (podRequest: PodModel.PodRequest) => {
-    this.props.addPod(podRequest);
-    this.setState({ visibleModal: false });
-  };
-  */
 
   protected handleChangeSearchType = (type: string) => {
     this.setState({ searchType: type, searchText: '' });
@@ -253,7 +222,6 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchPods: () => dispatch(clusterOperations.fetchPods()),
-  fetchPodsFromMongo: () => dispatch(clusterOperations.fetchPodsFromMongo()),
   addPod: (data: PodModel.PodRequest) => {
     dispatch(clusterOperations.addPod(data));
   },

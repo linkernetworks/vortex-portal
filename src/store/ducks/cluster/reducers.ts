@@ -1,9 +1,10 @@
 import { ActionType, getType } from 'typesafe-actions';
-import { last } from 'lodash';
+import { last, transform } from 'lodash';
 import * as Cluster from './actions';
 import * as Node from '@/models/Node';
 import * as Pod from '@/models/Pod';
 import * as Service from '@/models/Service';
+import * as Container from '@/models/Container';
 import * as Namespace from '@/models/Namespace';
 import * as Deployment from '@/models/Deployment';
 
@@ -13,7 +14,7 @@ export interface ClusterStateType {
   pods: Pod.Pods;
   podsNics: Pod.PodsNics;
   podsFromMongo: Array<Pod.PodFromMongo>;
-  containers: {};
+  containers: Container.Containers;
   deployments: Deployment.Controllers;
   deploymentsFromMongo: Array<Deployment.Deployment>;
   services: Array<Service.Service>;
@@ -172,87 +173,14 @@ export function clusterReducer(
     case getType(Cluster.fetchPods.success):
       const pods = action.payload;
       const allPods = Object.keys(action.payload);
-      const podsNics = state.podsNics;
+      const podsNics = transform(
+        pods,
+        (result, pod, podName) => {
+          result[podName] = pod.nics;
+        },
+        state.podsNics
+      );
 
-      allPods.map(key => {
-        const nics = pods[key].nics;
-        Object.keys(nics).map(name => {
-          if (
-            podsNics.hasOwnProperty(key) &&
-            podsNics[key].hasOwnProperty(name)
-          ) {
-            const newNetworkTraffic = nics[name].nicNetworkTraffic;
-            const originNetworkTraffic = podsNics[key][name].nicNetworkTraffic;
-
-            const receiveBytesTotal = last(
-              originNetworkTraffic.receiveBytesTotal
-            );
-            newNetworkTraffic.receiveBytesTotal.map(data => {
-              if (
-                receiveBytesTotal &&
-                data.timestamp > receiveBytesTotal.timestamp
-              ) {
-                originNetworkTraffic.receiveBytesTotal.push(data);
-                if (originNetworkTraffic.receiveBytesTotal.length > 15) {
-                  originNetworkTraffic.receiveBytesTotal.shift();
-                }
-              }
-            });
-
-            const transmitBytesTotal = last(
-              originNetworkTraffic.transmitBytesTotal
-            );
-            newNetworkTraffic.transmitBytesTotal.map(data => {
-              if (
-                transmitBytesTotal &&
-                data.timestamp > transmitBytesTotal.timestamp
-              ) {
-                originNetworkTraffic.transmitBytesTotal.push(data);
-                if (originNetworkTraffic.transmitBytesTotal.length > 15) {
-                  originNetworkTraffic.transmitBytesTotal.shift();
-                }
-              }
-            });
-
-            const receivePacketsTotal = last(
-              originNetworkTraffic.receivePacketsTotal
-            );
-            newNetworkTraffic.receivePacketsTotal.map(data => {
-              if (
-                receivePacketsTotal &&
-                data.timestamp > receivePacketsTotal.timestamp
-              ) {
-                originNetworkTraffic.receivePacketsTotal.push(data);
-                if (originNetworkTraffic.receivePacketsTotal.length > 15) {
-                  originNetworkTraffic.receivePacketsTotal.shift();
-                }
-              }
-            });
-
-            const transmitPacketsTotal = last(
-              originNetworkTraffic.transmitPacketsTotal
-            );
-            newNetworkTraffic.transmitPacketsTotal.map(data => {
-              if (
-                transmitPacketsTotal &&
-                data.timestamp > transmitPacketsTotal.timestamp
-              ) {
-                originNetworkTraffic.transmitPacketsTotal.push(data);
-                if (originNetworkTraffic.transmitPacketsTotal.length > 15) {
-                  originNetworkTraffic.transmitPacketsTotal.shift();
-                }
-              }
-            });
-          } else {
-            if (podsNics.hasOwnProperty(key)) {
-              podsNics[key][name] = nics[name];
-            } else {
-              podsNics[key] = {};
-              podsNics[key][name] = nics[name];
-            }
-          }
-        });
-      });
       return {
         ...state,
         pods,
@@ -263,9 +191,14 @@ export function clusterReducer(
     case getType(Cluster.fetchPod.success):
       return {
         ...state,
+        allPods: [...state.allPods, action.payload.podName],
         pods: {
           ...state.pods,
           [action.payload.podName]: action.payload
+        },
+        podsNics: {
+          ...state.podsNics,
+          [action.payload.podName]: action.payload.nics
         },
         isLoading: false
       };
