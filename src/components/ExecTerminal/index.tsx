@@ -38,7 +38,7 @@ class ExecTerminal extends React.PureComponent<ExecTerminalProps, object> {
   };
 
   public async componentDidMount() {
-    const { namespace, podName, containerName } = this.props;
+    const { namespace, podName, containerName, welcomeMsg } = this.props;
 
     const session = await getSocketSession(namespace, podName, containerName);
     const { sock, sendMessage } = getSock(
@@ -53,6 +53,10 @@ class ExecTerminal extends React.PureComponent<ExecTerminalProps, object> {
     this.xterm.element.style.padding = padding;
     fit(this.xterm);
     this.xterm.on('key', this.handleTerminalInput(sendMessage));
+
+    if (welcomeMsg) {
+      this.xterm.write(`${welcomeMsg}\r\n\n`);
+    }
   }
 
   public componentWillUnmount() {

@@ -269,6 +269,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
         </Card>
         <ModalTerminal
           title={execTitle}
+          welcomeMsg="Hello from [1;3;31mvortex.js[0m !"
           execIdentifier={execIdentifier}
           onCloseModal={this.handleCloseExec}
         />
