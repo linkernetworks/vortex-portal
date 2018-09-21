@@ -1,6 +1,6 @@
 export default {
   'service.type': '類型',
-  'service.selectors': '所選標籤',
+  'service.selectors': '選擇器',
   'service.ports': '通訊埠號',
   'service.add': '新增服務',
 
