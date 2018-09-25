@@ -32,6 +32,37 @@ class Profile extends React.PureComponent<UsersProps, UserState> {
     };
   }
 
+  public columns = [
+    {
+      dataIndex: 'key'
+    },
+    {
+      dataIndex: 'value'
+    }
+  ];
+  public data = [
+    {
+      key: 'User Name',
+      value: this.props.user.loginCredential.username
+    },
+    {
+      key: 'Role',
+      value: this.props.user.role
+    },
+    {
+      key: 'First Name',
+      value: this.props.user.firstName
+    },
+    {
+      key: 'Last Name',
+      value: this.props.user.lastName
+    },
+    {
+      key: 'Phone Number',
+      value: this.props.user.phoneNumber
+    }
+  ];
+
   protected showCreate = () => {
     this.setState({ visibleModal: true });
   };
@@ -47,44 +78,11 @@ class Profile extends React.PureComponent<UsersProps, UserState> {
 
   public render() {
     const { Meta } = Card;
-    const columns = [
-      {
-        title: 'Key',
-        dataIndex: 'key'
-      },
-      {
-        title: 'Value',
-        dataIndex: 'value'
-      }
-    ];
-    const data = [
-      {
-        key: 'User Name',
-        value: this.props.user.loginCredential.username
-      },
-      {
-        key: 'Role',
-        value: this.props.user.role
-      },
-      {
-        key: 'First Name',
-        value: this.props.user.firstName
-      },
-      {
-        key: 'Last Name',
-        value: this.props.user.lastName
-      },
-      {
-        key: 'Phone Number',
-        value: this.props.user.phoneNumber
-      }
-    ];
 
     return (
       <div className={styles.test}>
         <Card
           style={{ width: 500 }}
-          // cover={<div className={styles.billboard} />}
           actions={[<Icon key="edit" type="edit" onClick={this.showCreate} />]}
         >
           <Meta
@@ -95,8 +93,8 @@ class Profile extends React.PureComponent<UsersProps, UserState> {
             description={
               <Table
                 rowKey="name"
-                columns={columns}
-                dataSource={data}
+                columns={this.columns}
+                dataSource={this.data}
                 pagination={false}
                 showHeader={false}
                 size={'middle'}

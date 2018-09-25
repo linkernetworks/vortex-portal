@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { compose } from 'recompose';
 import { Form, Modal, Input } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
@@ -11,7 +11,7 @@ const formItemLayout = {
   wrapperCol: { span: 14 }
 };
 
-type PasswordFormProps = OwnProps & InjectedIntlProps & FormComponentProps;
+type PasswordFormProps = OwnProps & FormComponentProps;
 
 interface OwnProps {
   visible: boolean;
@@ -95,7 +95,6 @@ class PasswordForm extends React.PureComponent<PasswordFormProps, object> {
   }
 }
 
-export default compose<PasswordFormProps, OwnProps>(
-  Form.create(),
-  injectIntl
-)(PasswordForm);
+export default compose<PasswordFormProps, OwnProps>(Form.create())(
+  PasswordForm
+);
