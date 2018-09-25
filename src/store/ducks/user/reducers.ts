@@ -17,6 +17,7 @@ function isLoading(state = false, action: UserActionType) {
     case getType(User.fetchUsers.success):
     case getType(User.addUser.success):
     case getType(User.removeUser.success):
+    case getType(User.changePassword.success):
     case getType(User.login.success):
     case getType(User.fetchUsers.failure):
     case getType(User.addUser.failure):
@@ -33,6 +34,7 @@ function hasError(state = null, action: UserActionType) {
     case getType(User.fetchUsers.failure):
     case getType(User.addUser.failure):
     case getType(User.removeUser.failure):
+    case getType(User.changePassword.failure):
     case getType(User.login.failure):
       return action.payload;
     case getType(User.clearUserError):
@@ -70,6 +72,7 @@ function auth(
         token: action.payload.token,
         user: action.payload.user
       };
+    case getType(User.changePassword.success):
     case getType(User.login.failure):
     case getType(User.logout):
       return {
