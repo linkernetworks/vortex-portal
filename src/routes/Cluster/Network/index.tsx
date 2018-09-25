@@ -18,6 +18,7 @@ import {
 } from '@/store/ducks/network';
 import * as UserModel from '@/models/User';
 import { Nodes } from '@/models/Node';
+import { getNetworkShellInfo } from '@/services/network';
 import NetworkFrom from '@/components/NetworkForm';
 import ItemActions from '@/components/ItemActions';
 import ModalTerminal from '@/components/ModalTerminal';
@@ -28,6 +29,7 @@ const TreeNode = Tree.TreeNode;
 
 interface NetworkState {
   isCreating: boolean;
+  execBridgeName: string;
   execSelectedNode: Array<string>;
   execIdentifier?: {
     namespace: string;
@@ -131,6 +133,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
 
   public readonly state: NetworkState = {
     isCreating: false,
+    execBridgeName: '',
     execSelectedNode: []
   };
 
@@ -167,18 +170,25 @@ class Network extends React.Component<NetworkProps, NetworkState> {
       return;
     }
 
-    // get exec params from API
-    console.log(bridgeName);
-    console.log(selectedKeys);
-
-    this.setState({
-      execSelectedNode: selectedKeys,
-      execIdentifier: {
-        namespace: 'vortex',
-        podName: 'network-controller-server-unix-8jsbv',
-        containerName: 'network-controller-server-unix'
-      }
-    });
+    getNetworkShellInfo(selectedKeys[0].replace('[node]-', ''))
+      .then(info => {
+        this.setState({
+          execBridgeName: bridgeName,
+          execSelectedNode: selectedKeys,
+          execIdentifier: info.data
+        });
+      })
+      .catch(() => {
+        const { formatMessage } = this.props.intl;
+        notification.error({
+          message: formatMessage({
+            id: 'action.failure'
+          }),
+          description: formatMessage({
+            id: 'network.hint.exec.failure'
+          })
+        });
+      });
   };
 
   protected handleRemoveNetwork = (id: string) => {
@@ -196,7 +206,11 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   };
 
   protected handleCloseExec = () => {
-    this.setState({ execIdentifier: undefined, execSelectedNode: [] });
+    this.setState({
+      execIdentifier: undefined,
+      execSelectedNode: [],
+      execBridgeName: ''
+    });
   };
 
   protected renderTags = (tags: Array<string | number>) => {
@@ -231,7 +245,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
 
   public render() {
     const { networks } = this.props;
-    const { execIdentifier, execSelectedNode } = this.state;
+    const { execIdentifier, execSelectedNode, execBridgeName } = this.state;
     const networkNames = networks.map(network => network.name);
     const execTitle =
       execSelectedNode.length > 0
@@ -269,7 +283,7 @@ class Network extends React.Component<NetworkProps, NetworkState> {
         </Card>
         <ModalTerminal
           title={execTitle}
-          welcomeMsg="Hello from [1;3;31mvortex.js[0m !"
+          welcomeMsg={`Start to configure Open vSwitch bridges ${execBridgeName}`}
           execIdentifier={execIdentifier}
           onCloseModal={this.handleCloseExec}
         />

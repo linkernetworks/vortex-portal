@@ -15,3 +15,13 @@ export const createNetwork = (
 export const deleteNetwork = (id: string): AxiosPromise<Query.Response> => {
   return axios.delete(`/v1/networks/${id}`);
 };
+
+export const getNetworkShellInfo = (
+  nodeName: string
+): AxiosPromise<{
+  namespace: string;
+  podName: string;
+  containerName: string;
+}> => {
+  return axios.get(`/v1/networks/${nodeName}/shell`);
+};

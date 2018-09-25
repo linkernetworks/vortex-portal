@@ -29,5 +29,6 @@ export default {
   'network.hint.create.failure': 'Failed to create network.',
   'network.hint.delete.success': 'Success to delete network.',
   'network.hint.delete.failure': 'Failed to delete network.',
+  'network.hint.exec.failure': 'Failed to access openvswitch on the node',
   'network.hint.exec': 'Click node to access openvswitch on specific node.'
 };
