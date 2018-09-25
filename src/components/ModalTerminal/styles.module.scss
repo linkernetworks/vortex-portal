@@ -1,14 +1,4 @@
-@import '../../../styles/variables';
-
-$tag-gutter: 8px;
-
-.tags {
-  margin-bottom: -$tag-gutter;
-}
-
-.tag {
-  margin-bottom: $tag-gutter;
-}
+@import '../../styles/variables';
 
 .terminal-modal {
   :global {
