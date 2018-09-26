@@ -13,6 +13,12 @@ export const addUser = createAsyncAction(
   'ADD_USER_FAILURE'
 )<void, User.User, Error>();
 
+export const changePassword = createAsyncAction(
+  'CHANGE_PASSWORD_REQUEST',
+  'CHANGE_PASSWORD_SUCCESS',
+  'CHANGE_PASSWORD_FAILURE'
+)<void, User.LoginCredential, Error>();
+
 export const removeUser = createAsyncAction(
   'REMOVE_USER_REQUEST',
   'REMOVE_USER_SUCCESS',

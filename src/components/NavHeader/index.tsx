@@ -26,15 +26,12 @@ class NavHeader extends React.Component<NavHeaderProps> {
 
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-        <Menu.Item disabled={true}>
-          <Icon type="info-circle-o" />
-          <span>{currentUser && currentUser.role}</span>
-          {/* <FormattedMessage id="nav.profile" /> */}
+        <Menu.Item key="profile">
+          <Link to="/profile">
+            <Icon type="setting" style={{ marginRight: '8px' }} />
+            <FormattedMessage id="nav.profile" />
+          </Link>
         </Menu.Item>
-        {/* <Menu.Item disabled={true}>
-          <Icon type="setting" />
-          <FormattedMessage id="nav.setting" />
-        </Menu.Item> */}
         <Menu.Divider />
         <Menu.Item key="logout">
           <Icon type="logout" />
