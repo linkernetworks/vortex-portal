@@ -50,8 +50,11 @@ class ExecTerminal extends React.PureComponent<ExecTerminalProps, object> {
 
     this.xterm = new Terminal();
     this.xterm.open(this.termRef.current!);
+
     this.xterm.element.style.padding = padding;
+    this.xterm.element.style.height = '100%';
     fit(this.xterm);
+
     this.xterm.on('key', this.handleTerminalInput(sendMessage));
 
     if (welcomeMsg) {
@@ -69,7 +72,7 @@ class ExecTerminal extends React.PureComponent<ExecTerminalProps, object> {
   }
 
   public render() {
-    return <div ref={this.termRef} />;
+    return <div style={{ width: '100%', height: '100%' }} ref={this.termRef} />;
   }
 }
 

@@ -27,7 +27,7 @@ class ModalTerminal extends React.PureComponent<ModalTerminalProps, object> {
         onCancel={onCloseModal}
         footer={null}
         width={960}
-        bodyStyle={{ padding: 0 }}
+        bodyStyle={{ padding: 0, height: '65vh' }}
         destroyOnClose={true}
       >
         {execIdentifier && (
