@@ -8,6 +8,7 @@ import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import { userOperations } from '@/store/ducks/user';
 import * as styles from './styles.module.scss';
 import PasswordForm from '@/components/PasswordForm';
+import user from '@/assets/user.svg';
 
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { FlattenUser, User } from '@/models/User';
@@ -32,7 +33,7 @@ class Profile extends React.PureComponent<UsersProps, UserState> {
     };
   }
 
-  public columns = [
+  private columns = [
     {
       dataIndex: 'key'
     },
@@ -40,7 +41,7 @@ class Profile extends React.PureComponent<UsersProps, UserState> {
       dataIndex: 'value'
     }
   ];
-  public data = [
+  private data = [
     {
       key: 'User Name',
       value: this.props.user.loginCredential.username
@@ -86,9 +87,7 @@ class Profile extends React.PureComponent<UsersProps, UserState> {
           actions={[<Icon key="edit" type="edit" onClick={this.showCreate} />]}
         >
           <Meta
-            avatar={
-              <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-            }
+            avatar={<Avatar src={user} />}
             title={this.props.user.displayName}
             description={
               <Table
@@ -97,7 +96,6 @@ class Profile extends React.PureComponent<UsersProps, UserState> {
                 dataSource={this.data}
                 pagination={false}
                 showHeader={false}
-                size={'middle'}
               />
             }
           />
