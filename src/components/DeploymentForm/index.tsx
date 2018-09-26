@@ -621,7 +621,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                   message: 'Please input your replicas'
                 }
               ]
-            })(<InputNumber min={0} placeholder="Replicas" />)}
+            })(<InputNumber min={1} placeholder="Replicas" />)}
           </FormItem>
         )}
         <FormItem
