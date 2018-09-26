@@ -21,10 +21,6 @@ interface OwnProps {
 }
 
 class PasswordForm extends React.PureComponent<PasswordFormProps, object> {
-  public state = {
-    confirmDirty: false
-  };
-
   protected handleSubmit = () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -48,11 +44,6 @@ class PasswordForm extends React.PureComponent<PasswordFormProps, object> {
     } else {
       callback();
     }
-  };
-
-  public handleConfirmBlur = (e: any) => {
-    const value = e.target.value;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   };
 
   public render() {
@@ -87,7 +78,7 @@ class PasswordForm extends React.PureComponent<PasswordFormProps, object> {
                   validator: this.compareToFirstPassword
                 }
               ]
-            })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
+            })(<Input type="password" />)}
           </FormItem>
         </Form>
       </Modal>
