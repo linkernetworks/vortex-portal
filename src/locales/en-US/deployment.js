@@ -16,6 +16,13 @@ export default {
   'deployment.replicas': 'Number of pods',
   'deployment.delete': 'Delete the Deployment',
   'deployment.undeletable': 'Can not delete this Deployment',
+
+  'deployment.filter.deploymentName': 'deployment name',
+  'deployment.filter.podName': 'pod name',
+  'deployment.filter.containerName': 'container name',
+  'deployment.filter.nodeName': 'node name',
+  'deployment.filter.namespaceName': 'namespace name',
+
   'deployment.hint.create.success': 'Success to create deployment.',
   'deployment.hint.create.failure': 'Failed to create deployment.',
   'deployment.hint.delete.success': 'Success to delete deployment.',

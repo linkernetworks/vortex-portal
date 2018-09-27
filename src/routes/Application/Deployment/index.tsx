@@ -9,13 +9,15 @@ import {
   Tag,
   notification,
   Popconfirm,
-  Card
+  Card,
+  Input,
+  Select
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
-import { find } from 'lodash';
+import { includes, find } from 'lodash';
 
 import * as UserModel from '@/models/User';
 import * as PodModel from '@/models/Pod';
@@ -28,12 +30,18 @@ import ItemActions from '@/components/ItemActions';
 
 import * as styles from './styles.module.scss';
 
+const InputGroup = Input.Group;
+const Search = Input.Search;
+const Option = Select.Option;
+
 interface DeploymentState {
   visiblePodDrawer: boolean;
   visibleDeploymentDrawer: boolean;
   visibleModal: boolean;
   currentPod: string;
   currentDeployment: string;
+  searchType: string;
+  searchText: string;
 }
 
 type DeploymentProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
@@ -115,7 +123,9 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
       visibleDeploymentDrawer: false,
       visibleModal: false,
       currentPod: '',
-      currentDeployment: ''
+      currentDeployment: '',
+      searchType: 'deployment',
+      searchText: ''
     };
   }
 
@@ -130,6 +140,14 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
   public componentWillUnmount() {
     clearInterval(this.intervalPodId);
   }
+
+  protected handleChangeSearchType = (type: string) => {
+    this.setState({ searchType: type, searchText: '' });
+  };
+
+  protected handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
+    this.setState({ searchText: e.currentTarget.value });
+  };
 
   protected showMorePod = (pod: string) => {
     this.setState({ visiblePodDrawer: true, currentPod: pod });
@@ -172,11 +190,31 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
   };
 
   public renderTable = () => {
+    const { searchType, searchText } = this.state;
+    const filterDeployments = this.props.allDeployments.filter(name => {
+      switch (searchType) {
+        default:
+        case 'deployment':
+          return includes(
+            this.props.deployments[name].controllerName,
+            searchText
+          );
+        case 'pod':
+          for (const pod of this.props.deployments[name].pods) {
+            if (includes(pod, searchText)) {
+              return true;
+            }
+          }
+          return false;
+        case 'namespace':
+          return includes(this.props.deployments[name].namespace, searchText);
+      }
+    });
     return (
       <Table
         className="main-table"
         columns={this.columns}
-        dataSource={this.getDeploymentInfo(this.props.allDeployments)}
+        dataSource={this.getDeploymentInfo(filterDeployments)}
       />
     );
   };
@@ -321,6 +359,40 @@ class Deployment extends React.Component<DeploymentProps, DeploymentState> {
             </Link>
           }
         >
+          <div className="table-controls">
+            <InputGroup compact={true}>
+              <Select
+                style={{ width: '15%' }}
+                defaultValue="deployment"
+                onChange={this.handleChangeSearchType}
+              >
+                <Option value="deployment">
+                  <FormattedMessage id="deployment.filter.deploymentName" />
+                </Option>
+                <Option value="pod">
+                  <FormattedMessage id="deployment.filter.podName" />
+                </Option>
+                <Option value="namespace">
+                  <FormattedMessage id="deployment.filter.namespaceName" />
+                </Option>
+              </Select>
+              <Search
+                style={{ width: '25%' }}
+                placeholder={this.props.intl.formatMessage(
+                  {
+                    id: 'form.placeholder.filter'
+                  },
+                  {
+                    field: this.props.intl.formatMessage({
+                      id: 'deployment'
+                    })
+                  }
+                )}
+                value={this.state.searchText}
+                onChange={this.handleSearch}
+              />
+            </InputGroup>
+          </div>
           {this.renderTable()}
           {deployments.hasOwnProperty(currentDeployment) && (
             <Drawer

@@ -30,8 +30,8 @@ const Panel = Collapse.Panel;
 const Step = Steps.Step;
 
 const formItemLayout = {
-  labelCol: { span: 3 },
-  wrapperCol: { span: 14 }
+  labelCol: { span: 4 },
+  wrapperCol: { span: 12 }
 };
 
 interface DeploymentFormProps extends FormComponentProps {
