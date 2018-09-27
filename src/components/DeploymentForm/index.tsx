@@ -686,14 +686,12 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                 placeholder="Give a mount path"
                 onBlur={this.addVolume}
               />
-              {filterVolumeOptions.length > 0 && (
-                <Button
-                  style={{ marginLeft: 12 }}
-                  shape="circle"
-                  icon="enter"
-                  onClick={this.addVolume}
-                />
-              )}
+              <Button
+                style={{ marginLeft: 12 }}
+                shape="circle"
+                icon="enter"
+                onClick={this.addVolume}
+              />
             </div>
           )}
         </FormItem>
