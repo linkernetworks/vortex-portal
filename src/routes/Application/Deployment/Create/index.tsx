@@ -5,7 +5,7 @@ import * as NamespaceModel from '@/models/Namespace';
 import { networkModels, networkOperations } from '@/store/ducks/network';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Card, notification } from 'antd';
+import { Card, Upload, Icon, notification } from 'antd';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
@@ -17,6 +17,9 @@ import { Volume as VolumeModel } from '@/models/Storage';
 import * as styles from './styles.module.scss';
 
 import DeploymentForm from '@/components/DeploymentForm';
+import { loadToken } from '@/utils/auth';
+
+const Dragger = Upload.Dragger;
 
 interface CreateDeploymentState {
   tabKey: string;
@@ -50,6 +53,10 @@ const tabList = [
   {
     key: 'addDeploymentWithNetwork',
     tab: <FormattedMessage id="deployment.addWithNetwork" />
+  },
+  {
+    key: 'addDeploymentByYAML',
+    tab: <FormattedMessage id="deployment.addByYAML" />
   }
 ];
 
@@ -69,6 +76,12 @@ class CreateDeployment extends React.Component<
     this.props.fetchNamespaces();
     this.props.fetchVolumes();
   }
+
+  protected handleUploadChange = (info: any) => {
+    if (info.file.status === 'done') {
+      this.props.push('/application/deployment');
+    }
+  };
 
   protected handleSubmit = (deployment: DeploymentModel.Deployment) => {
     this.props.addDeployment(deployment);
@@ -119,6 +132,29 @@ class CreateDeployment extends React.Component<
             onSubmit={this.handleSubmit}
           />
         );
+      case 'addDeploymentByYAML':
+        return (
+          <Dragger
+            name="file"
+            headers={{
+              Authorization: `Bearer ${loadToken()}`
+            }}
+            multiple={false}
+            showUploadList={false}
+            action="/v1/deployments/upload/yaml"
+            onChange={this.handleUploadChange}
+          >
+            <p className="ant-upload-drag-icon">
+              <Icon type="inbox" />
+            </p>
+            <p className="ant-upload-text">
+              Click or drag file to this area to upload
+            </p>
+            <p className="ant-upload-hint">
+              Support for a single or bulk upload.
+            </p>
+          </Dragger>
+        );
       default:
         return null;
     }
@@ -130,6 +166,7 @@ class CreateDeployment extends React.Component<
     return (
       <Card
         className={styles.card}
+        bodyStyle={{ height: '90%' }}
         tabList={tabList}
         activeTabKey={tabKey}
         onTabChange={key => {
@@ -148,8 +185,8 @@ const mapStateToProps = (state: RootState) => {
     allDeployments: state.cluster.allDeployments,
     containers: state.cluster.containers,
     allContainers: state.cluster.allContainers,
-    networks: state.network.networks,
     namespaces: state.cluster.namespaces,
+    networks: state.network.networks,
     volumes: state.volume.volumes
   };
 };
