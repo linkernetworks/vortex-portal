@@ -77,6 +77,12 @@ class CreateDeployment extends React.Component<
     this.props.fetchVolumes();
   }
 
+  protected handleUploadChange = (info: any) => {
+    if (info.file.status === 'done') {
+      this.props.push('/application/deployment');
+    }
+  };
+
   protected handleSubmit = (deployment: DeploymentModel.Deployment) => {
     this.props.addDeployment(deployment);
     this.props.push('/application/deployment');
@@ -134,7 +140,9 @@ class CreateDeployment extends React.Component<
               Authorization: `Bearer ${loadToken()}`
             }}
             multiple={false}
+            showUploadList={false}
             action="/v1/deployments/upload/yaml"
+            onChange={this.handleUploadChange}
           >
             <p className="ant-upload-drag-icon">
               <Icon type="inbox" />
