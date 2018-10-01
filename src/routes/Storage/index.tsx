@@ -354,8 +354,8 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
         owner: displayName,
         type: storage.type,
         storageClassName: storage.storageClassName,
-        ip: storage.id,
-        path: storage.ip
+        ip: storage.ip,
+        path: storage.path
       };
     });
   };
