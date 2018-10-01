@@ -125,3 +125,9 @@ export const removeDeployment = createAsyncAction(
   'REMOVE_DEPLOYMENT_SUCCESS',
   'REMOVE_DEPLOYMENT_FAILURE'
 )<void, { id: string }, Error>();
+
+export const autoscale = createAsyncAction(
+  'AUTOSCALE_REQUEST',
+  'AUTOSCALE_SUCCESS',
+  'AUTOSCALE_FAILURE'
+)<void, Deployment.Deployment, Error>();

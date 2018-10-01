@@ -28,6 +28,7 @@ import { userOperations } from '@/store/ducks/user';
 import ItemActions from '@/components/ItemActions';
 import DeploymentDetail from '@/components/DeploymentDetail';
 
+import AutoscaleForm from '@/components/AutoscaleForm';
 import * as styles from './styles.module.scss';
 
 const InputGroup = Input.Group;
@@ -37,6 +38,7 @@ const Option = Select.Option;
 interface DeploymentState {
   searchType: string;
   searchText: string;
+  autoscale: boolean;
 }
 
 type DeploymentProps = OwnProps &

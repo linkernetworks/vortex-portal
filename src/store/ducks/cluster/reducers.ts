@@ -69,6 +69,7 @@ export function clusterReducer(
     case getType(Cluster.addNamespace.request):
     case getType(Cluster.removeService.request):
     case getType(Cluster.removeNamespace.request):
+    case getType(Cluster.autoscale.request):
       return { ...state, isLoading: true };
     case getType(Cluster.fetchNodes.success):
       const nodes = action.payload;
@@ -300,6 +301,11 @@ export function clusterReducer(
         deploymentsFromMongo: state.deploymentsFromMongo.filter(
           record => record.id !== action.payload.id
         )
+      };
+    case getType(Cluster.autoscale.success):
+      return {
+        ...state,
+        isLoading: false
       };
     default:
       return state;

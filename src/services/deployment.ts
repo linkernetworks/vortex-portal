@@ -27,3 +27,10 @@ export const createDeployment = (
 export const deleteDeployment = (id: string): AxiosPromise<Query.Response> => {
   return axios.delete(`/v1/deployments/${id}`);
 };
+
+export const autoscale = (
+  data: Deployment.Autoscale,
+  enable: boolean
+): AxiosPromise<Deployment.Deployment> => {
+  return axios.put(`/v1/deployments/autoscale?enable=${enable}`, data);
+};

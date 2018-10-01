@@ -47,6 +47,15 @@ export interface DeploymentNetwork {
   routesIntf?: Array<DeploymentRouteIntf>;
 }
 
+export interface Autoscale {
+  namespace: string;
+  scaleTargetRefName: string;
+  resourceName: string;
+  minReplicas: number;
+  maxReplicas: number;
+  targetAverageUtilization: number;
+}
+
 export interface Controller {
   id?: string;
   ownerID?: string;
