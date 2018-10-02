@@ -4,6 +4,7 @@ import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { compose } from 'recompose';
 import { Form, Select, InputNumber, Button, Icon } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
+import { get } from 'lodash';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -16,6 +17,7 @@ const formItemLayout = {
 type AutoscaleFormProps = OwnProps & InjectedIntlProps & FormComponentProps;
 
 interface OwnProps {
+  info: DeploymentModel.AutoscalerInfo | undefined;
   enable: boolean;
   namespace: string;
   controllerName: string;
@@ -44,7 +46,7 @@ class AutoscaleForm extends React.PureComponent<AutoscaleFormProps, object> {
   };
 
   public render() {
-    const { enable } = this.props;
+    const { enable, info } = this.props;
     const { getFieldDecorator } = this.props.form;
 
     return (
@@ -54,6 +56,7 @@ class AutoscaleForm extends React.PureComponent<AutoscaleFormProps, object> {
           label={<FormattedMessage id="deployment.autoscale.resource" />}
         >
           {getFieldDecorator('resourceName', {
+            initialValue: get(info, 'resourceName'),
             rules: [
               {
                 required: enable
@@ -75,6 +78,7 @@ class AutoscaleForm extends React.PureComponent<AutoscaleFormProps, object> {
           label={<FormattedMessage id="deployment.autoscale.average" />}
         >
           {getFieldDecorator('targetAverageUtilization', {
+            initialValue: get(info, 'targetAverageUtilization'),
             rules: [
               {
                 required: enable
@@ -87,6 +91,7 @@ class AutoscaleForm extends React.PureComponent<AutoscaleFormProps, object> {
           label={<FormattedMessage id="deployment.autoscale.minReplicas" />}
         >
           {getFieldDecorator('minReplicas', {
+            initialValue: get(info, 'minReplicas'),
             rules: [
               {
                 required: enable
@@ -99,6 +104,7 @@ class AutoscaleForm extends React.PureComponent<AutoscaleFormProps, object> {
           label={<FormattedMessage id="deployment.autoscale.maxReplicas" />}
         >
           {getFieldDecorator('maxReplicas', {
+            initialValue: get(info, 'maxReplicas'),
             rules: [
               {
                 required: enable
