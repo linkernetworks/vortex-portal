@@ -10,10 +10,14 @@ import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import { FlattenUser, UserBrief, UserFields, User } from '@/models/User';
 import ItemActions from '@/components/ItemActions';
 import UserForm from '@/components/UserForm';
+import withCapitalize from '@/containers/withCapitalize';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { userOperations, userSelectors, userActions } from '@/store/ducks/user';
+import { toTitleCase } from '@/utils/string';
 
 type UsersProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
+
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 
 interface OwnProps extends ColumnProps<FlattenUser> {
   users: {
@@ -35,43 +39,53 @@ interface UserState {
 class Users extends React.PureComponent<UsersProps, UserState> {
   private columns: Array<ColumnProps<FlattenUser>> = [
     {
-      title: this.props.intl.formatMessage({ id: 'user.username' }),
+      title: toTitleCase(
+        this.props.intl.formatMessage({ id: 'user.username' })
+      ),
       dataIndex: 'username',
       key: 'username'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'user.displayName' }),
+      title: toTitleCase(
+        this.props.intl.formatMessage({ id: 'user.displayName' })
+      ),
       dataIndex: 'displayName',
       key: 'displayName'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'user.firstName' }),
+      title: toTitleCase(
+        this.props.intl.formatMessage({ id: 'user.firstName' })
+      ),
       dataIndex: 'firstName',
       key: 'firstName'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'user.lastName' }),
+      title: toTitleCase(
+        this.props.intl.formatMessage({ id: 'user.lastName' })
+      ),
       dataIndex: 'lastName',
       key: 'lastName'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'user.role' }),
+      title: toTitleCase(this.props.intl.formatMessage({ id: 'user.role' })),
       dataIndex: 'role',
       key: 'role'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'user.phoneNumber' }),
+      title: toTitleCase(
+        this.props.intl.formatMessage({ id: 'user.phoneNumber' })
+      ),
       dataIndex: 'phoneNumber',
       key: 'phoneNumber'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'createdAt' }),
+      title: toTitleCase(this.props.intl.formatMessage({ id: 'createdAt' })),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: text => moment(text).calendar()
     },
     {
-      title: this.props.intl.formatMessage({ id: 'action' }),
+      title: toTitleCase(this.props.intl.formatMessage({ id: 'action' })),
       render: (_, record) => {
         return (
           <ItemActions
@@ -123,10 +137,10 @@ class Users extends React.PureComponent<UsersProps, UserState> {
     return (
       <div>
         <Card
-          title={<FormattedMessage id="user" />}
+          title={<CapitalizedMessage id="user" />}
           extra={
             <Button onClick={this.handleFormToggle}>
-              <Icon type="plus" /> <FormattedMessage id="user.add" />
+              <Icon type="plus" /> <CapitalizedMessage id="user.add" />
             </Button>
           }
         >
