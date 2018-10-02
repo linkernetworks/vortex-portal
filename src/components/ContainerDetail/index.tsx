@@ -19,6 +19,7 @@ import {
 import * as containerAPI from '@/services/container';
 import * as ContainerModel from '@/models/Container';
 import StatusIcon from '@/components/StatusIcon';
+import ModalTerminal from '@/components/ModalTerminal';
 
 import * as styles from './styles.module.scss';
 
@@ -37,6 +38,11 @@ interface ContainerDetailState {
     now: ContainerModel.Resource | undefined;
     day: ContainerModel.Resource | undefined;
     week: ContainerModel.Resource | undefined;
+  };
+  execIdentifier?: {
+    namespace: string;
+    podName: string;
+    containerName: string;
   };
 }
 
@@ -103,6 +109,23 @@ class ContainerDetail extends React.PureComponent<
     } else {
       this.setState({ containerTimeUnit });
     }
+  };
+
+  protected handleOpenExec = () => {
+    const { container } = this.props;
+    this.setState({
+      execIdentifier: {
+        namespace: container.detail.namespace,
+        podName: container.detail.pod,
+        containerName: container.detail.containerName
+      }
+    });
+  };
+
+  protected handleCloseExec = () => {
+    this.setState({
+      execIdentifier: undefined
+    });
   };
 
   protected renderListItemContent = (
@@ -307,7 +330,7 @@ class ContainerDetail extends React.PureComponent<
           <h3>
             <FormattedMessage id="actions" />
           </h3>
-          <Button>
+          <Button onClick={this.handleOpenExec}>
             <FormattedMessage id="container.openTerminal" />
           </Button>
         </div>
@@ -318,6 +341,11 @@ class ContainerDetail extends React.PureComponent<
           </h3>
           {this.renderResource()}
         </div>
+        <ModalTerminal
+          title={container.detail.containerName}
+          execIdentifier={this.state.execIdentifier}
+          onCloseModal={this.handleCloseExec}
+        />
       </React.Fragment>
     );
   }
