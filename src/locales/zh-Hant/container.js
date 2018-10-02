@@ -10,4 +10,6 @@ export default {
 
   'container.resource.cpuUsagePercentage': 'CPU 使用百分比',
   'container.resource.memoryUsageMegabyte': '記憶體使用 MB',
+
+  'container.openTerminal': '打開終端機介面',
 }
