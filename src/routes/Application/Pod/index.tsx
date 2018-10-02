@@ -13,7 +13,6 @@ import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
 
-import PodDrawer from '@/components/PodDrawer';
 import ItemActions from '@/components/ItemActions';
 
 const InputGroup = Input.Group;
@@ -21,8 +20,6 @@ const Search = Input.Search;
 const Option = Select.Option;
 
 interface PodState {
-  visiblePodDrawer: boolean;
-  currentPod: string;
   networks: Array<NetworkModel.Network>;
   namespaces: Array<NamespaceModel.Namespace>;
   searchType: string;
@@ -69,8 +66,12 @@ class Pod extends React.Component<PodProps, PodState> {
         <ItemActions
           items={[
             {
-              type: 'more',
-              onConfirm: this.showMorePod.bind(this, record.name)
+              type: 'link',
+              link: {
+                to: {
+                  pathname: `/application/pod/${record.name}`
+                }
+              }
             }
           ]}
         />
@@ -80,8 +81,6 @@ class Pod extends React.Component<PodProps, PodState> {
   constructor(props: PodProps) {
     super(props);
     this.state = {
-      visiblePodDrawer: false,
-      currentPod: '',
       networks: [],
       namespaces: [],
       searchType: 'pod',
@@ -106,14 +105,6 @@ class Pod extends React.Component<PodProps, PodState> {
     this.setState({ searchText: e.currentTarget.value });
   };
 
-  protected showMorePod = (pod: string) => {
-    this.setState({ visiblePodDrawer: true, currentPod: pod });
-  };
-
-  protected hideMorePod = () => {
-    this.setState({ visiblePodDrawer: false });
-  };
-
   protected getPodInfo = (pods: Array<string>) => {
     return pods.map(pod => ({
       name: this.props.pods[pod].podName,
@@ -126,7 +117,7 @@ class Pod extends React.Component<PodProps, PodState> {
   };
 
   public render() {
-    const { currentPod, searchText } = this.state;
+    const { searchText } = this.state;
     const filterPods = this.props.allPods.filter(name => {
       switch (this.state.searchType) {
         default:
@@ -192,15 +183,6 @@ class Pod extends React.Component<PodProps, PodState> {
             columns={this.columns}
             dataSource={this.getPodInfo(filterPods)}
           />
-          {this.props.pods.hasOwnProperty(currentPod) && (
-            <PodDrawer
-              pod={this.props.pods[currentPod]}
-              podNics={this.props.podsNics[currentPod]}
-              visiblePodDrawer={this.state.visiblePodDrawer}
-              hideMorePod={this.hideMorePod}
-              removePodByName={this.props.removePodByName}
-            />
-          )}
         </Card>
       </div>
     );
