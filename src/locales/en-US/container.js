@@ -1,4 +1,5 @@
 export default {
+  'container.detail.name': 'name',
   'container.detail.image': 'image',
   'container.detail.command': 'command',
   'container.detail.newCommand': 'new command',

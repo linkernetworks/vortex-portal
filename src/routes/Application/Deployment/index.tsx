@@ -1,12 +1,21 @@
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { push } from 'react-router-redux';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import { connect } from 'react-redux';
-import { Button, Icon, Table, Drawer, Card } from 'antd';
+import {
+  Button,
+  Icon,
+  Table,
+  Drawer,
+  Card,
+  Input,
+  Select,
+  notification
+} from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { find } from 'lodash';
+import { includes, find } from 'lodash';
 import { Dispatch } from 'redux';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
@@ -21,8 +30,18 @@ import DeploymentDetail from '@/components/DeploymentDetail';
 
 import * as styles from './styles.module.scss';
 
+const InputGroup = Input.Group;
+const Search = Input.Search;
+const Option = Select.Option;
+
+interface DeploymentState {
+  searchType: string;
+  searchText: string;
+}
+
 type DeploymentProps = OwnProps &
   InjectedAuthRouterProps &
+  InjectedIntlProps &
   RouteComponentProps<{ name: string }>;
 
 interface OwnProps {
@@ -52,7 +71,7 @@ interface DeploymentInfo {
   createdAt: string;
 }
 
-class Deployment extends React.PureComponent<DeploymentProps, object> {
+class Deployment extends React.PureComponent<DeploymentProps, DeploymentState> {
   private intervalPodId: number;
   private columns: Array<ColumnProps<DeploymentInfo>> = [
     {
@@ -61,7 +80,7 @@ class Deployment extends React.PureComponent<DeploymentProps, object> {
       width: 300
     },
     {
-      title: <FormattedMessage id="deployment.owner" />,
+      title: <FormattedMessage id="owner" />,
       dataIndex: 'owner'
     },
     {
@@ -103,6 +122,11 @@ class Deployment extends React.PureComponent<DeploymentProps, object> {
     }
   ];
 
+  public state: DeploymentState = {
+    searchType: 'deployment',
+    searchText: ''
+  };
+
   public componentDidMount() {
     this.intervalPodId = window.setInterval(this.props.fetchPods, 5000);
     this.props.fetchPods();
@@ -115,12 +139,27 @@ class Deployment extends React.PureComponent<DeploymentProps, object> {
     clearInterval(this.intervalPodId);
   }
 
-  protected showMorePod = (pod: string) => {
-    this.setState({ visiblePodDrawer: true, currentPod: pod });
+  protected handleChangeSearchType = (type: string) => {
+    this.setState({ searchType: type, searchText: '' });
   };
 
-  protected hideMorePod = () => {
-    this.setState({ visiblePodDrawer: false });
+  protected handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
+    this.setState({ searchText: e.currentTarget.value });
+  };
+
+  protected handleRemoveDeployment = (id: string) => {
+    this.props.removeDeployment(id);
+    clearInterval(this.intervalPodId);
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'deployment.hint.delete.success'
+      })
+    });
   };
 
   protected getDeploymentInfo = (allDeployments: Array<string>) => {
@@ -144,6 +183,36 @@ class Deployment extends React.PureComponent<DeploymentProps, object> {
     });
   };
 
+  public renderTable = () => {
+    const { searchType, searchText } = this.state;
+    const filterDeployments = this.props.allDeployments.filter(name => {
+      switch (searchType) {
+        default:
+        case 'deployment':
+          return includes(
+            this.props.deployments[name].controllerName,
+            searchText
+          );
+        case 'pod':
+          for (const pod of this.props.deployments[name].pods) {
+            if (includes(pod, searchText)) {
+              return true;
+            }
+          }
+          return false;
+        case 'namespace':
+          return includes(this.props.deployments[name].namespace, searchText);
+      }
+    });
+    return (
+      <Table
+        className="main-table"
+        columns={this.columns}
+        dataSource={this.getDeploymentInfo(filterDeployments)}
+      />
+    );
+  };
+
   public render() {
     const { deployments, pods, match } = this.props;
     const currentDeployment = match.params.name;
@@ -161,12 +230,41 @@ class Deployment extends React.PureComponent<DeploymentProps, object> {
             </Link>
           }
         >
-          <Table
-            className="main-table"
-            rowKey="id"
-            columns={this.columns}
-            dataSource={this.getDeploymentInfo(this.props.allDeployments)}
-          />
+          <div className="table-controls">
+            <InputGroup compact={true}>
+              <Select
+                style={{ width: '15%' }}
+                defaultValue="deployment"
+                onChange={this.handleChangeSearchType}
+              >
+                <Option value="deployment">
+                  <FormattedMessage id="deployment.filter.deploymentName" />
+                </Option>
+                <Option value="pod">
+                  <FormattedMessage id="deployment.filter.podName" />
+                </Option>
+                <Option value="namespace">
+                  <FormattedMessage id="deployment.filter.namespaceName" />
+                </Option>
+              </Select>
+              <Search
+                style={{ width: '25%' }}
+                placeholder={this.props.intl.formatMessage(
+                  {
+                    id: 'form.placeholder.filter'
+                  },
+                  {
+                    field: this.props.intl.formatMessage({
+                      id: 'deployment'
+                    })
+                  }
+                )}
+                value={this.state.searchText}
+                onChange={this.handleSearch}
+              />
+            </InputGroup>
+          </div>
+          {this.renderTable()}
           <Drawer
             title={<FormattedMessage id="deployment" />}
             width={720}
@@ -178,7 +276,7 @@ class Deployment extends React.PureComponent<DeploymentProps, object> {
               <DeploymentDetail
                 deployment={deployments[currentDeployment]}
                 pods={pods}
-                removeDeployment={this.props.removeDeployment}
+                removeDeployment={this.handleRemoveDeployment}
               />
             )}
           </Drawer>
@@ -224,4 +322,4 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction> & RTDispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Deployment);
+)(injectIntl(Deployment));

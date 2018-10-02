@@ -25,4 +25,10 @@ export default {
   'network.hint.selectNode': 'Select a node',
   'network.hint.selectInterfaces': 'Select interfaces',
   'network.hint.VLANTags': 'Please enter a number between 0 ~ 4095.',
+  'network.hint.create.success': 'Success to create network.',
+  'network.hint.create.failure': 'Failed to create network.',
+  'network.hint.delete.success': 'Success to delete network.',
+  'network.hint.delete.failure': 'Failed to delete network.',
+  'network.hint.exec.failure': 'Failed to access openvswitch on the node',
+  'network.hint.exec': 'Click node to access openvswitch on specific node.'
 };

@@ -1,4 +1,5 @@
 export default {
+  'deployment.name': '名稱',
   'deployment.restartPolicy': '重啟政策',
   'deployment.labels': '標籤',
   'deployment.envVars': '環境變數',
@@ -13,4 +14,8 @@ export default {
   'deployment.volumes': 'Volumes',
   'deployment.delete': '刪除 Deployment',
   'deployment.undeletable': '不能刪除這個 Deployment',
+  'deployment.hint.create.success': '成功創建 deployment 。',
+  'deployment.hint.create.failure': '創建 deployment 失敗。',
+  'deployment.hint.delete.success': '成功刪除 deployment 。',
+  'deployment.hint.delete.failure': '刪除 deployment 失敗。'
 }

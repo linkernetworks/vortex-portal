@@ -30,8 +30,8 @@ const Panel = Collapse.Panel;
 const Step = Steps.Step;
 
 const formItemLayout = {
-  labelCol: { span: 3 },
-  wrapperCol: { span: 14 }
+  labelCol: { span: 4 },
+  wrapperCol: { span: 12 }
 };
 
 interface DeploymentFormProps extends FormComponentProps {
@@ -576,10 +576,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
     });
     return (
       <Form>
-        <FormItem
-          {...formItemLayout}
-          label={<FormattedMessage id="deployment.name" />}
-        >
+        <FormItem {...formItemLayout} label={<FormattedMessage id="name" />}>
           {getFieldDecorator('name', {
             rules: [
               {
@@ -624,7 +621,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                   message: 'Please input your replicas'
                 }
               ]
-            })(<InputNumber min={0} placeholder="Replicas" />)}
+            })(<InputNumber min={1} placeholder="Replicas" />)}
           </FormItem>
         )}
         <FormItem
@@ -689,14 +686,12 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                 placeholder="Give a mount path"
                 onBlur={this.addVolume}
               />
-              {filterVolumeOptions.length > 0 && (
-                <Button
-                  style={{ marginLeft: 12 }}
-                  shape="circle"
-                  icon="enter"
-                  onClick={this.addVolume}
-                />
-              )}
+              <Button
+                style={{ marginLeft: 12 }}
+                shape="circle"
+                icon="enter"
+                onClick={this.addVolume}
+              />
             </div>
           )}
         </FormItem>
@@ -1082,7 +1077,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                 <TabPane tab={'Container' + (index + 1)} key={container.key}>
                   <FormItem
                     {...formItemLayout}
-                    label={<FormattedMessage id="container.detail.name" />}
+                    label={<FormattedMessage id="name" />}
                   >
                     {getFieldDecorator(`container-${container.key}-name`, {
                       rules: [

@@ -1,4 +1,5 @@
 export default {
+  'deployment.name': 'name',
   'deployment.restartPolicy': 'restart policy',
   'deployment.labels': 'labels',
   'deployment.envVars': 'env vars',
@@ -11,6 +12,19 @@ export default {
   'deployment.addWithNetwork': 'Create Deployment with network',
   'deployment.replicas': 'number of pods',
   'deployment.volumes': 'volumes',
+  'deployment.addByYAML': 'Create Deployment by YAML File',
+  'deployment.replicas': 'Number of pods',
   'deployment.delete': 'Delete the Deployment',
   'deployment.undeletable': 'Can not delete this Deployment',
+
+  'deployment.filter.deploymentName': 'deployment name',
+  'deployment.filter.podName': 'pod name',
+  'deployment.filter.containerName': 'container name',
+  'deployment.filter.nodeName': 'node name',
+  'deployment.filter.namespaceName': 'namespace name',
+
+  'deployment.hint.create.success': 'Success to create deployment.',
+  'deployment.hint.create.failure': 'Failed to create deployment.',
+  'deployment.hint.delete.success': 'Success to delete deployment.',
+  'deployment.hint.delete.failure': 'Failed to delete deployment.'
 }

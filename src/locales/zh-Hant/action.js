@@ -8,6 +8,7 @@ export default {
   'action.confirm': '確認',
   'action.cancel': '取消',
   'action.create': '建立',
+  'action.success': '成功',
   'action.removeAll': '刪除全部',
   'action.next': '下一步',
   'action.previous': '上一步',

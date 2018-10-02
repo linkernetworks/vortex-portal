@@ -6,6 +6,7 @@ import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
 import { RootState } from '@/store/ducks';
 import MainLayout from '@/layouts/MainLayout';
 import UserLayout from '@/layouts/UserLayout';
+import UserProfile from '@/routes/Profile';
 import ClusterOverview from '@/routes/Cluster/Overview';
 import Node from '@/routes/Cluster/Node';
 import Network from '@/routes/Cluster/Network';
@@ -72,6 +73,11 @@ const appRoutes = (
     />
     <Redirect exact={true} from="/" to="/cluster/overview" />
     <Redirect exact={true} from="/cluster" to="/cluster/overview" />
+    <RouteWithLayout
+      layout={MainLayout}
+      component={userIsAuthenticated(UserProfile)}
+      path="/profile"
+    />
     <RouteWithLayout
       layout={MainLayout}
       component={userIsAuthenticated(ClusterOverview)}

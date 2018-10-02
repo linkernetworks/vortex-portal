@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Button, Tag, Icon, Tree, Card, Table } from 'antd';
+import { Button, Tag, Icon, Tree, Card, Table, notification } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { FormattedMessage } from 'react-intl';
 import { find } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
-import * as styles from './styles.module.scss';
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
 import { userOperations } from '@/store/ducks/user';
@@ -19,16 +18,27 @@ import {
 } from '@/store/ducks/network';
 import * as UserModel from '@/models/User';
 import { Nodes } from '@/models/Node';
+import { getNetworkShellInfo } from '@/services/network';
 import NetworkFrom from '@/components/NetworkForm';
 import ItemActions from '@/components/ItemActions';
+import ModalTerminal from '@/components/ModalTerminal';
+
+import * as styles from './styles.module.scss';
 
 const TreeNode = Tree.TreeNode;
 
 interface NetworkState {
   isCreating: boolean;
+  execBridgeName: string;
+  execSelectedNode: Array<string>;
+  execIdentifier?: {
+    namespace: string;
+    podName: string;
+    containerName: string;
+  };
 }
 
-type NetworkProps = OwnProps & InjectedAuthRouterProps;
+type NetworkProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
 
 interface OwnProps {
   nodes: Nodes;
@@ -67,16 +77,20 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     {
       title: <FormattedMessage id="node" />,
       render: (_, record) => (
-        <Tree showIcon={true} selectable={false}>
-          {record.nodes.map((node, idx) => (
+        <Tree
+          showIcon={true}
+          selectedKeys={this.state.execSelectedNode}
+          onSelect={this.handleOpenExec(record.bridgeName)}
+        >
+          {record.nodes.map(node => (
             <TreeNode
               title={node.name}
-              key={`${node.name}-${idx}`}
+              key={`[node]-${node.name}`}
               icon={<FontAwesomeIcon icon="server" />}
             >
               {node.physicalInterfaces.map(physicalInterface => (
                 <TreeNode
-                  key={`${node.name}-${idx}-${physicalInterface.name}-${
+                  key={`[interface]-${node.name}-${physicalInterface.name}-${
                     physicalInterface.pciID
                   }`}
                   icon={<FontAwesomeIcon icon="plug" />}
@@ -109,19 +123,19 @@ class Network extends React.Component<NetworkProps, NetworkState> {
           items={[
             {
               type: 'delete',
-              onConfirm: this.props.removeNetwork.bind(this, record.id)
+              onConfirm: this.handleRemoveNetwork.bind(this, record.id)
             }
           ]}
         />
       )
     }
   ];
-  constructor(props: NetworkProps) {
-    super(props);
-    this.state = {
-      isCreating: false
-    };
-  }
+
+  public readonly state: NetworkState = {
+    isCreating: false,
+    execBridgeName: '',
+    execSelectedNode: []
+  };
 
   public componentDidMount() {
     this.props.fetchNodes();
@@ -136,6 +150,66 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     this.props.addNetwork(data).then(() => {
       this.setState({ isCreating: false });
       successCB();
+    });
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'network.hint.create.success'
+      })
+    });
+  };
+
+  protected handleOpenExec = (bridgeName: string) => (
+    selectedKeys: Array<string>
+  ) => {
+    if (!/^(\[node\])/.test(selectedKeys[0])) {
+      return;
+    }
+
+    getNetworkShellInfo(selectedKeys[0].replace('[node]-', ''))
+      .then(info => {
+        this.setState({
+          execBridgeName: bridgeName,
+          execSelectedNode: selectedKeys,
+          execIdentifier: info.data
+        });
+      })
+      .catch(() => {
+        const { formatMessage } = this.props.intl;
+        notification.error({
+          message: formatMessage({
+            id: 'action.failure'
+          }),
+          description: formatMessage({
+            id: 'network.hint.exec.failure'
+          })
+        });
+      });
+  };
+
+  protected handleRemoveNetwork = (id: string) => {
+    this.props.removeNetwork(id);
+
+    const { formatMessage } = this.props.intl;
+    notification.success({
+      message: formatMessage({
+        id: 'action.success'
+      }),
+      description: formatMessage({
+        id: 'network.hint.delete.success'
+      })
+    });
+  };
+
+  protected handleCloseExec = () => {
+    this.setState({
+      execIdentifier: undefined,
+      execSelectedNode: [],
+      execBridgeName: ''
     });
   };
 
@@ -171,7 +245,13 @@ class Network extends React.Component<NetworkProps, NetworkState> {
 
   public render() {
     const { networks } = this.props;
+    const { execIdentifier, execSelectedNode, execBridgeName } = this.state;
     const networkNames = networks.map(network => network.name);
+    const execTitle =
+      execSelectedNode.length > 0
+        ? execSelectedNode[0].replace('[node]-', '')
+        : '';
+
     return (
       <div>
         <Card
@@ -182,8 +262,12 @@ class Network extends React.Component<NetworkProps, NetworkState> {
             </Button>
           }
         >
+          <p>
+            * <FormattedMessage id="network.hint.exec" />
+          </p>
           <Table
             className="main-table"
+            rowKey="id"
             columns={this.columns}
             dataSource={this.getNetworkInfo(this.props.networks)}
           />
@@ -197,6 +281,12 @@ class Network extends React.Component<NetworkProps, NetworkState> {
             nodesWithUsedInterfaces={this.props.nodesWithUsedInterfaces}
           />
         </Card>
+        <ModalTerminal
+          title={execTitle}
+          welcomeMsg={`Start to configure Open vSwitch bridges ${execBridgeName}`}
+          execIdentifier={execIdentifier}
+          onCloseModal={this.handleCloseExec}
+        />
       </div>
     );
   }
@@ -228,4 +318,4 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Network);
+)(injectIntl(Network));

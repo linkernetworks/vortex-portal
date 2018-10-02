@@ -45,6 +45,24 @@ export const removeUser = (id: string): RTAction<Promise<UserActionType>> => {
   };
 };
 
+export const changePassword = (
+  data: LoginCredential
+): RTAction<Promise<UserActionType>> => {
+  return async dispatch => {
+    dispatch(userActions.changePassword.request());
+    try {
+      const res = await userAPI.updatePassword(data);
+      if (!res.data.error) {
+        return dispatch(userActions.changePassword.success(data));
+      } else {
+        throw new Error(res.data.message);
+      }
+    } catch (e) {
+      return dispatch(userActions.changePassword.failure(e.response.data));
+    }
+  };
+};
+
 export const login = (
   data: LoginCredential
 ): RTAction<Promise<UserActionType>> => {

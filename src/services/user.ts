@@ -18,6 +18,12 @@ export const signin = (data: LoginCredential): AxiosPromise<Response> => {
   return axios.post('/v1/users/signin', data);
 };
 
+export const updatePassword = (
+  data: LoginCredential
+): AxiosPromise<Response> => {
+  return axios.put('/v1/users/password', data);
+};
+
 export const getUsers = (): AxiosPromise<Array<User>> => {
   return axios.get('/v1/users');
 };
