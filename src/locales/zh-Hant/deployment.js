@@ -14,6 +14,13 @@ export default {
   'deployment.volumes': 'Volumes',
   'deployment.delete': '刪除 Deployment',
   'deployment.undeletable': '不能刪除這個 Deployment',
+
+  'deployment.filter.deploymentName': 'deployment 名稱',
+  'deployment.filter.podName': 'pod 名稱',
+  'deployment.filter.containerName': '容器名稱',
+  'deployment.filter.nodeName': '節點名稱',
+  'deployment.filter.namespaceName': '命名空間名稱',
+
   'deployment.hint.create.success': '成功創建 deployment 。',
   'deployment.hint.create.failure': '創建 deployment 失敗。',
   'deployment.hint.delete.success': '成功刪除 deployment 。',

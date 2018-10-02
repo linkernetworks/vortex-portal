@@ -4,7 +4,7 @@ export default {
   'side.pod': 'Pod',
   'side.container': '容器',
   'side.network': '網路',
-  'side.application': 'Application',
+  'side.application': '應用程式',
   'side.namespace': '命名空間',
   'side.deployment': 'Deployment',
   'side.ovs': 'Open vSwitch',
