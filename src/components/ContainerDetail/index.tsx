@@ -20,6 +20,7 @@ import * as containerAPI from '@/services/container';
 import * as ContainerModel from '@/models/Container';
 import StatusIcon from '@/components/StatusIcon';
 import ModalTerminal from '@/components/ModalTerminal';
+import ModalContainerLogs from '@/components/ModalContainerLogs';
 
 import * as styles from './styles.module.scss';
 
@@ -40,6 +41,11 @@ interface ContainerDetailState {
     week: ContainerModel.Resource | undefined;
   };
   execIdentifier?: {
+    namespace: string;
+    podName: string;
+    containerName: string;
+  };
+  logsIdentifier?: {
     namespace: string;
     podName: string;
     containerName: string;
@@ -111,6 +117,17 @@ class ContainerDetail extends React.PureComponent<
     }
   };
 
+  protected handleOpenLogs = () => {
+    const { container } = this.props;
+    this.setState({
+      logsIdentifier: {
+        namespace: container.detail.namespace,
+        podName: container.detail.pod,
+        containerName: container.detail.containerName
+      }
+    });
+  };
+
   protected handleOpenExec = () => {
     const { container } = this.props;
     this.setState({
@@ -119,6 +136,12 @@ class ContainerDetail extends React.PureComponent<
         podName: container.detail.pod,
         containerName: container.detail.containerName
       }
+    });
+  };
+
+  protected handleCloseLogs = () => {
+    this.setState({
+      logsIdentifier: undefined
     });
   };
 
@@ -330,6 +353,9 @@ class ContainerDetail extends React.PureComponent<
           <h3>
             <FormattedMessage id="actions" />
           </h3>
+          <Button style={{ marginRight: '10px' }} onClick={this.handleOpenLogs}>
+            <FormattedMessage id="container.openLogs" />
+          </Button>
           <Button onClick={this.handleOpenExec}>
             <FormattedMessage id="container.openTerminal" />
           </Button>
@@ -341,6 +367,13 @@ class ContainerDetail extends React.PureComponent<
           </h3>
           {this.renderResource()}
         </div>
+
+        <ModalContainerLogs
+          title={container.detail.containerName}
+          logsIdentifier={this.state.logsIdentifier}
+          onCloseModal={this.handleCloseLogs}
+        />
+
         <ModalTerminal
           title={container.detail.containerName}
           execIdentifier={this.state.execIdentifier}
