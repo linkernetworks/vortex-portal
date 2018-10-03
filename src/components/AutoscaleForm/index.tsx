@@ -56,7 +56,7 @@ class AutoscaleForm extends React.PureComponent<AutoscaleFormProps, object> {
           label={<FormattedMessage id="deployment.autoscale.resource" />}
         >
           {getFieldDecorator('resourceName', {
-            initialValue: get(info, 'resourceName'),
+            initialValue: get(info, 'resourceName', undefined),
             rules: [
               {
                 required: enable
@@ -78,39 +78,39 @@ class AutoscaleForm extends React.PureComponent<AutoscaleFormProps, object> {
           label={<FormattedMessage id="deployment.autoscale.average" />}
         >
           {getFieldDecorator('targetAverageUtilization', {
-            initialValue: get(info, 'targetAverageUtilization'),
+            initialValue: get(info, 'targetAverageUtilization', 0),
             rules: [
               {
                 required: enable
               }
             ]
-          })(<InputNumber disabled={!enable} min={1} max={100} />)}
+          })(<InputNumber disabled={!enable} min={0} max={100} />)}
         </FormItem>
         <FormItem
           {...formItemLayout}
           label={<FormattedMessage id="deployment.autoscale.minReplicas" />}
         >
           {getFieldDecorator('minReplicas', {
-            initialValue: get(info, 'minReplicas'),
+            initialValue: get(info, 'minReplicas', 0),
             rules: [
               {
                 required: enable
               }
             ]
-          })(<InputNumber disabled={!enable} min={1} />)}
+          })(<InputNumber disabled={!enable} min={0} />)}
         </FormItem>
         <FormItem
           {...formItemLayout}
           label={<FormattedMessage id="deployment.autoscale.maxReplicas" />}
         >
           {getFieldDecorator('maxReplicas', {
-            initialValue: get(info, 'maxReplicas'),
+            initialValue: get(info, 'maxReplicas', 0),
             rules: [
               {
                 required: enable
               }
             ]
-          })(<InputNumber disabled={!enable} min={1} />)}
+          })(<InputNumber disabled={!enable} min={0} />)}
         </FormItem>
         <Button style={{ float: 'right' }} onClick={this.handleSubmit}>
           <Icon type="save" />
