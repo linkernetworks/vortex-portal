@@ -188,6 +188,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
           networkType,
           capability: values.capability,
           volumes,
+          configMaps: [],
           nodeAffinity: [],
           replicas
         };

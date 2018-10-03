@@ -8,6 +8,7 @@ export interface Deployment {
   containers: Array<DeploymentContainer>;
   networks: Array<DeploymentNetwork>;
   volumes: Array<DeploymentVolume>;
+  configMaps: Array<DeploymentConfigMap>;
   nodeAffinity: Array<string>;
   networkType: string;
   capability: boolean;
@@ -34,6 +35,11 @@ export interface DeploymentRouteGw {
 
 export interface DeploymentRouteIntf {
   dstCIDR: string;
+}
+
+export interface DeploymentConfigMap {
+  name: string;
+  mountPath: string;
 }
 
 export interface DeploymentVolume {
