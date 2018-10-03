@@ -30,7 +30,7 @@ class AutoscaleForm extends React.PureComponent<AutoscaleFormProps, object> {
   }
 
   protected handleSubmit = () => {
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields((err: any, values: any) => {
       if (!err) {
         const data = {
           namespace: this.props.namespace,

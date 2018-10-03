@@ -28,7 +28,6 @@ import { userOperations } from '@/store/ducks/user';
 import ItemActions from '@/components/ItemActions';
 import DeploymentDetail from '@/components/DeploymentDetail';
 
-import AutoscaleForm from '@/components/AutoscaleForm';
 import * as styles from './styles.module.scss';
 
 const InputGroup = Input.Group;
@@ -38,7 +37,6 @@ const Option = Select.Option;
 interface DeploymentState {
   searchType: string;
   searchText: string;
-  autoscale: boolean;
 }
 
 type DeploymentProps = OwnProps &
@@ -59,6 +57,7 @@ interface OwnProps {
   users: Array<UserModel.User>;
   fetchUsers: () => any;
   push: (path: string) => any;
+  autoscale: (data: DeploymentModel.Autoscale, enable: boolean) => any;
 }
 
 interface DeploymentInfo {
@@ -276,6 +275,7 @@ class Deployment extends React.PureComponent<DeploymentProps, DeploymentState> {
           >
             {deployments.hasOwnProperty(currentDeployment) && (
               <DeploymentDetail
+                autoscale={this.props.autoscale}
                 deployment={deployments[currentDeployment]}
                 pods={pods}
                 removeDeployment={this.handleRemoveDeployment}
@@ -322,7 +322,9 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction> & RTDispatch) => ({
   removeDeployment: (id: string) =>
     dispatch(clusterOperations.removeDeployment(id)),
   fetchUsers: () => dispatch(userOperations.fetchUsers()),
-  push: (path: string) => dispatch(push(path))
+  push: (path: string) => dispatch(push(path)),
+  autoscale: (data: DeploymentModel.Autoscale, enable: boolean) =>
+    dispatch(clusterOperations.autoscale(data, enable))
 });
 
 export default connect(
