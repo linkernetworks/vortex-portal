@@ -148,6 +148,10 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
           containers.push({
             name: values[`container-${container.key}-name`],
             image: values[`container-${container.key}-image`],
+            resourceRequestsCPU:
+              values[`container-${container.key}-requestsCPU`],
+            resourceRequestsMemory:
+              values[`container-${container.key}-requestsMemroy`],
             command: container.command
           });
         });
@@ -975,6 +979,42 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                           }
                         ]
                       })(<Input placeholder="Input a image name" />)}
+                    </FormItem>
+                    <FormItem
+                      {...formItemLayout}
+                      label={
+                        <FormattedMessage id="container.detail.requestsCPU" />
+                      }
+                    >
+                      {getFieldDecorator(
+                        `container-${container.key}-requestsCPU`,
+                        {
+                          initialValue: 0,
+                          rules: [
+                            {
+                              required: false
+                            }
+                          ]
+                        }
+                      )(<InputNumber />)}
+                    </FormItem>
+                    <FormItem
+                      {...formItemLayout}
+                      label={
+                        <FormattedMessage id="container.detail.requestsMemory" />
+                      }
+                    >
+                      {getFieldDecorator(
+                        `container-${container.key}-requestsMemory`,
+                        {
+                          initialValue: 0,
+                          rules: [
+                            {
+                              required: false
+                            }
+                          ]
+                        }
+                      )(<InputNumber />)}
                     </FormItem>
                     <FormItem
                       {...formItemLayout}

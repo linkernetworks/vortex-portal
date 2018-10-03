@@ -19,7 +19,7 @@ export default {
 
   'deployment.autoscale.enable': 'enable',
   'deployment.autoscale.resource': 'resource',
-  'deployment.autoscale.average': 'target utilization(%)',
+  'deployment.autoscale.average': 'target utilization',
   'deployment.autoscale.minReplicas': 'min replicas',
   'deployment.autoscale.maxReplicas': 'max replicas',
   'deployment.autoscale.save': 'Save',

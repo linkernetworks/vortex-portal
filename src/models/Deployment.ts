@@ -51,6 +51,8 @@ export interface DeploymentContainer {
   key?: string;
   name: string;
   image: string;
+  resourceRequestsCPU: number;
+  resourceRequestsMemory: number;
   command: Array<string>;
 }
 

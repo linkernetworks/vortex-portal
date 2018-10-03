@@ -84,7 +84,14 @@ class AutoscaleForm extends React.PureComponent<AutoscaleFormProps, object> {
                 required: enable
               }
             ]
-          })(<InputNumber disabled={!enable} min={0} max={100} />)}
+          })(
+            <InputNumber
+              min={0}
+              max={100}
+              disabled={!enable}
+              formatter={value => `${value} %`}
+            />
+          )}
         </FormItem>
         <FormItem
           {...formItemLayout}
