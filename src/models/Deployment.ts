@@ -12,6 +12,18 @@ export interface Deployment {
   networkType: string;
   capability: boolean;
   replicas: number;
+  isAutoscaler?: boolean;
+  autoscalerInfo?: AutoscalerInfo;
+}
+
+export interface AutoscalerInfo {
+  name: string;
+  namespace: string;
+  scaleTargetRefName: string;
+  resourceName: string;
+  minReplicas: number;
+  maxReplicas: number;
+  targetAverageUtilization: number;
 }
 
 export interface DeploymentRouteGw {
@@ -47,6 +59,15 @@ export interface DeploymentNetwork {
   routesIntf?: Array<DeploymentRouteIntf>;
 }
 
+export interface Autoscale {
+  namespace: string;
+  scaleTargetRefName: string;
+  resourceName: string;
+  minReplicas: number;
+  maxReplicas: number;
+  targetAverageUtilization: number;
+}
+
 export interface Controller {
   id?: string;
   ownerID?: string;
@@ -60,6 +81,8 @@ export interface Controller {
   availablePod: number;
   labels: any;
   pods: Array<string>;
+  isAutoscaler?: boolean;
+  autoscalerInfo?: AutoscalerInfo;
 }
 
 export interface Controllers {

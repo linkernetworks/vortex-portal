@@ -17,6 +17,13 @@ export default {
   'deployment.delete': 'Delete the Deployment',
   'deployment.undeletable': 'Can not delete this Deployment',
 
+  'deployment.autoscale.enable': 'enable',
+  'deployment.autoscale.resource': 'resource',
+  'deployment.autoscale.average': 'target utilization(%)',
+  'deployment.autoscale.minReplicas': 'min replicas',
+  'deployment.autoscale.maxReplicas': 'max replicas',
+  'deployment.autoscale.save': 'Save',
+
   'deployment.filter.deploymentName': 'deployment name',
   'deployment.filter.podName': 'pod name',
   'deployment.filter.containerName': 'container name',

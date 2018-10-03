@@ -300,3 +300,18 @@ export const fetchDeploymentsFromMongo = (): RTAction<
     }
   };
 };
+
+export const autoscale = (
+  data: DeploymentModel.Autoscale,
+  enable: boolean
+): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.autoscale.request);
+    try {
+      const res = await deploymentAPI.autoscale(data, enable);
+      return dispatch(clusterActions.autoscale.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.autoscale.failure(e));
+    }
+  };
+};

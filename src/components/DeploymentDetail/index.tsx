@@ -1,13 +1,23 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, Icon, Table, Tag, notification, Popconfirm } from 'antd';
+import {
+  Button,
+  Icon,
+  Table,
+  Tag,
+  notification,
+  Popconfirm,
+  Switch
+} from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
+import { get } from 'lodash';
 
 import * as PodModel from '@/models/Pod';
 import * as DeploymentModel from '@/models/Deployment';
 import StatusIcon from '@/components/StatusIcon';
 import ItemActions from '@/components/ItemActions';
+import AutoscaleForm from '@/components/AutoscaleForm';
 
 import * as styles from './styles.module.scss';
 
@@ -15,18 +25,34 @@ interface DeploymentDetailProps {
   deployment: DeploymentModel.Controller;
   pods: PodModel.Pods;
   removeDeployment: (id: string) => void;
+  autoscale: (data: DeploymentModel.Autoscale, enable: boolean) => any;
+}
+
+interface DeploymentDetailState {
+  autoscale: boolean;
 }
 
 class DeploymentDetail extends React.PureComponent<
   DeploymentDetailProps,
   object
 > {
+  public state: DeploymentDetailState = {
+    autoscale: !!get(this.props.deployment, 'isAutoscaler')
+  };
+
   protected handleRemoveDeployment = (id: string) => {
     this.props.removeDeployment(id);
     return notification.success({
       message: 'Success',
       description: 'Delete the deployment successfully.'
     });
+  };
+
+  protected handleSubmit = (
+    data: DeploymentModel.Autoscale,
+    enable: boolean
+  ) => {
+    this.props.autoscale(data, enable);
   };
 
   protected getPodInfo = (pods: Array<string>) => {
@@ -151,6 +177,26 @@ class DeploymentDetail extends React.PureComponent<
         </div>
         <div className={styles.drawerBottom}>
           {this.renderAction(deployment.id)}
+        </div>
+
+        <div className={styles.contentSection}>
+          <h3 style={{ display: 'inline', marginRight: '8px' }}>Autoscale</h3>
+          <Switch
+            checked={this.state.autoscale}
+            onChange={() =>
+              this.setState({
+                autoscale: !this.state.autoscale
+              })
+            }
+          />
+          <AutoscaleForm
+            key={this.state.autoscale + ''}
+            info={deployment.autoscalerInfo}
+            enable={this.state.autoscale}
+            namespace={deployment.namespace}
+            controllerName={deployment.controllerName}
+            onSubmit={this.handleSubmit}
+          />
         </div>
       </React.Fragment>
     );

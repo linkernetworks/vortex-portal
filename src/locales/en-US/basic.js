@@ -15,5 +15,5 @@ export default {
   'volume': 'volume',
   'overview': 'overview',
   'status': 'status',
-  'createdAt': 'created at',
+  'createdAt': 'created at'
 }

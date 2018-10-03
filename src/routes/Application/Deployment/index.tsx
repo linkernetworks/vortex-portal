@@ -57,6 +57,7 @@ interface OwnProps {
   users: Array<UserModel.User>;
   fetchUsers: () => any;
   push: (path: string) => any;
+  autoscale: (data: DeploymentModel.Autoscale, enable: boolean) => any;
 }
 
 interface DeploymentInfo {
@@ -274,6 +275,7 @@ class Deployment extends React.PureComponent<DeploymentProps, DeploymentState> {
           >
             {deployments.hasOwnProperty(currentDeployment) && (
               <DeploymentDetail
+                autoscale={this.props.autoscale}
                 deployment={deployments[currentDeployment]}
                 pods={pods}
                 removeDeployment={this.handleRemoveDeployment}
@@ -291,6 +293,10 @@ const mapStateToProps = (state: RootState) => {
     if (state.cluster.deployments[deployment.name] !== undefined) {
       state.cluster.deployments[deployment.name].id = deployment.id;
       state.cluster.deployments[deployment.name].ownerID = deployment.ownerID;
+      state.cluster.deployments[deployment.name].isAutoscaler =
+        deployment.isAutoscaler;
+      state.cluster.deployments[deployment.name].autoscalerInfo =
+        deployment.autoscalerInfo;
     }
   });
   return {
@@ -316,7 +322,9 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction> & RTDispatch) => ({
   removeDeployment: (id: string) =>
     dispatch(clusterOperations.removeDeployment(id)),
   fetchUsers: () => dispatch(userOperations.fetchUsers()),
-  push: (path: string) => dispatch(push(path))
+  push: (path: string) => dispatch(push(path)),
+  autoscale: (data: DeploymentModel.Autoscale, enable: boolean) =>
+    dispatch(clusterOperations.autoscale(data, enable))
 });
 
 export default connect(
