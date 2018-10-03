@@ -22,7 +22,7 @@ interface OwnProps {
 
 class PasswordForm extends React.PureComponent<PasswordFormProps, object> {
   protected handleSubmit = () => {
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields((err: any, values: any) => {
       if (!err) {
         this.props.onSubmit({
           username: this.props.username,

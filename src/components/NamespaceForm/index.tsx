@@ -49,7 +49,7 @@ class NamespaceForm extends React.PureComponent<NamespaceFormProps, object> {
   };
 
   protected handleSubmit = () => {
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields((err: any, values: any) => {
       if (!err) {
         this.props.onSubmit(values);
       }

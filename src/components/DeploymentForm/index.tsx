@@ -110,7 +110,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
   };
 
   protected handleSubmit = () => {
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields((err: any, values: any) => {
       if (!err) {
         let volumes = [];
         if (values.volumes) {

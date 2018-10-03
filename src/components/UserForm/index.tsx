@@ -63,7 +63,7 @@ class UserForm extends React.PureComponent<UserFormProps, UserFormState> {
   };
 
   protected handleOnSubmit = () => {
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields((err: any, values: any) => {
       if (!err) {
         this.props.onSubmit(values);
       }

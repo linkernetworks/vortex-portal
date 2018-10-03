@@ -18,7 +18,7 @@ interface OwnProps extends FormComponentProps {
 class SignIn extends React.PureComponent<SignInProps, object> {
   protected handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    this.props.form.validateFields((error, value: LoginCredential) => {
+    this.props.form.validateFields((error: any, value: LoginCredential) => {
       if (!error) {
         this.props.onSubmit(value);
       }

@@ -107,7 +107,7 @@ class ImageHub extends React.PureComponent<
 
   protected handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields((err: any, values: any) => {
       if (!err) {
         console.log('Received values of form: ', values);
       }

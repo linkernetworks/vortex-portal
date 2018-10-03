@@ -181,7 +181,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
   };
 
   protected handleSubmit = () => {
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields((err: any, values: any) => {
       if (!err) {
         const selector = {};
         if (values.selectors) {
