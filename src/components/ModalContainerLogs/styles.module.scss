@@ -1,0 +1,21 @@
+@import '../../styles/variables';
+
+.textarea {
+  border: none;
+  color: white;
+  height: 100% !important;
+  background-color: black;
+}
+
+.terminal-modal {
+  :global {
+    .ant-modal-header {
+      background: $menu-dark-bg;
+      border-bottom: $menu-dark-submenu-bg;
+    }
+
+    .ant-modal-title, .ant-modal-close {
+      color: $text-color-dark;
+    }
+  }
+}

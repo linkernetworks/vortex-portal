@@ -12,4 +12,5 @@ export default {
   'container.resource.memoryUsageMegabyte': 'memory usage MB',
 
   'container.openTerminal': 'Open temerinal',
+  'container.openLogs': 'Open logs',
 }

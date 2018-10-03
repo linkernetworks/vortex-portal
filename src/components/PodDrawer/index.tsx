@@ -21,6 +21,7 @@ import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import * as podAPI from '@/services/pod';
 import * as containerAPI from '@/services/container';
 import ExecTerminal from '@/components/ExecTerminal';
+import ContainerLogs from '@/components/ContainerLogs';
 
 import {
   LineChart,
@@ -743,13 +744,28 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
             {this.renderResource(currentContainer.resource)}
           </div>
 
-          {pod && (
-            <ExecTerminal
-              namespace={pod.namespace}
-              podName={pod.podName}
-              containerName={currentContainer.detail.containerName}
-            />
-          )}
+          <div className={styles.contentSection}>
+            <h3>Logs</h3>
+            {pod && (
+              <ContainerLogs
+                key={currentContainer.detail.containerName}
+                namespace={pod.namespace}
+                podName={pod.podName}
+                containerName={currentContainer.detail.containerName}
+              />
+            )}
+          </div>
+
+          <div className={styles.contentSection}>
+            <h3>Terminal</h3>
+            {pod && (
+              <ExecTerminal
+                namespace={pod.namespace}
+                podName={pod.podName}
+                containerName={currentContainer.detail.containerName}
+              />
+            )}
+          </div>
         </Drawer>
         <div className={styles.drawerBottom}>
           {!!pod && this.renderAction(pod)}
