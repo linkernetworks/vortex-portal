@@ -54,3 +54,11 @@ export const getContainerLogs = (
     }
   });
 };
+
+export const getContainerLogFile = (
+  namespace: string,
+  pod: string,
+  container: string
+): AxiosPromise<string> => {
+  return axios.get(`/v1/containers/logs/file/${namespace}/${pod}/${container}`);
+};

@@ -9,7 +9,8 @@
 
 .terminal-modal {
   :global {
-    .ant-modal-header {
+    .ant-modal-header, .ant-modal-footer {
+      border: none;
       background: $menu-dark-bg;
       border-bottom: $menu-dark-submenu-bg;
     }

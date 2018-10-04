@@ -14,6 +14,7 @@ export default {
   'action.previous': '上一步',
   'action.done': '完成',
   'action.copy': '複製',
+  'action.download': '下載',
   'action.copy.success': '成功複製 {field}',
   'action.confirmToDelete': '你確定要刪除這個?',
 }
