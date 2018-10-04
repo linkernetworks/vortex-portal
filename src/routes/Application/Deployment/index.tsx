@@ -293,8 +293,8 @@ const mapStateToProps = (state: RootState) => {
     if (state.cluster.deployments[deployment.name] !== undefined) {
       state.cluster.deployments[deployment.name].id = deployment.id;
       state.cluster.deployments[deployment.name].ownerID = deployment.ownerID;
-      state.cluster.deployments[deployment.name].isAutoscaler =
-        deployment.isAutoscaler;
+      state.cluster.deployments[deployment.name].isEnableAutoscale =
+        deployment.isEnableAutoscale;
       state.cluster.deployments[deployment.name].autoscalerInfo =
         deployment.autoscalerInfo;
     }

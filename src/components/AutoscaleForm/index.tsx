@@ -4,7 +4,7 @@ import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { compose } from 'recompose';
 import { Form, Select, InputNumber, Button, Icon } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
-import { get } from 'lodash';
+import { get, find } from 'lodash';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -48,7 +48,16 @@ class AutoscaleForm extends React.PureComponent<AutoscaleFormProps, object> {
   public render() {
     const { enable, info } = this.props;
     const { getFieldDecorator } = this.props.form;
-
+    const resourceList = [
+      {
+        name: 'CPU',
+        value: 'cpu'
+      },
+      {
+        name: 'Memory',
+        value: 'memory'
+      }
+    ];
     return (
       <Form>
         <FormItem
@@ -68,8 +77,22 @@ class AutoscaleForm extends React.PureComponent<AutoscaleFormProps, object> {
               style={{ width: 200 }}
               placeholder="Select a resource"
             >
-              <Option value="cpu">CPU</Option>
-              <Option value="memory">Memory</Option>
+              {get(
+                info,
+                'isCapableAutoscaleResources',
+                new Array<string>()
+              ).map(resource => {
+                const name = get(
+                  find(resourceList, { value: resource }),
+                  'name',
+                  ''
+                );
+                return (
+                  <Option key={resource} value={resource}>
+                    {name}
+                  </Option>
+                );
+              })}
             </Select>
           )}
         </FormItem>

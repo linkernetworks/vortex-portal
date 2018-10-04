@@ -148,10 +148,9 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
           containers.push({
             name: values[`container-${container.key}-name`],
             image: values[`container-${container.key}-image`],
-            resourceRequestsCPU:
-              values[`container-${container.key}-requestsCPU`],
-            resourceRequestsMemory:
-              values[`container-${container.key}-requestsMemroy`],
+            resourceRequestCPU: values[`container-${container.key}-requestCPU`],
+            resourceRequestMemory:
+              values[`container-${container.key}-requestMemroy`],
             command: container.command
           });
         });
@@ -983,11 +982,11 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                     <FormItem
                       {...formItemLayout}
                       label={
-                        <FormattedMessage id="container.detail.requestsCPU" />
+                        <FormattedMessage id="container.detail.requestCPU" />
                       }
                     >
                       {getFieldDecorator(
-                        `container-${container.key}-requestsCPU`,
+                        `container-${container.key}-requestCPU`,
                         {
                           initialValue: 0,
                           rules: [
@@ -1001,11 +1000,11 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                     <FormItem
                       {...formItemLayout}
                       label={
-                        <FormattedMessage id="container.detail.requestsMemory" />
+                        <FormattedMessage id="container.detail.requestMemory" />
                       }
                     >
                       {getFieldDecorator(
-                        `container-${container.key}-requestsMemory`,
+                        `container-${container.key}-requestMemory`,
                         {
                           initialValue: 0,
                           rules: [

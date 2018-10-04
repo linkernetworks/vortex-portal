@@ -28,8 +28,8 @@ export interface PodContainerRequest {
   key?: string;
   name: string;
   image: string;
-  resourceRequestsCPU: number;
-  resourceRequestsMemory: number;
+  resourceRequestCPU: number;
+  resourceRequestMemory: number;
   command: Array<string>;
 }
 

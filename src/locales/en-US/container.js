@@ -1,8 +1,8 @@
 export default {
   'container.detail.name': 'name',
   'container.detail.image': 'image',
-  'container.detail.requestsCPU': 'requests CPU',
-  'container.detail.requestsMemory': 'requests memory',
+  'container.detail.requestCPU': 'request CPU',
+  'container.detail.requestMemory': 'request memory',
   'container.detail.command': 'command',
   'container.detail.newCommand': 'new command',
 

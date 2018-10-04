@@ -13,7 +13,7 @@ export interface Deployment {
   networkType: string;
   capability: boolean;
   replicas: number;
-  isAutoscaler?: boolean;
+  isEnableAutoscale?: boolean;
   autoscalerInfo?: AutoscalerInfo;
 }
 
@@ -25,6 +25,7 @@ export interface AutoscalerInfo {
   minReplicas: number;
   maxReplicas: number;
   targetAverageUtilization: number;
+  isCapableAutoscaleResources: Array<string>;
 }
 
 export interface DeploymentRouteGw {
@@ -51,8 +52,8 @@ export interface DeploymentContainer {
   key?: string;
   name: string;
   image: string;
-  resourceRequestsCPU: number;
-  resourceRequestsMemory: number;
+  resourceRequestCPU: number;
+  resourceRequestMemory: number;
   command: Array<string>;
 }
 
@@ -89,7 +90,7 @@ export interface Controller {
   availablePod: number;
   labels: any;
   pods: Array<string>;
-  isAutoscaler?: boolean;
+  isEnableAutoscale?: boolean;
   autoscalerInfo?: AutoscalerInfo;
 }
 
