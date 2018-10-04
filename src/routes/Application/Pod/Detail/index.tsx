@@ -476,6 +476,7 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
               {this.renderInterface()}
             </React.Fragment>
           )}
+          <div className={styles.cardBottom}>{this.renderAction(pod!)}</div>
         </Card>
         <Drawer
           title={<FormattedMessage id="container" />}
