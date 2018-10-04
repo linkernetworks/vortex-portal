@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Input, Modal } from 'antd';
+import { FormattedMessage } from 'react-intl';
+import { Input, Modal, Button } from 'antd';
 import { last } from 'lodash';
 import * as styles from './styles.module.scss';
 import * as containerAPI from '@/services/container';
@@ -73,6 +74,20 @@ class ModalContainerLogs extends React.PureComponent<
     this.setState({ logs });
   };
 
+  protected fetchContainerLogFile = () => {
+    if (this.props.logsIdentifier !== undefined) {
+      const i = this.props.logsIdentifier;
+      containerAPI
+        .getContainerLogFile(i.namespace, i.podName, i.containerName)
+        .then(res => {
+          console.log(res.data);
+          window.location.href =
+            'data:application/octet-stream;charset=utf-8;base64,' +
+            btoa(res.data);
+        });
+    }
+  };
+
   public render() {
     const { logsIdentifier, title } = this.props;
     let content = '';
@@ -84,10 +99,19 @@ class ModalContainerLogs extends React.PureComponent<
     return (
       <Modal
         visible={!!logsIdentifier}
-        title={title}
+        title={'[Log] ' + title}
         className={styles['terminal-modal']}
         onCancel={this.handleClose}
-        footer={null}
+        footer={[
+          <Button
+            key="download"
+            onClick={() => {
+              this.fetchContainerLogFile();
+            }}
+          >
+            <FormattedMessage id="action.download" />
+          </Button>
+        ]}
         width={960}
         bodyStyle={{ padding: 0, height: '65vh', background: 'black' }}
         destroyOnClose={true}

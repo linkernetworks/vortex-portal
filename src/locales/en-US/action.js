@@ -14,6 +14,7 @@ export default {
   'action.previous': 'previous',
   'action.done': 'done',
   'action.copy': 'copy',
+  'action.download': 'download',
   'action.copy.success': 'Success to copy the {field}',
   'action.confirmToDelete': 'Are you sure delete this?',
 }
