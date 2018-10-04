@@ -99,7 +99,7 @@ class ModalContainerLogs extends React.PureComponent<
     return (
       <Modal
         visible={!!logsIdentifier}
-        title={title}
+        title={'[Log] ' + title}
         className={styles['terminal-modal']}
         onCancel={this.handleClose}
         footer={[

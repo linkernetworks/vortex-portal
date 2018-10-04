@@ -50,7 +50,7 @@ class ModalTerminal extends React.PureComponent<
     return (
       <Modal
         visible={!!execIdentifier}
-        title={title}
+        title={'[Terminal] ' + title}
         className={styles['terminal-modal']}
         onCancel={this.handleClose}
         footer={null}
