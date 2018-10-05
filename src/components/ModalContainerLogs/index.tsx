@@ -4,6 +4,7 @@ import { Input, Modal, Button } from 'antd';
 import { last } from 'lodash';
 import * as styles from './styles.module.scss';
 import * as containerAPI from '@/services/container';
+import * as fileSaver from 'file-saver';
 
 const InputTextArea = Input.TextArea;
 
@@ -80,10 +81,10 @@ class ModalContainerLogs extends React.PureComponent<
       containerAPI
         .getContainerLogFile(i.namespace, i.podName, i.containerName)
         .then(res => {
-          console.log(res.data);
-          window.location.href =
-            'data:application/octet-stream;charset=utf-8;base64,' +
-            btoa(res.data);
+          const blob = new Blob([res.data], {
+            type: 'text/plain;charset=utf-8'
+          });
+          fileSaver.saveAs(blob, i.containerName+'-log.txt');
         });
     }
   };
