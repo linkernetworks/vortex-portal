@@ -82,8 +82,6 @@ export function clusterReducer(
           // Remove virtual interface
           if (nics[name].type !== 'physical') {
             delete nics[name];
-          } else if (nics[name].dpdk === true) {
-            delete nics[name];
           } else {
             // Add nics data or creating nics data for chart to draw
             if (

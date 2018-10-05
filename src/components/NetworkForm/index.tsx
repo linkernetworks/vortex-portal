@@ -258,7 +258,6 @@ class NetworkForm extends React.PureComponent<
     const value = e.target.value;
     const { type, isDPDKPort, nodes } = this.state;
     const isDPDKChanged = isDPDKPort.value !== (value === 'dpdk');
-    console.log(isDPDKChanged);
 
     this.setState({
       type: {
