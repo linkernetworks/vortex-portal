@@ -406,7 +406,7 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
   };
 
   protected renderAction = (pod: PodModel.Pod | null) => {
-    if (pod !== null) {
+    if (pod !== null && pod !== undefined) {
       return (
         <Popconfirm
           key="action.delete"
