@@ -37,7 +37,7 @@ class DeploymentDetail extends React.PureComponent<
   object
 > {
   public state: DeploymentDetailState = {
-    autoscale: !!get(this.props.deployment, 'isAutoscaler')
+    autoscale: !!get(this.props.deployment, 'isEnableAutoscale')
   };
 
   protected handleRemoveDeployment = (id: string) => {
@@ -59,14 +59,27 @@ class DeploymentDetail extends React.PureComponent<
     if (Object.keys(this.props.pods).length === 0) {
       return [];
     }
-    return pods.map(pod => ({
-      name: this.props.pods[pod].podName,
-      namespace: this.props.pods[pod].namespace,
-      node: this.props.pods[pod].node,
-      status: this.props.pods[pod].status,
-      restarts: this.props.pods[pod].restartCount,
-      createdAt: moment(this.props.pods[pod].createAt * 1000).fromNow()
-    }));
+
+    return pods.map(pod => {
+      if (!this.props.pods[pod]) {
+        return {
+          name: '',
+          namespace: '',
+          node: '',
+          status: '',
+          restarts: 0,
+          createdAt: moment().fromNow()
+        };
+      }
+      return {
+        name: this.props.pods[pod].podName,
+        namespace: this.props.pods[pod].namespace,
+        node: this.props.pods[pod].node,
+        status: this.props.pods[pod].status,
+        restarts: this.props.pods[pod].restartCount,
+        createdAt: moment(this.props.pods[pod].createAt * 1000).fromNow()
+      };
+    });
   };
 
   protected renderLabels = (labels: Map<string, string>) => {

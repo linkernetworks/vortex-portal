@@ -133,6 +133,9 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
           containers.push({
             name: values[`container-${container.key}-name`],
             image: values[`container-${container.key}-image`],
+            resourceRequestCPU: values[`container-${container.key}-requestCPU`],
+            resourceRequestMemory:
+              values[`container-${container.key}-requestMemory`],
             command: container.command
           });
         });
@@ -1101,6 +1104,54 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                         }
                       ]
                     })(<Input placeholder="Input a image name" />)}
+                  </FormItem>
+                  <FormItem
+                    {...formItemLayout}
+                    label={
+                      <FormattedMessage id="container.detail.requestCPU" />
+                    }
+                  >
+                    {getFieldDecorator(
+                      `container-${container.key}-requestCPU`,
+                      {
+                        initialValue: 0,
+                        rules: [
+                          {
+                            required: false
+                          }
+                        ]
+                      }
+                    )(
+                      <InputNumber
+                        min={0}
+                        step={50}
+                        formatter={value => `${value} m`}
+                      />
+                    )}
+                  </FormItem>
+                  <FormItem
+                    {...formItemLayout}
+                    label={
+                      <FormattedMessage id="container.detail.requestMemory" />
+                    }
+                  >
+                    {getFieldDecorator(
+                      `container-${container.key}-requestMemory`,
+                      {
+                        initialValue: 0,
+                        rules: [
+                          {
+                            required: false
+                          }
+                        ]
+                      }
+                    )(
+                      <InputNumber
+                        min={0}
+                        step={64}
+                        formatter={value => `${value} Mi`}
+                      />
+                    )}
                   </FormItem>
                   <FormItem
                     {...formItemLayout}
