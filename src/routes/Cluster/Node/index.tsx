@@ -14,6 +14,7 @@ import {
   Legend
 } from 'recharts';
 import { Dispatch } from 'redux';
+import { pickBy } from 'lodash';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import * as NodeModel from '@/models/Node';
@@ -333,6 +334,12 @@ class Node extends React.Component<NodeProps, NodeState> {
 
   protected renderInterface = (node: string) => {
     let defaultKey = '';
+
+    this.props.nodes[node].nics = pickBy(
+      this.props.nodes[node].nics,
+      (_, key) => this.props.nodes[node].nics[key].dpdk !== true
+    );
+
     for (const name of Object.keys(this.props.nodes[node].nics)) {
       if (this.props.nodes[node].nics[name].default) {
         defaultKey = name;
