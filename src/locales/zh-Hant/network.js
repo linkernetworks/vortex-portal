@@ -28,5 +28,6 @@ export default {
   'network.hint.create.success': '成功創建網路。',
   'network.hint.create.failure': '創建網路失敗。',
   'network.hint.delete.success': '成功刪除網路。',
-  'network.hint.delete.failure': '刪除網路失敗。'
+  'network.hint.delete.failure': '刪除網路失敗。',
+  'network.hint.exec': '點擊節點以訪問特定節點上的 Open vSwitch'
 }

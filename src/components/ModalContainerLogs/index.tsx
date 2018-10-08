@@ -84,7 +84,7 @@ class ModalContainerLogs extends React.PureComponent<
           const blob = new Blob([res.data], {
             type: 'text/plain;charset=utf-8'
           });
-          fileSaver.saveAs(blob, i.containerName+'-log.txt');
+          fileSaver.saveAs(blob, i.containerName + '-log.txt');
         });
     }
   };
