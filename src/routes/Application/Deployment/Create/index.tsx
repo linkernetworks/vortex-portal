@@ -37,11 +37,13 @@ interface OwnProps {
   networks: Array<networkModels.Network>;
   namespaces: Array<NamespaceModel.Namespace>;
   volumes: Array<VolumeModel>;
+  allNodes: Array<string>;
   fetchDeployments: () => any;
   fetchNetworks: () => any;
   fetchNamespaces: () => any;
   fetchVolumes: () => any;
   addDeployment: (data: DeploymentModel.Deployment) => any;
+  fetchNodes: () => any;
   push: (route: string) => any;
 }
 
@@ -75,6 +77,7 @@ class CreateDeployment extends React.Component<
     this.props.fetchNetworks();
     this.props.fetchNamespaces();
     this.props.fetchVolumes();
+    this.props.fetchNodes();
   }
 
   protected handleUploadChange = (info: any) => {
@@ -114,6 +117,7 @@ class CreateDeployment extends React.Component<
             networks={this.props.networks}
             namespaces={this.props.namespaces}
             volumes={this.props.volumes}
+            allNodes={this.props.allNodes}
             onSubmit={this.handleSubmit}
           />
         );
@@ -129,6 +133,7 @@ class CreateDeployment extends React.Component<
             networks={this.props.networks}
             namespaces={this.props.namespaces}
             volumes={this.props.volumes}
+            allNodes={this.props.allNodes}
             onSubmit={this.handleSubmit}
           />
         );
@@ -187,6 +192,7 @@ const mapStateToProps = (state: RootState) => {
     allContainers: state.cluster.allContainers,
     namespaces: state.cluster.namespaces,
     networks: state.network.networks,
+    allNodes: state.cluster.allNodes,
     volumes: state.volume.volumes
   };
 };
@@ -196,6 +202,7 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchNetworks: () => dispatch(networkOperations.fetchNetworks()),
   fetchNamespaces: () => dispatch(clusterOperations.fetchNamespaces()),
   fetchVolumes: () => dispatch(volumeOperations.fetchVolumes()),
+  fetchNodes: () => dispatch(clusterOperations.fetchNodes()),
   addDeployment: (data: DeploymentModel.Deployment) => {
     dispatch(clusterOperations.addDeployment(data));
   },
