@@ -43,6 +43,7 @@ interface DeploymentFormProps extends FormComponentProps {
   networks: Array<NetworkModel.Network>;
   namespaces: Array<NamespaceModel.Namespace>;
   volumes: Array<VolumeModel>;
+  allNodes: Array<string>;
   onSubmit: (data: any) => void;
 }
 
@@ -142,11 +143,14 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         const networks: Array<PodModel.PodNetworkRequest> = [];
         let networkType = '';
         let replicas = 1;
+        let nodeAffinity = [];
         if (this.props.network) {
           networkType = 'custom';
+          nodeAffinity.push(values.nodeAffinity);
         } else {
           networkType = values.networkType;
           replicas = values.replicas;
+          nodeAffinity = values.nodeAffinity;
         }
         if (networkType === 'custom') {
           this.state.networks.map((network: PodModel.PodNetworkRequest) => {
@@ -190,9 +194,9 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
           networks,
           networkType,
           capability: values.capability,
+          nodeAffinity,
           volumes,
           configMaps: [],
-          nodeAffinity: [],
           replicas
         };
 
@@ -628,6 +632,32 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
             })(<InputNumber min={1} placeholder="Replicas" />)}
           </FormItem>
         )}
+        <FormItem
+          {...formItemLayout}
+          label={<FormattedMessage id="deployment.nodeAffinity" />}
+        >
+          {getFieldDecorator('nodeAffinity', {
+            rules: [
+              {
+                required: false
+              }
+            ]
+          })(
+            <Select
+              mode={!this.props.network ? 'multiple' : 'default'}
+              style={{ width: 200 }}
+              placeholder="Select a node affinity"
+            >
+              {this.props.allNodes.map(node => {
+                return (
+                  <Option key={node} value={node}>
+                    {node}
+                  </Option>
+                );
+              })}
+            </Select>
+          )}
+        </FormItem>
         <FormItem
           {...formItemLayout}
           label={<FormattedMessage id="deployment.volumes" />}
