@@ -9,7 +9,7 @@ import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import { find } from 'lodash';
 
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
-import { clusterOperations } from '@/store/ducks/cluster';
+import { clusterOperations, clusterActions } from '@/store/ducks/cluster';
 import { userOperations } from '@/store/ducks/user';
 import * as UserModel from '@/models/User';
 import * as NamespaceModel from '@/models/Namespace';
@@ -33,6 +33,8 @@ interface OwnProps {
   removeNamespace: (id: string) => any;
   users: Array<UserModel.User>;
   fetchUsers: () => any;
+  error: Error | null;
+  clearClusterError: () => any;
 }
 
 class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
@@ -87,32 +89,58 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
   };
 
   protected handleSubmit = (namespace: NamespaceModel.Namespace) => {
+    this.props.clearClusterError();
     this.props.addNamespace(namespace);
     this.setState({ visibleModal: false });
 
     const { formatMessage } = this.props.intl;
-    notification.success({
-      message: formatMessage({
-        id: 'action.success'
-      }),
-      description: formatMessage({
-        id: 'namespace.hint.create.success'
-      })
-    });
+
+    if (!this.props.error) {
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'namespace.hint.create.success'
+        })
+      });
+    } else {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description: formatMessage({
+          id: 'namespace.hint.create.failure'
+        })
+      });
+    }
   };
 
   protected handleRemoveNamespace = (id: string) => {
+    this.props.clearClusterError();
     this.props.removeNamespace(id);
 
     const { formatMessage } = this.props.intl;
-    notification.success({
-      message: formatMessage({
-        id: 'action.success'
-      }),
-      description: formatMessage({
-        id: 'namespace.hint.delete.success'
-      })
-    });
+
+    if (!this.props.error) {
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'namespace.hint.delete.success'
+        })
+      });
+    } else {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description: formatMessage({
+          id: 'namespace.hint.delete.failure'
+        })
+      });
+    }
   };
 
   // TODO: Selector
@@ -166,7 +194,8 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
 const mapStateToProps = (state: RootState) => {
   return {
     namespaces: state.cluster.namespaces,
-    users: state.user.users
+    users: state.user.users,
+    error: state.cluster.error
   };
 };
 
@@ -178,7 +207,8 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
   removeNamespace: (id: string) => {
     dispatch(clusterOperations.removeNamespace(id));
   },
-  fetchUsers: () => dispatch(userOperations.fetchUsers())
+  fetchUsers: () => dispatch(userOperations.fetchUsers()),
+  clearClusterError: () => dispatch(clusterActions.clearClusterError())
 });
 
 export default connect(

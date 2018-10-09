@@ -1,4 +1,4 @@
-import { createAsyncAction } from 'typesafe-actions';
+import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import * as Node from '@/models/Node';
 import * as Pod from '@/models/Pod';
 import * as Container from '@/models/Container';
@@ -131,3 +131,7 @@ export const autoscale = createAsyncAction(
   'AUTOSCALE_SUCCESS',
   'AUTOSCALE_FAILURE'
 )<void, Deployment.Deployment, Error>();
+
+export const clearClusterError = createStandardAction('CLEAR_CLUSTER_ERROR')<
+  void
+>();
