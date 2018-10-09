@@ -13,8 +13,8 @@ export default {
   'pod.restartPolicy': '重啟次數',
   'pod.capability': '以特權身份執行',
 
-  'pod.nicNetworkTraffic.TXRXMegabyteTotal': 'Receive/Transmit MB Total',
-  'pod.nicNetworkTraffic.TXRXPacketsTotal': 'Receive/Transmit Packets Total',
+  'pod.nicNetworkTraffic.TXRXMegabyteTotal': '總 收到/傳輸 MB',
+  'pod.nicNetworkTraffic.TXRXPacketsTotal': '總 收到/傳輸 封包數',
 
   'pod.filter.podName': 'pod 名稱',
   'pod.filter.containerName': '容器名稱',

@@ -1,5 +1,6 @@
 export default {
   'name': '名稱',
+  'details': '細節',
   'owner': '創建者',
   'node': '節點',
   'pod': 'pod',

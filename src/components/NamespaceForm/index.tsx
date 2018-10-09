@@ -11,9 +11,10 @@ import withRequiredRule, {
 import withUniqueRule, {
   InjectedProps as withUniqueRuleProps
 } from '@/containers/withUniqueRule';
+import withCapitalize from '@/containers/withCapitalize';
 
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 const FormItem = Form.Item;
-
 const formItemLayout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 14 }
@@ -73,12 +74,15 @@ class NamespaceForm extends React.PureComponent<NamespaceFormProps, object> {
     return (
       <Modal
         visible={this.props.visible}
-        title={<FormattedMessage id="namespace.add" />}
+        title={<CapitalizedMessage id="namespace.add" />}
         onOk={this.handleSubmit}
         onCancel={this.handleClose}
       >
         <Form>
-          <FormItem {...formItemLayout} label={<FormattedMessage id="name" />}>
+          <FormItem
+            {...formItemLayout}
+            label={<CapitalizedMessage id="name" />}
+          >
             {getFieldDecorator('name', {
               rules: [
                 requiredRule('name'),

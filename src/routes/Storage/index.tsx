@@ -27,8 +27,12 @@ import * as NamespaceModel from '@/models/Namespace';
 import * as namespaceAPI from '@/services/namespace';
 import * as UserModel from '@/models/User';
 import { FormField } from '@/utils/types';
+import { toTitleCase } from '@/utils/string';
+import withCapitalize from '@/containers/withCapitalize';
 
 type StorageProps = OwnProps & InjectedAuthRouterProps & InjectedIntlProps;
+
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 
 interface OwnProps {
   storages: {
@@ -65,17 +69,17 @@ interface StorageState {
 const tabList = [
   {
     key: 'storage',
-    tab: <FormattedMessage id="storage" />
+    tab: <CapitalizedMessage id="storage" />
   },
   {
     key: 'volume',
-    tab: <FormattedMessage id="volume" />
+    tab: <CapitalizedMessage id="volume" />
   }
 ];
 
 class Storage extends React.PureComponent<StorageProps, StorageState> {
   private actionColumn: ColumnProps<StorageModel | VolumeModel> = {
-    title: this.props.intl.formatMessage({ id: 'action' }),
+    title: toTitleCase(this.props.intl.formatMessage({ id: 'action' })),
     render: (_, record) => {
       return (
         <ItemActions
@@ -92,23 +96,25 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
 
   private storageColumns: Array<ColumnProps<StorageModel>> = [
     {
-      title: this.props.intl.formatMessage({ id: 'name' }),
+      title: toTitleCase(this.props.intl.formatMessage({ id: 'name' })),
       dataIndex: 'name',
       key: 'name',
       width: 200
     },
     {
-      title: this.props.intl.formatMessage({ id: 'owner' }),
+      title: toTitleCase(this.props.intl.formatMessage({ id: 'owner' })),
       dataIndex: 'owner',
       key: 'owner'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'storage.type' }),
+      title: toTitleCase(this.props.intl.formatMessage({ id: 'storage.type' })),
       dataIndex: 'type',
       key: 'type'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'storage.storageClassName' }),
+      title: toTitleCase(
+        this.props.intl.formatMessage({ id: 'storage.storageClassName' })
+      ),
       dataIndex: 'storageClassName',
       key: 'storageClassName'
     },
@@ -118,12 +124,12 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
       key: 'ip'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'storage.path' }),
+      title: toTitleCase(this.props.intl.formatMessage({ id: 'storage.path' })),
       dataIndex: 'path',
       key: 'path'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'createdAt' }),
+      title: toTitleCase(this.props.intl.formatMessage({ id: 'createdAt' })),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: text => moment(text).calendar()
@@ -133,28 +139,32 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
 
   private volumeColumns: Array<ColumnProps<VolumeModel>> = [
     {
-      title: this.props.intl.formatMessage({ id: 'name' }),
+      title: toTitleCase(this.props.intl.formatMessage({ id: 'name' })),
       dataIndex: 'name',
       key: 'name',
       width: 200
     },
     {
-      title: this.props.intl.formatMessage({ id: 'owner' }),
+      title: toTitleCase(this.props.intl.formatMessage({ id: 'owner' })),
       dataIndex: 'owner',
       key: 'owner'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'volume.storageName' }),
+      title: toTitleCase(
+        this.props.intl.formatMessage({ id: 'volume.storageName' })
+      ),
       dataIndex: 'storageName',
       key: 'storageName'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'volume.accessMode' }),
+      title: toTitleCase(
+        this.props.intl.formatMessage({ id: 'volume.accessMode' })
+      ),
       dataIndex: 'accessMode',
       key: 'accessMode'
     },
     {
-      title: this.props.intl.formatMessage({ id: 'createdAt' }),
+      title: toTitleCase(this.props.intl.formatMessage({ id: 'createdAt' })),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: text => moment(text).calendar()
@@ -223,24 +233,31 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
 
   protected handleItemDelete = (id: string) => {
     const { tabKey } = this.state;
+    const { formatMessage } = this.props.intl;
     switch (tabKey) {
       case 'storage':
         this.props.removeStorage(id);
+        notification.success({
+          message: formatMessage({
+            id: 'action.success'
+          }),
+          description: formatMessage({
+            id: 'storage.hint.delete.success'
+          })
+        });
         break;
       case 'volume':
         this.props.removeVolume(id);
+        notification.success({
+          message: formatMessage({
+            id: 'action.success'
+          }),
+          description: formatMessage({
+            id: 'volume.hint.delete.success'
+          })
+        });
         break;
     }
-
-    const { formatMessage } = this.props.intl;
-    notification.success({
-      message: formatMessage({
-        id: 'action.success'
-      }),
-      description: formatMessage({
-        id: 'Delete successfully.'
-      })
-    });
   };
 
   protected handleAddItem = () => {
@@ -290,6 +307,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
 
   protected handleStorageSubmit = () => {
     const { tabKey } = this.state;
+    const { formatMessage } = this.props.intl;
 
     switch (tabKey) {
       case 'storage':
@@ -304,9 +322,27 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
                 isCreatingStorage: false,
                 storageFields: this.storageFactory()
               });
+              notification.success({
+                message: formatMessage({
+                  id: 'action.success'
+                }),
+                description: formatMessage({
+                  id: 'storage.hint.create.success'
+                })
+              });
+            } else {
+              notification.error({
+                message: formatMessage({
+                  id: 'action.failure'
+                }),
+                description: formatMessage({
+                  id: 'storage.hint.create.failure'
+                })
+              });
             }
           });
         break;
+
       case 'volume':
         this.props.clearVolumeError();
         this.props
@@ -317,20 +353,27 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
                 isCreatingVolume: false,
                 volumeFields: this.volumeFactory()
               });
+              notification.success({
+                message: formatMessage({
+                  id: 'action.success'
+                }),
+                description: formatMessage({
+                  id: 'volume.hint.create.success'
+                })
+              });
+            } else {
+              notification.error({
+                message: formatMessage({
+                  id: 'action.failure'
+                }),
+                description: formatMessage({
+                  id: 'volume.hint.create.failure'
+                })
+              });
             }
           });
         break;
     }
-
-    const { formatMessage } = this.props.intl;
-    notification.success({
-      message: formatMessage({
-        id: 'action.success'
-      }),
-      description: formatMessage({
-        id: 'Create successfully.'
-      })
-    });
   };
 
   public renderTableHeader = () => {
@@ -458,7 +501,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
           onTabChange={key => {
             this.setState({ tabKey: key });
           }}
-          title={<FormattedMessage id="storage" />}
+          title={<CapitalizedMessage id="storage" />}
           extra={this.renderTableHeader()}
         >
           {this.renderTabContent()}

@@ -337,7 +337,7 @@ class ContainerDetail extends React.PureComponent<
 
         <div className={styles.contentSection}>
           <h3>
-            <FormattedMessage id="detail" />
+            <FormattedMessage id="details" />
           </h3>
           {this.renderContainerDetail(container.detail)}
         </div>

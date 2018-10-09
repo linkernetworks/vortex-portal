@@ -6,7 +6,10 @@ import { FormComponentProps } from 'antd/lib/form';
 
 import * as styles from './styles.module.scss';
 import { LoginCredential } from '@/models/User';
+import withCapitalize from '@/containers/withCapitalize';
+import { toTitleCase } from '@/utils/string';
 
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 const FormItem = Form.Item;
 
 type SignInProps = OwnProps & InjectedIntlProps;
@@ -32,7 +35,7 @@ class SignIn extends React.PureComponent<SignInProps, object> {
         <Form onSubmit={this.handleSubmit}>
           <div className={styles.header}>
             <h2>
-              <FormattedMessage id="auth.signin" />
+              <CapitalizedMessage id="auth.signin" />
             </h2>
             <p>
               <FormattedMessage id="auth.signin.subtitle" />
@@ -60,9 +63,11 @@ class SignIn extends React.PureComponent<SignInProps, object> {
             })(
               <Input
                 prefix={<Icon className={styles.icon} type="mail" />}
-                placeholder={this.props.intl.formatMessage({
-                  id: 'auth.username'
-                })}
+                placeholder={toTitleCase(
+                  this.props.intl.formatMessage({
+                    id: 'auth.username'
+                  })
+                )}
               />
             )}
           </FormItem>
@@ -85,9 +90,11 @@ class SignIn extends React.PureComponent<SignInProps, object> {
               <Input
                 type="password"
                 prefix={<Icon className={styles.icon} type="lock" />}
-                placeholder={this.props.intl.formatMessage({
-                  id: 'auth.password'
-                })}
+                placeholder={toTitleCase(
+                  this.props.intl.formatMessage({
+                    id: 'auth.password'
+                  })
+                )}
               />
             )}
           </FormItem>
@@ -98,7 +105,7 @@ class SignIn extends React.PureComponent<SignInProps, object> {
               className={styles['login-button']}
               htmlType="submit"
             >
-              <FormattedMessage id="auth.signin" />
+              <CapitalizedMessage id="auth.signin" />
             </Button>
           </FormItem>
         </Form>
@@ -107,7 +114,7 @@ class SignIn extends React.PureComponent<SignInProps, object> {
         </Divider>
         <Button size="large" className={styles['login-button']}>
           <Link to="/signup">
-            <FormattedMessage id="auth.signup" />
+            <CapitalizedMessage id="auth.signup" />
           </Link>
         </Button>
       </React.Fragment>

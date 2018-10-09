@@ -16,6 +16,9 @@ import * as NamespaceModel from '@/models/Namespace';
 
 import NamespaceForm from '@/components/NamespaceForm';
 import ItemActions from '@/components/ItemActions';
+import withCapitalize from '@/containers/withCapitalize';
+
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 
 interface NamespaceState {
   visibleModal: boolean;
@@ -35,20 +38,20 @@ interface OwnProps {
 class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
   private columns: Array<ColumnProps<NamespaceModel.Namespace>> = [
     {
-      title: <FormattedMessage id="name" />,
+      title: <CapitalizedMessage id="name" />,
       dataIndex: 'name',
       width: 300
     },
     {
-      title: <FormattedMessage id="owner" />,
+      title: <CapitalizedMessage id="owner" />,
       dataIndex: 'owner'
     },
     {
-      title: <FormattedMessage id="createdAt" />,
+      title: <CapitalizedMessage id="createdAt" />,
       render: (_, record) => moment(record.createdAt).calendar()
     },
     {
-      title: <FormattedMessage id="action" />,
+      title: <CapitalizedMessage id="action" />,
       key: 'action',
       render: (_, record) => (
         <ItemActions
@@ -135,10 +138,10 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
     return (
       <div>
         <Card
-          title={<FormattedMessage id="namespace" />}
+          title={<CapitalizedMessage id="namespace" />}
           extra={
             <Button onClick={this.showCreate}>
-              <Icon type="plus" /> <FormattedMessage id="namespace.add" />
+              <Icon type="plus" /> <CapitalizedMessage id="namespace.add" />
             </Button>
           }
         >

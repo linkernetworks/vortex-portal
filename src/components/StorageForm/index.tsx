@@ -6,7 +6,10 @@ import { FormComponentProps } from 'antd/lib/form';
 import { StorageFields } from '@/models/Storage';
 import { FormField } from '@/utils/types';
 import { validateIPv4 } from '@/utils/validate';
+import withCapitalize from '@/containers/withCapitalize';
+import { toTitleCase } from '@/utils/string';
 
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -53,7 +56,9 @@ class StorageForm extends React.PureComponent<
         title={<FormattedMessage id="storage.form.createNewStorage" />}
         visible={visiable}
         confirmLoading={isLoading}
-        okText={this.props.intl.formatMessage({ id: 'action.create' })}
+        okText={toTitleCase(
+          this.props.intl.formatMessage({ id: 'action.create' })
+        )}
         onCancel={this.handleClose}
         onOk={onSubmit}
       >
@@ -68,13 +73,13 @@ class StorageForm extends React.PureComponent<
           />
         )}
         <Form>
-          <FormItem label={<FormattedMessage id="name" />} required={true}>
+          <FormItem label={<CapitalizedMessage id="name" />} required={true}>
             {getFieldDecorator('name', {
               rules: [fieldRequiredRule('name')]
             })(<Input />)}
           </FormItem>
           <FormItem
-            label={<FormattedMessage id="storage.type" />}
+            label={<CapitalizedMessage id="storage.type" />}
             required={true}
           >
             {getFieldDecorator('type', {
@@ -86,7 +91,7 @@ class StorageForm extends React.PureComponent<
             )}
           </FormItem>
           <FormItem
-            label={<FormattedMessage id="storage.ip" />}
+            label={<CapitalizedMessage id="storage.ip" />}
             required={true}
             hasFeedback={true}
           >
@@ -107,7 +112,7 @@ class StorageForm extends React.PureComponent<
             })(<Input />)}
           </FormItem>
           <FormItem
-            label={<FormattedMessage id="storage.path" />}
+            label={<CapitalizedMessage id="storage.path" />}
             required={true}
             hasFeedback={true}
           >

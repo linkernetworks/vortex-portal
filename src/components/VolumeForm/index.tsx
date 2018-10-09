@@ -6,7 +6,10 @@ import { FormComponentProps } from 'antd/lib/form';
 import { VolumeFields, AccessMode } from '@/models/Storage';
 import * as NamespaceModel from '@/models/Namespace';
 import { FormField } from '@/utils/types';
+import withCapitalize from '@/containers/withCapitalize';
+import { toTitleCase } from '@/utils/string';
 
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -57,10 +60,12 @@ class VolumeForm extends React.PureComponent<
 
     return (
       <Modal
-        title={<FormattedMessage id="volume.form.createNewVolume" />}
+        title={<CapitalizedMessage id="volume.form.createNewVolume" />}
         visible={visiable}
         confirmLoading={isLoading}
-        okText={this.props.intl.formatMessage({ id: 'action.create' })}
+        okText={toTitleCase(
+          this.props.intl.formatMessage({ id: 'action.create' })
+        )}
         onCancel={this.handleClose}
         onOk={onSubmit}
       >
@@ -75,12 +80,12 @@ class VolumeForm extends React.PureComponent<
           />
         )}
         <Form>
-          <FormItem label={<FormattedMessage id="volume" />} required={true}>
+          <FormItem label={<CapitalizedMessage id="volume" />} required={true}>
             {getFieldDecorator('name', {
               rules: [fieldRequiredRule('name')]
             })(<Input />)}
           </FormItem>
-          <FormItem label={<FormattedMessage id="namespace" />}>
+          <FormItem label={<CapitalizedMessage id="namespace" />}>
             {getFieldDecorator('namespace', {
               rules: [
                 {
@@ -101,7 +106,7 @@ class VolumeForm extends React.PureComponent<
             )}
           </FormItem>
           <FormItem
-            label={<FormattedMessage id="volume.storageName" />}
+            label={<CapitalizedMessage id="volume.storageName" />}
             required={true}
           >
             {getFieldDecorator('storageName', {
@@ -117,7 +122,7 @@ class VolumeForm extends React.PureComponent<
             )}
           </FormItem>
           <FormItem
-            label={<FormattedMessage id="volume.accessMode" />}
+            label={<CapitalizedMessage id="volume.accessMode" />}
             required={true}
           >
             {getFieldDecorator('accessMode', {

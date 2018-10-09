@@ -22,7 +22,9 @@ import {
 } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import EditableTagGroup from '@/components/EditableTagGroup';
+import withCapitalize from '@/containers/withCapitalize';
 
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 const FormItem = Form.Item;
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
@@ -584,7 +586,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
     });
     return (
       <Form>
-        <FormItem {...formItemLayout} label={<FormattedMessage id="name" />}>
+        <FormItem {...formItemLayout} label={<CapitalizedMessage id="name" />}>
           {getFieldDecorator('name', {
             rules: [
               {
@@ -596,7 +598,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label={<FormattedMessage id="namespace" />}
+          label={<CapitalizedMessage id="namespace" />}
         >
           {getFieldDecorator('namespace', {
             rules: [
@@ -620,7 +622,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         {!this.props.network && (
           <FormItem
             {...formItemLayout}
-            label={<FormattedMessage id="deployment.replicas" />}
+            label={<CapitalizedMessage id="deployment.replicas" />}
           >
             {getFieldDecorator('replicas', {
               rules: [
@@ -634,7 +636,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         )}
         <FormItem
           {...formItemLayout}
-          label={<FormattedMessage id="deployment.nodeAffinity" />}
+          label={<CapitalizedMessage id="deployment.nodeAffinity" />}
         >
           {getFieldDecorator('nodeAffinity', {
             rules: [
@@ -660,7 +662,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label={<FormattedMessage id="deployment.volumes" />}
+          label={<CapitalizedMessage id="deployment.volumes" />}
         >
           {getFieldDecorator('volumes', {
             rules: [
@@ -731,7 +733,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label={<FormattedMessage id="deployment.labels" />}
+          label={<CapitalizedMessage id="deployment.labels" />}
         >
           {getFieldDecorator('labels', {
             rules: [
@@ -790,7 +792,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label={<FormattedMessage id="deployment.envVars" />}
+          label={<CapitalizedMessage id="deployment.envVars" />}
         >
           {getFieldDecorator('envVars', {
             rules: [
@@ -849,7 +851,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         </FormItem>
         <FormItem
           {...formItemLayout}
-          label={<FormattedMessage id="deployment.capability" />}
+          label={<CapitalizedMessage id="deployment.capability" />}
         >
           {getFieldDecorator('capability', {
             rules: [
@@ -879,7 +881,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         {!this.props.network && (
           <FormItem
             {...formItemLayout}
-            label={<FormattedMessage id="network.selectType" />}
+            label={<CapitalizedMessage id="network.selectType" />}
           >
             {getFieldDecorator('networkType', {
               rules: [
@@ -917,7 +919,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                   <TabPane tab={'Network' + (index + 1)} key={network.key}>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="name" />}
+                      label={<CapitalizedMessage id="name" />}
                     >
                       {getFieldDecorator(`network-${network.key}-name`, {
                         rules: [
@@ -943,7 +945,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                     </FormItem>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="network.interfaceName" />}
+                      label={<CapitalizedMessage id="network.interfaceName" />}
                     >
                       {getFieldDecorator(`network-${network.key}-ifName`, {
                         rules: [
@@ -956,7 +958,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                     </FormItem>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="network.ipAddress" />}
+                      label={<CapitalizedMessage id="network.ipAddress" />}
                     >
                       {getFieldDecorator(`network-${network.key}-ipAddress`, {
                         rules: [
@@ -970,7 +972,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                     </FormItem>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="network.netmask" />}
+                      label={<CapitalizedMessage id="network.netmask" />}
                     >
                       {getFieldDecorator(`network-${network.key}-netmask`, {
                         rules: [
@@ -984,7 +986,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                     </FormItem>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="network.VLANTags" />}
+                      label={<CapitalizedMessage id="network.VLANTags" />}
                     >
                       {getFieldDecorator(`network-${network.key}-vlan`, {
                         rules: [
@@ -1034,7 +1036,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                                   <FormItem
                                     {...formItemLayout}
                                     label={
-                                      <FormattedMessage id="network.dstCIDR" />
+                                      <CapitalizedMessage id="network.dstCIDR" />
                                     }
                                   >
                                     {getFieldDecorator(
@@ -1055,7 +1057,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                                   <FormItem
                                     {...formItemLayout}
                                     label={
-                                      <FormattedMessage id="network.gateway" />
+                                      <CapitalizedMessage id="network.gateway" />
                                     }
                                   >
                                     {getFieldDecorator(
@@ -1111,7 +1113,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                 <TabPane tab={'Container' + (index + 1)} key={container.key}>
                   <FormItem
                     {...formItemLayout}
-                    label={<FormattedMessage id="name" />}
+                    label={<CapitalizedMessage id="name" />}
                   >
                     {getFieldDecorator(`container-${container.key}-name`, {
                       rules: [
@@ -1124,7 +1126,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                   </FormItem>
                   <FormItem
                     {...formItemLayout}
-                    label={<FormattedMessage id="container.detail.image" />}
+                    label={<CapitalizedMessage id="container.detail.image" />}
                   >
                     {getFieldDecorator(`container-${container.key}-image`, {
                       rules: [
@@ -1138,7 +1140,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                   <FormItem
                     {...formItemLayout}
                     label={
-                      <FormattedMessage id="container.detail.requestCPU" />
+                      <CapitalizedMessage id="container.detail.requestCPU" />
                     }
                   >
                     {getFieldDecorator(
@@ -1162,7 +1164,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                   <FormItem
                     {...formItemLayout}
                     label={
-                      <FormattedMessage id="container.detail.requestMemory" />
+                      <CapitalizedMessage id="container.detail.requestMemory" />
                     }
                   >
                     {getFieldDecorator(
@@ -1185,7 +1187,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                   </FormItem>
                   <FormItem
                     {...formItemLayout}
-                    label={<FormattedMessage id="container.detail.command" />}
+                    label={<CapitalizedMessage id="container.detail.command" />}
                   >
                     {getFieldDecorator(`container-${container.key}-command`, {
                       rules: [
@@ -1200,7 +1202,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                         onChange={this.handleCommandChange.bind(this, index)}
                         validator={this.checkCommand}
                         addMessage={
-                          <FormattedMessage id="container.detail.newCommand" />
+                          <CapitalizedMessage id="container.detail.newCommand" />
                         }
                       />
                     )}

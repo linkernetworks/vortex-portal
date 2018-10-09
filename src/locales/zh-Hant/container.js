@@ -12,4 +12,5 @@ export default {
   'container.resource.memoryUsageMegabyte': '記憶體使用 MB',
 
   'container.openTerminal': '打開終端機介面',
+  'container.openLogs': '打開 container 紀錄'
 }

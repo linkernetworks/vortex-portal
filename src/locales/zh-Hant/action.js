@@ -9,6 +9,7 @@ export default {
   'action.cancel': '取消',
   'action.create': '建立',
   'action.success': '成功',
+  'action.failure': '失敗',
   'action.removeAll': '刪除全部',
   'action.next': '下一步',
   'action.previous': '上一步',

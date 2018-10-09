@@ -24,7 +24,9 @@ import ItemActions from '@/components/ItemActions';
 import ModalTerminal from '@/components/ModalTerminal';
 
 import * as styles from './styles.module.scss';
+import withCapitalize from '@/containers/withCapitalize';
 
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 const TreeNode = Tree.TreeNode;
 
 interface NetworkState {
@@ -59,23 +61,23 @@ interface OwnProps {
 class Network extends React.Component<NetworkProps, NetworkState> {
   private columns: Array<ColumnProps<networkModels.Network>> = [
     {
-      title: <FormattedMessage id="name" />,
+      title: <CapitalizedMessage id="name" />,
       dataIndex: 'name'
     },
     {
-      title: <FormattedMessage id="owner" />,
+      title: <CapitalizedMessage id="owner" />,
       dataIndex: 'owner'
     },
     {
-      title: <FormattedMessage id="network.type" />,
+      title: <CapitalizedMessage id="network.type" />,
       dataIndex: 'type'
     },
     {
-      title: <FormattedMessage id="network.bridgeName" />,
+      title: <CapitalizedMessage id="network.bridgeName" />,
       dataIndex: 'bridgeName'
     },
     {
-      title: <FormattedMessage id="node" />,
+      title: <CapitalizedMessage id="node" />,
       render: (_, record) => (
         <Tree
           showIcon={true}
@@ -103,20 +105,20 @@ class Network extends React.Component<NetworkProps, NetworkState> {
       )
     },
     {
-      title: <FormattedMessage id={`network.VLANTags`} />,
+      title: <CapitalizedMessage id={`network.VLANTags`} />,
       render: (_, record) =>
         record.vlanTags.length === 0 ? (
-          <FormattedMessage id="network.noTrunk" />
+          <CapitalizedMessage id="network.noTrunk" />
         ) : (
           this.renderTags(record.vlanTags)
         )
     },
     {
-      title: <FormattedMessage id="createdAt" />,
+      title: <CapitalizedMessage id="createdAt" />,
       render: (_, record) => moment(record.createdAt).calendar()
     },
     {
-      title: <FormattedMessage id="action" />,
+      title: <CapitalizedMessage id="action" />,
       key: 'action',
       render: (_, record) => (
         <ItemActions
@@ -255,15 +257,15 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     return (
       <div>
         <Card
-          title={<FormattedMessage id="network" />}
+          title={<CapitalizedMessage id="network" />}
           extra={
             <Button onClick={() => this.setState({ isCreating: true })}>
-              <Icon type="plus" /> <FormattedMessage id="network.add" />
+              <Icon type="plus" /> <CapitalizedMessage id="network.add" />
             </Button>
           }
         >
           <p>
-            * <FormattedMessage id="network.hint.exec" />
+            * <CapitalizedMessage id="network.hint.exec" />
           </p>
           <Table
             className="main-table"

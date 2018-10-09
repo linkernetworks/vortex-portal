@@ -29,7 +29,9 @@ import ItemActions from '@/components/ItemActions';
 import DeploymentDetail from '@/components/DeploymentDetail';
 
 import * as styles from './styles.module.scss';
+import withCapitalize from '@/containers/withCapitalize';
 
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 const InputGroup = Input.Group;
 const Search = Input.Search;
 const Option = Select.Option;
@@ -76,36 +78,36 @@ class Deployment extends React.PureComponent<DeploymentProps, DeploymentState> {
   private intervalPodId: number;
   private columns: Array<ColumnProps<DeploymentInfo>> = [
     {
-      title: <FormattedMessage id="name" />,
+      title: <CapitalizedMessage id="name" />,
       dataIndex: 'name',
       width: 300
     },
     {
-      title: <FormattedMessage id="owner" />,
+      title: <CapitalizedMessage id="owner" />,
       dataIndex: 'owner'
     },
     {
-      title: <FormattedMessage id="namespace" />,
+      title: <CapitalizedMessage id="namespace" />,
       dataIndex: 'namespace'
     },
     {
-      title: <FormattedMessage id="deployment.desiredPod" />,
+      title: <CapitalizedMessage id="deployment.desiredPod" />,
       dataIndex: 'desiredPod'
     },
     {
-      title: <FormattedMessage id="deployment.currentPod" />,
+      title: <CapitalizedMessage id="deployment.currentPod" />,
       dataIndex: 'currentPod'
     },
     {
-      title: <FormattedMessage id="deployment.availablePod" />,
+      title: <CapitalizedMessage id="deployment.availablePod" />,
       dataIndex: 'availablePod'
     },
     {
-      title: <FormattedMessage id="createdAt" />,
+      title: <CapitalizedMessage id="createdAt" />,
       dataIndex: 'createdAt'
     },
     {
-      title: <FormattedMessage id="action" />,
+      title: <CapitalizedMessage id="action" />,
       render: (_, record) => (
         <ItemActions
           items={[
@@ -222,11 +224,11 @@ class Deployment extends React.PureComponent<DeploymentProps, DeploymentState> {
     return (
       <div>
         <Card
-          title={<FormattedMessage id="deployment" />}
+          title={<CapitalizedMessage id="deployment" />}
           extra={
             <Link className={styles.action} to="/application/deployment/create">
               <Button>
-                <Icon type="plus" /> <FormattedMessage id="deployment.add" />
+                <Icon type="plus" /> <CapitalizedMessage id="deployment.add" />
               </Button>
             </Link>
           }
@@ -239,13 +241,13 @@ class Deployment extends React.PureComponent<DeploymentProps, DeploymentState> {
                 onChange={this.handleChangeSearchType}
               >
                 <Option value="deployment">
-                  <FormattedMessage id="deployment.filter.deploymentName" />
+                  <CapitalizedMessage id="deployment.filter.deploymentName" />
                 </Option>
                 <Option value="pod">
-                  <FormattedMessage id="deployment.filter.podName" />
+                  <CapitalizedMessage id="deployment.filter.podName" />
                 </Option>
                 <Option value="namespace">
-                  <FormattedMessage id="deployment.filter.namespaceName" />
+                  <CapitalizedMessage id="deployment.filter.namespaceName" />
                 </Option>
               </Select>
               <Search
@@ -267,7 +269,7 @@ class Deployment extends React.PureComponent<DeploymentProps, DeploymentState> {
           </div>
           {this.renderTable()}
           <Drawer
-            title={<FormattedMessage id="deployment" />}
+            title={<CapitalizedMessage id="deployment" />}
             width={720}
             closable={false}
             onClose={this.props.push.bind(this, '/application/deployment')}
