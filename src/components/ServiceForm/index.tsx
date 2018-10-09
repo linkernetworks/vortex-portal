@@ -16,7 +16,9 @@ import {
   Select
 } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
+import withCapitalize from '@/containers/withCapitalize';
 
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 const FormItem = Form.Item;
 const TabPane = Tabs.TabPane;
 const RadioButton = Radio.Button;
@@ -250,12 +252,15 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
     return (
       <Modal
         visible={this.props.visible}
-        title={<FormattedMessage id="service.add" />}
+        title={<CapitalizedMessage id="service.add" />}
         onOk={this.handleSubmit}
         onCancel={this.handleClose}
       >
         <Form>
-          <FormItem {...formItemLayout} label={<FormattedMessage id="name" />}>
+          <FormItem
+            {...formItemLayout}
+            label={<CapitalizedMessage id="name" />}
+          >
             {getFieldDecorator('name', {
               rules: [
                 {
@@ -267,7 +272,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label={<FormattedMessage id="namespace" />}
+            label={<CapitalizedMessage id="namespace" />}
           >
             {getFieldDecorator('namespace', {
               rules: [
@@ -290,7 +295,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label={<FormattedMessage id="service.type" />}
+            label={<CapitalizedMessage id="service.type" />}
           >
             {getFieldDecorator('type', {
               rules: [
@@ -309,7 +314,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label={<FormattedMessage id="service.selectors" />}
+            label={<CapitalizedMessage id="service.selectors" />}
           >
             {getFieldDecorator('selectors', {
               rules: [
@@ -384,7 +389,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
                   <TabPane tab={'Port' + (index + 1)} key={port.key}>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="name" />}
+                      label={<CapitalizedMessage id="name" />}
                     >
                       {getFieldDecorator(`port-${port.key}-name`, {
                         rules: [
@@ -397,7 +402,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
                     </FormItem>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="service.ports.port" />}
+                      label={<CapitalizedMessage id="service.ports.port" />}
                     >
                       {getFieldDecorator(`port-${port.key}-port`, {
                         rules: [
@@ -410,7 +415,9 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
                     </FormItem>
                     <FormItem
                       {...formItemLayout}
-                      label={<FormattedMessage id="service.ports.targetPort" />}
+                      label={
+                        <CapitalizedMessage id="service.ports.targetPort" />
+                      }
                     >
                       {getFieldDecorator(`port-${port.key}-targetPort`, {
                         rules: [
@@ -419,12 +426,14 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
                             message: 'Please input your target port'
                           }
                         ]
-                      })(<InputNumber min={0} placeholder="Taget Port" />)}
+                      })(<InputNumber min={0} placeholder="Target Port" />)}
                     </FormItem>
                     {getFieldValue('type') === 'NodePort' && (
                       <FormItem
                         {...formItemLayout}
-                        label={<FormattedMessage id="service.ports.nodePort" />}
+                        label={
+                          <CapitalizedMessage id="service.ports.nodePort" />
+                        }
                       >
                         {getFieldDecorator(`port-${port.key}-nodePort`, {
                           rules: [

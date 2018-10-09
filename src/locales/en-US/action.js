@@ -9,6 +9,7 @@ export default {
   'action.cancel': 'cancel',
   'action.create': 'create',
   'action.success': 'success',
+  'action.failure': 'failure',
   'action.removeAll': 'remove All',
   'action.next': 'next',
   'action.previous': 'previous',

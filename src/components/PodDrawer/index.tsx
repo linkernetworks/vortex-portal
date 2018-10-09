@@ -691,7 +691,9 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
         </div>
 
         <div className={styles.contentSection}>
-          <h3>Details</h3>
+          <h3>
+            <FormattedMessage id="details" />
+          </h3>
           {this.renderDetail()}
         </div>
 

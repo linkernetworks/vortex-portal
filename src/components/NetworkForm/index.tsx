@@ -9,7 +9,9 @@ import EditableTagGroup from '@/components/EditableTagGroup';
 import { FormField } from '@/utils/types';
 import * as Network from '@/models/Network';
 import * as Node from '@/models/Node';
+import withCapitalize from '@/containers/withCapitalize';
 
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
 const RadioButton = Radio.Button;
@@ -373,10 +375,10 @@ class NetworkForm extends React.PureComponent<
         visible={visible}
         wrapClassName={styles.modal}
         onCancel={this.handleClose}
-        title={<FormattedMessage id="network.form.createNewNetwork" />}
+        title={<CapitalizedMessage id="network.form.createNewNetwork" />}
         footer={[
           <Button key="cancel" onClick={this.handleClose}>
-            <FormattedMessage id="action.cancel" />
+            <CapitalizedMessage id="action.cancel" />
           </Button>,
           <Button
             key="submit"
@@ -384,13 +386,13 @@ class NetworkForm extends React.PureComponent<
             loading={isLoading}
             onClick={this.handleSubmit}
           >
-            <FormattedMessage id="action.create" />
+            <CapitalizedMessage id="action.create" />
           </Button>
         ]}
       >
         <Form>
           <FormItem
-            label={<FormattedMessage id="name" />}
+            label={<CapitalizedMessage id="name" />}
             required={true}
             hasFeedback={true}
             validateStatus={this.state.name.validateStatus}
@@ -408,7 +410,7 @@ class NetworkForm extends React.PureComponent<
             </FormattedMessage>
           </FormItem>
           <FormItem
-            label={<FormattedMessage id="network.type" />}
+            label={<CapitalizedMessage id="network.type" />}
             required={true}
           >
             <RadioGroup
@@ -423,7 +425,7 @@ class NetworkForm extends React.PureComponent<
           </FormItem>
 
           <FormItem
-            label={<FormattedMessage id="network.form.nodesWithInterface" />}
+            label={<CapitalizedMessage id="network.form.nodesWithInterface" />}
             required={true}
             validateStatus={this.state.nodes.validateStatus}
             help={this.state.nodes.errorMsg}
@@ -436,13 +438,13 @@ class NetworkForm extends React.PureComponent<
                 onClick={this.handleMoreNodeClick}
               >
                 <Icon type="plus" />
-                <FormattedMessage id="network.form.addMoreNode" />
+                <CapitalizedMessage id="network.form.addMoreNode" />
               </Button>
             )}
           </FormItem>
           <FormItem
             className={styles['last-form-item']}
-            label={<FormattedMessage id="network.VLANTags" />}
+            label={<CapitalizedMessage id="network.VLANTags" />}
             validateStatus={this.state.vlanTags.validateStatus}
             help={this.state.vlanTags.errorMsg}
           >
@@ -451,7 +453,7 @@ class NetworkForm extends React.PureComponent<
               canRemoveAll={true}
               onChange={this.handleTagsChange}
               validator={this.checkVLANTag}
-              addMessage={<FormattedMessage id="network.newTag" />}
+              addMessage={<CapitalizedMessage id="network.newTag" />}
             />
           </FormItem>
         </Form>

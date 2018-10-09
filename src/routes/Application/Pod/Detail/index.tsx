@@ -43,12 +43,14 @@ import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
 import StatusIcon from '@/components/StatusIcon';
 import ItemActions from '@/components/ItemActions';
 import ContainerDetail from '@/components/ContainerDetail';
+import withCapitalize from '@/containers/withCapitalize';
 
 import * as styles from './styles.module.scss';
 
 const TabPane = Tabs.TabPane;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 
 type PodDetailProps = OwnProps &
   InjectedAuthRouterProps &
@@ -188,13 +190,13 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
       <Row>
         <Col span={6}>
           {this.renderListItemContent(
-            <FormattedMessage id="status" />,
+            <CapitalizedMessage id="status" />,
             pod.status
           )}
         </Col>
         <Col span={6}>
           {this.renderListItemContent(
-            <FormattedMessage id="createdAt" />,
+            <CapitalizedMessage id="createdAt" />,
             moment(pod.createAt * 1000).calendar()
           )}
         </Col>
@@ -203,7 +205,7 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
         </Col>
         <Col span={6}>
           {this.renderListItemContent(
-            <FormattedMessage id="namespace" />,
+            <CapitalizedMessage id="namespace" />,
             pod.namespace
           )}
         </Col>
@@ -215,12 +217,15 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
         </Col>
         <Col span={6}>
           {this.renderListItemContent(
-            <FormattedMessage id="pod.restartCount" />,
+            <CapitalizedMessage id="pod.restartCount" />,
             pod.restartCount
           )}
         </Col>
         <Col span={6}>
-          {this.renderListItemContent(<FormattedMessage id="node" />, pod.node)}
+          {this.renderListItemContent(
+            <CapitalizedMessage id="node" />,
+            pod.node
+          )}
         </Col>
         <Col span={6}>
           {this.renderListItemContent(
@@ -299,27 +304,27 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
     // TODO: i18n
     const columns: Array<ColumnProps<ContainerModel.Container>> = [
       {
-        title: 'Name',
+        title: <CapitalizedMessage id="name" />,
         dataIndex: 'detail.containerName',
         key: 'name'
       },
       {
-        title: 'Status',
+        title: <CapitalizedMessage id="status" />,
         dataIndex: 'detail.status',
         key: 'status'
       },
       {
-        title: 'Namespace',
+        title: <CapitalizedMessage id="namespace" />,
         dataIndex: 'detail.namespace',
         key: 'namespace'
       },
       {
-        title: 'Image',
+        title: <CapitalizedMessage id="container.detail.image" />,
         dataIndex: 'detail.image',
         key: 'image'
       },
       {
-        title: <FormattedMessage id="action" />,
+        title: <CapitalizedMessage id="action" />,
         key: 'action',
         render: (_, record: ContainerModel.Container) => (
           <ItemActions
@@ -410,7 +415,7 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
       return (
         <Popconfirm
           key="action.delete"
-          title={<FormattedMessage id="action.confirmToDelete" />}
+          title={<CapitalizedMessage id="action.confirmToDelete" />}
           onConfirm={this.handleRemovePod.bind(
             this,
             pod.namespace,
@@ -418,14 +423,14 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
           )}
         >
           <Button>
-            <Icon type="delete" /> <FormattedMessage id="pod.delete" />
+            <Icon type="delete" /> <CapitalizedMessage id="pod.delete" />
           </Button>
         </Popconfirm>
       );
     } else {
       return (
         <Button type="dashed" disabled={true}>
-          <Icon type="delete" /> <FormattedMessage id="pod.undeletable" />
+          <Icon type="delete" /> <CapitalizedMessage id="pod.undeletable" />
         </Button>
       );
     }
@@ -458,12 +463,14 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
           ) : (
             <React.Fragment>
               <div className={styles.contentSection}>
-                <h3>Details</h3>
+                <h3>
+                  <CapitalizedMessage id="details" />
+                </h3>
                 {this.renderDetail()}
               </div>
               <div className={styles.contentSection}>
                 <h3>
-                  <FormattedMessage id="pod.labels" />
+                  <CapitalizedMessage id="pod.labels" />
                 </h3>
                 {this.renderLabels(pod!.labels)}
               </div>
@@ -479,7 +486,7 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
           <div className={styles.cardBottom}>{this.renderAction(pod!)}</div>
         </Card>
         <Drawer
-          title={<FormattedMessage id="container" />}
+          title={<CapitalizedMessage id="container" />}
           width={720}
           visible={isOpenDrawer}
           onClose={this.hideMoreContainer}

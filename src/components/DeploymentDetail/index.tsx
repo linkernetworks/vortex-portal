@@ -20,6 +20,9 @@ import ItemActions from '@/components/ItemActions';
 import AutoscaleForm from '@/components/AutoscaleForm';
 
 import * as styles from './styles.module.scss';
+import withCapitalize from '@/containers/withCapitalize';
+
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 
 interface DeploymentDetailProps {
   deployment: DeploymentModel.Controller;
@@ -101,24 +104,24 @@ class DeploymentDetail extends React.PureComponent<
     const { deployment } = this.props;
     const columns: Array<ColumnProps<PodModel.PodInfo>> = [
       {
-        title: <FormattedMessage id="name" />,
+        title: <CapitalizedMessage id="name" />,
         dataIndex: 'name',
         key: 'name'
       },
       {
-        title: <FormattedMessage id="namespace" />,
+        title: <CapitalizedMessage id="namespace" />,
         dataIndex: 'namespace'
       },
       {
-        title: <FormattedMessage id="node" />,
+        title: <CapitalizedMessage id="node" />,
         dataIndex: 'node'
       },
       {
-        title: <FormattedMessage id="status" />,
+        title: <CapitalizedMessage id="status" />,
         dataIndex: 'status'
       },
       {
-        title: <FormattedMessage id="action" />,
+        title: <CapitalizedMessage id="action" />,
         key: 'action',
         render: (_, record) => (
           <ItemActions
@@ -150,11 +153,11 @@ class DeploymentDetail extends React.PureComponent<
       return (
         <Popconfirm
           key="action.delete"
-          title={<FormattedMessage id="action.confirmToDelete" />}
+          title={<CapitalizedMessage id="action.confirmToDelete" />}
           onConfirm={this.handleRemoveDeployment.bind(this, id)}
         >
           <Button>
-            <Icon type="delete" /> <FormattedMessage id="deployment.delete" />
+            <Icon type="delete" /> <CapitalizedMessage id="deployment.delete" />
           </Button>
         </Popconfirm>
       );
@@ -162,7 +165,7 @@ class DeploymentDetail extends React.PureComponent<
       return (
         <Button type="dashed" disabled={true}>
           <Icon type="delete" />
-          <FormattedMessage id="deployment.undeletable" />
+          <CapitalizedMessage id="deployment.undeletable" />
         </Button>
       );
     }
@@ -179,7 +182,7 @@ class DeploymentDetail extends React.PureComponent<
 
         <div className={styles.contentSection}>
           <h3>
-            <FormattedMessage id="deployment.labels" />
+            <CapitalizedMessage id="deployment.labels" />
           </h3>
           {this.renderLabels(deployment.labels)}
         </div>

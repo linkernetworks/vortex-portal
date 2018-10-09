@@ -18,7 +18,9 @@ import ServiceForm from '@/components/ServiceForm';
 import ItemActions from '@/components/ItemActions';
 
 import * as namespaceAPI from '@/services/namespace';
+import withCapitalize from '@/containers/withCapitalize';
 
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 const TreeNode = Tree.TreeNode;
 
 interface ServiceState {
@@ -39,23 +41,23 @@ interface OwnProps {
 class Service extends React.Component<ServiceProps, ServiceState> {
   private columns: Array<ColumnProps<ServiceModel.Service>> = [
     {
-      title: <FormattedMessage id="name" />,
+      title: <CapitalizedMessage id="name" />,
       dataIndex: 'name'
     },
     {
-      title: <FormattedMessage id="owner" />,
+      title: <CapitalizedMessage id="owner" />,
       dataIndex: 'owner'
     },
     {
-      title: <FormattedMessage id="namespace" />,
+      title: <CapitalizedMessage id="namespace" />,
       dataIndex: 'namespace'
     },
     {
-      title: <FormattedMessage id="service.type" />,
+      title: <CapitalizedMessage id="service.type" />,
       dataIndex: 'type'
     },
     {
-      title: <FormattedMessage id="service.selectors" />,
+      title: <CapitalizedMessage id="service.selectors" />,
       render: (_, record) => (
         <div>
           {Object.keys(record.selector).map((key: string) => (
@@ -65,7 +67,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
       )
     },
     {
-      title: <FormattedMessage id="service.ports" />,
+      title: <CapitalizedMessage id="service.ports" />,
       render: (_, record) => (
         <Tree showIcon={true} selectable={false}>
           {record.ports.map((port: ServiceModel.ServicePort) => (
@@ -94,11 +96,11 @@ class Service extends React.Component<ServiceProps, ServiceState> {
       )
     },
     {
-      title: <FormattedMessage id="createdAt" />,
+      title: <CapitalizedMessage id="createdAt" />,
       render: (_, record) => moment(record.createdAt).calendar()
     },
     {
-      title: <FormattedMessage id="action" />,
+      title: <CapitalizedMessage id="action" />,
       key: 'action',
       render: (_, record) => (
         <ItemActions

@@ -14,7 +14,9 @@ import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
 
 import ItemActions from '@/components/ItemActions';
+import withCapitalize from '@/containers/withCapitalize';
 
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 const InputGroup = Input.Group;
 const Search = Input.Search;
 const Option = Select.Option;
@@ -40,28 +42,28 @@ class Pod extends React.Component<PodProps, PodState> {
   private intervalPodId: number;
   private columns: Array<ColumnProps<PodModel.PodInfo>> = [
     {
-      title: <FormattedMessage id="name" />,
+      title: <CapitalizedMessage id="name" />,
       dataIndex: 'name',
       width: 300
     },
     {
-      title: <FormattedMessage id="namespace" />,
+      title: <CapitalizedMessage id="namespace" />,
       dataIndex: 'namespace'
     },
     {
-      title: <FormattedMessage id="node" />,
+      title: <CapitalizedMessage id="node" />,
       dataIndex: 'node'
     },
     {
-      title: <FormattedMessage id="status" />,
+      title: <CapitalizedMessage id="status" />,
       dataIndex: 'status'
     },
     {
-      title: <FormattedMessage id="createdAt" />,
+      title: <CapitalizedMessage id="createdAt" />,
       dataIndex: 'createdAt'
     },
     {
-      title: <FormattedMessage id="action" />,
+      title: <CapitalizedMessage id="action" />,
       render: (_, record) => (
         <ItemActions
           items={[
@@ -139,7 +141,7 @@ class Pod extends React.Component<PodProps, PodState> {
 
     return (
       <div>
-        <Card title={<FormattedMessage id="pod" />}>
+        <Card title={<CapitalizedMessage id="pod" />}>
           <div className="table-controls">
             <InputGroup compact={true}>
               <Select
@@ -148,16 +150,16 @@ class Pod extends React.Component<PodProps, PodState> {
                 onChange={this.handleChangeSearchType}
               >
                 <Option value="pod">
-                  <FormattedMessage id="pod.filter.podName" />
+                  <CapitalizedMessage id="pod.filter.podName" />
                 </Option>
                 <Option value="container">
-                  <FormattedMessage id="pod.filter.containerName" />
+                  <CapitalizedMessage id="pod.filter.containerName" />
                 </Option>
                 <Option value="node">
-                  <FormattedMessage id="pod.filter.nodeName" />
+                  <CapitalizedMessage id="pod.filter.nodeName" />
                 </Option>
                 <Option value="namespace">
-                  <FormattedMessage id="pod.filter.namespaceName" />
+                  <CapitalizedMessage id="pod.filter.namespaceName" />
                 </Option>
               </Select>
               <Search

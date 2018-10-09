@@ -15,6 +15,13 @@ export default {
   'deployment.delete': '刪除 Deployment',
   'deployment.undeletable': '不能刪除這個 Deployment',
 
+  'deployment.autoscale.enable': '開啟',
+  'deployment.autoscale.resource': '資源',
+  'deployment.autoscale.average': '目標平均用量',
+  'deployment.autoscale.minReplicas': '最少 replicas',
+  'deployment.autoscale.maxReplicas': '最多 replicas',
+  'deployment.autoscale.save': '保存',
+
   'deployment.filter.deploymentName': 'deployment 名稱',
   'deployment.filter.podName': 'pod 名稱',
   'deployment.filter.containerName': '容器名稱',

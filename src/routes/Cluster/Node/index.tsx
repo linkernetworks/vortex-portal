@@ -25,6 +25,9 @@ import * as nodeAPI from '@/services/node';
 import { formatBytes } from '@/utils/bytes';
 
 import * as styles from './styles.module.scss';
+import withCapitalize from '@/containers/withCapitalize';
+
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 
 interface NodeState {
   visible: boolean;
@@ -125,13 +128,13 @@ class Node extends React.Component<NodeProps, NodeState> {
         <Row>
           <Col span={12}>
             {this.renderListItemContent(
-              <FormattedMessage id="createdAt" />,
+              <CapitalizedMessage id="createdAt" />,
               time.toISOString()
             )}
           </Col>
           <Col span={12}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.detail.kernelVersion" />,
+              <CapitalizedMessage id="node.detail.kernelVersion" />,
               this.props.nodes[node].detail.kernelVersion
             )}
           </Col>
@@ -139,13 +142,13 @@ class Node extends React.Component<NodeProps, NodeState> {
         <Row>
           <Col span={12}>
             {this.renderListItemContent(
-              <FormattedMessage id="status" />,
+              <CapitalizedMessage id="status" />,
               this.props.nodes[node].detail.status
             )}
           </Col>
           <Col span={12}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.detail.dockerVersion" />,
+              <CapitalizedMessage id="node.detail.dockerVersion" />,
               this.props.nodes[node].detail.dockerVersion
             )}
           </Col>
@@ -153,13 +156,13 @@ class Node extends React.Component<NodeProps, NodeState> {
         <Row>
           <Col span={12}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.detail.os" />,
+              <CapitalizedMessage id="node.detail.os" />,
               this.props.nodes[node].detail.os
             )}
           </Col>
           <Col span={12}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.detail.kubernetesVersion" />,
+              <CapitalizedMessage id="node.detail.kubernetesVersion" />,
               this.props.nodes[node].detail.kubernetesVersion
             )}
           </Col>
@@ -174,19 +177,19 @@ class Node extends React.Component<NodeProps, NodeState> {
         <Row>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.capacityCPU" />,
+              <CapitalizedMessage id="node.resource.capacityCPU" />,
               this.props.nodes[node].resource.capacityCPU
             )}
           </Col>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.capacityMemory" />,
+              <CapitalizedMessage id="node.resource.capacityMemory" />,
               formatBytes(this.props.nodes[node].resource.capacityMemory)
             )}
           </Col>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.capacityPods" />,
+              <CapitalizedMessage id="node.resource.capacityPods" />,
               this.props.nodes[node].resource.capacityPods
             )}
           </Col>
@@ -194,19 +197,19 @@ class Node extends React.Component<NodeProps, NodeState> {
         <Row>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.allocatableCPU" />,
+              <CapitalizedMessage id="node.resource.allocatableCPU" />,
               this.props.nodes[node].resource.allocatableCPU
             )}
           </Col>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.allocatableMemory" />,
+              <CapitalizedMessage id="node.resource.allocatableMemory" />,
               formatBytes(this.props.nodes[node].resource.allocatableMemory)
             )}
           </Col>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.allocatablePods" />,
+              <CapitalizedMessage id="node.resource.allocatablePods" />,
               this.props.nodes[node].resource.allocatablePods
             )}
           </Col>
@@ -214,19 +217,19 @@ class Node extends React.Component<NodeProps, NodeState> {
         <Row>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.cpuRequests" />,
+              <CapitalizedMessage id="node.resource.cpuRequests" />,
               this.props.nodes[node].resource.cpuRequests
             )}
           </Col>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.memoryRequests" />,
+              <CapitalizedMessage id="node.resource.memoryRequests" />,
               formatBytes(this.props.nodes[node].resource.memoryRequests)
             )}
           </Col>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.memoryHugepages" />,
+              <CapitalizedMessage id="node.resource.memoryHugepages" />,
               this.props.nodes[node].resource.memoryFreeHugepages +
                 ' / ' +
                 this.props.nodes[node].resource.memoryTotalHugepages
@@ -237,19 +240,19 @@ class Node extends React.Component<NodeProps, NodeState> {
         <Row>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.cpuLimits" />,
+              <CapitalizedMessage id="node.resource.cpuLimits" />,
               this.props.nodes[node].resource.cpuLimits
             )}
           </Col>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.memoryLimits" />,
+              <CapitalizedMessage id="node.resource.memoryLimits" />,
               formatBytes(this.props.nodes[node].resource.memoryLimits)
             )}
           </Col>
           <Col span={8}>
             {this.renderListItemContent(
-              <FormattedMessage id="node.resource.memoryHugepagesSize" />,
+              <CapitalizedMessage id="node.resource.memoryHugepagesSize" />,
               formatBytes(this.props.nodes[node].resource.memoryHugepagesSize)
             )}
           </Col>
@@ -357,19 +360,19 @@ class Node extends React.Component<NodeProps, NodeState> {
             <TabPane tab={name} key={name}>
               <Col span={8}>
                 {this.renderListItemContent(
-                  <FormattedMessage id="node.nics.type" />,
+                  <CapitalizedMessage id="node.nics.type" />,
                   this.props.nodes[node].nics[name].type
                 )}
               </Col>
               <Col span={8}>
                 {this.renderListItemContent(
-                  <FormattedMessage id="node.nics.ip" />,
+                  <CapitalizedMessage id="node.nics.ip" />,
                   this.props.nodes[node].nics[name].ip
                 )}
               </Col>
               <Col span={8}>
                 {this.renderListItemContent(
-                  <FormattedMessage id="node.nics.pciID" />,
+                  <CapitalizedMessage id="node.nics.pciID" />,
                   this.props.nodes[node].nics[name].pciID
                 )}
               </Col>
@@ -385,7 +388,7 @@ class Node extends React.Component<NodeProps, NodeState> {
               </RadioGroup>
               <div>
                 {this.renderListItemContent(
-                  <FormattedMessage id="node.nics.TXRXMegabyteTotal" />,
+                  <CapitalizedMessage id="node.nics.TXRXMegabyteTotal" />,
                   <div>
                     {this.renderChart(
                       nics[name].nicNetworkTraffic.receiveBytesTotal,
@@ -397,7 +400,7 @@ class Node extends React.Component<NodeProps, NodeState> {
               </div>
               <div>
                 {this.renderListItemContent(
-                  <FormattedMessage id="node.nics.TXRXPacketsTotal" />,
+                  <CapitalizedMessage id="node.nics.TXRXPacketsTotal" />,
                   <div>
                     {this.renderChart(
                       nics[name].nicNetworkTraffic.receivePacketsTotal,
@@ -454,45 +457,45 @@ class Node extends React.Component<NodeProps, NodeState> {
     const { currentNode } = this.state;
     const columns: Array<ColumnProps<NodeInfo>> = [
       {
-        title: <FormattedMessage id="name" />,
+        title: <CapitalizedMessage id="name" />,
         dataIndex: 'name'
       },
       {
-        title: <FormattedMessage id="status" />,
+        title: <CapitalizedMessage id="status" />,
         dataIndex: 'status'
       },
       {
-        title: <FormattedMessage id="node.resource.cpuRequests" />,
+        title: <CapitalizedMessage id="node.resource.cpuRequests" />,
         dataIndex: 'cpuRequests'
       },
       {
-        title: <FormattedMessage id="node.resource.cpuLimits" />,
+        title: <CapitalizedMessage id="node.resource.cpuLimits" />,
         dataIndex: 'cpiLimits'
       },
       {
-        title: <FormattedMessage id="node.resource.memoryRequests" />,
+        title: <CapitalizedMessage id="node.resource.memoryRequests" />,
         dataIndex: 'memoryRequests'
       },
       {
-        title: <FormattedMessage id="node.resource.memoryLimits" />,
+        title: <CapitalizedMessage id="node.resource.memoryLimits" />,
         dataIndex: 'memoryLimits'
       },
       {
-        title: <FormattedMessage id="createdAt" />,
+        title: <CapitalizedMessage id="createdAt" />,
         dataIndex: 'createdAt'
       },
       {
-        title: <FormattedMessage id="action" />,
+        title: <CapitalizedMessage id="action" />,
         render: (_, record) => (
           <a onClick={() => this.showMore(record.name)}>
-            {<FormattedMessage id="action.more" />}
+            {<CapitalizedMessage id="action.more" />}
           </a>
         )
       }
     ];
     return (
       <div>
-        <Card title={<FormattedMessage id="node" />}>
+        <Card title={<CapitalizedMessage id="node" />}>
           <Table
             className="main-table"
             columns={columns}
@@ -500,7 +503,7 @@ class Node extends React.Component<NodeProps, NodeState> {
           />
           {this.props.nodes.hasOwnProperty(currentNode) && (
             <Drawer
-              title={<FormattedMessage id="node" />}
+              title={<CapitalizedMessage id="node" />}
               width={720}
               placement="right"
               closable={false}
@@ -517,14 +520,16 @@ class Node extends React.Component<NodeProps, NodeState> {
               </div>
 
               <div className={styles.contentSection}>
-                <h3>Details</h3>
+                <h3>
+                  <CapitalizedMessage id="details" />
+                </h3>
                 {this.renderDetail(currentNode)}
               </div>
 
               <div className={styles.contentSection}>
                 <h3>Labels</h3>
                 {this.renderListItemContent(
-                  <FormattedMessage id="node.detail.labels" />,
+                  <CapitalizedMessage id="node.detail.labels" />,
                   this.renderLabels(this.props.nodes[currentNode].detail.labels)
                 )}
               </div>

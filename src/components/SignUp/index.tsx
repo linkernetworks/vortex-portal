@@ -7,7 +7,10 @@ import { omit } from 'lodash';
 
 import * as styles from './styles.module.scss';
 import { UserFields } from '@/models/User';
+import withCapitalize from '@/containers/withCapitalize';
+import { toTitleCase } from '@/utils/string';
 
+const CapitalizedMessage = withCapitalize(FormattedMessage);
 const FormItem = Form.Item;
 const TabPane = Tabs.TabPane;
 
@@ -36,9 +39,11 @@ class SignUp extends React.PureComponent<
                   <FormItem>
                     {getFieldDecorator('firstName', {})(
                       <Input
-                        placeholder={this.props.intl.formatMessage({
-                          id: 'auth.firstName'
-                        })}
+                        placeholder={toTitleCase(
+                          this.props.intl.formatMessage({
+                            id: 'auth.firstName'
+                          })
+                        )}
                       />
                     )}
                   </FormItem>
@@ -47,9 +52,11 @@ class SignUp extends React.PureComponent<
                   <FormItem>
                     {getFieldDecorator('lastName', {})(
                       <Input
-                        placeholder={this.props.intl.formatMessage({
-                          id: 'auth.lastName'
-                        })}
+                        placeholder={toTitleCase(
+                          this.props.intl.formatMessage({
+                            id: 'auth.lastName'
+                          })
+                        )}
                       />
                     )}
                   </FormItem>
@@ -60,9 +67,11 @@ class SignUp extends React.PureComponent<
               {getFieldDecorator('displayName', {})(
                 <Input
                   prefix={<Icon className={styles.icon} type="user" />}
-                  placeholder={this.props.intl.formatMessage({
-                    id: 'auth.displayName'
-                  })}
+                  placeholder={toTitleCase(
+                    this.props.intl.formatMessage({
+                      id: 'auth.displayName'
+                    })
+                  )}
                 />
               )}
             </FormItem>
@@ -71,9 +80,11 @@ class SignUp extends React.PureComponent<
                 <Input
                   prefix={<Icon className={styles.icon} type="mobile" />}
                   type="tel"
-                  placeholder={this.props.intl.formatMessage({
-                    id: 'auth.mobile'
-                  })}
+                  placeholder={toTitleCase(
+                    this.props.intl.formatMessage({
+                      id: 'auth.mobile'
+                    })
+                  )}
                 />
               )}
             </FormItem>
@@ -91,9 +102,11 @@ class SignUp extends React.PureComponent<
               {getFieldDecorator('username', {})(
                 <Input
                   prefix={<Icon className={styles.icon} type="mail" />}
-                  placeholder={this.props.intl.formatMessage({
-                    id: 'auth.username'
-                  })}
+                  placeholder={toTitleCase(
+                    this.props.intl.formatMessage({
+                      id: 'auth.username'
+                    })
+                  )}
                 />
               )}
             </FormItem>
@@ -102,9 +115,11 @@ class SignUp extends React.PureComponent<
                 <Input
                   type="password"
                   prefix={<Icon className={styles.icon} type="lock" />}
-                  placeholder={this.props.intl.formatMessage({
-                    id: 'auth.password'
-                  })}
+                  placeholder={toTitleCase(
+                    this.props.intl.formatMessage({
+                      id: 'auth.password'
+                    })
+                  )}
                 />
               )}
             </FormItem>
@@ -162,7 +177,7 @@ class SignUp extends React.PureComponent<
     return this.steps.map((step, idx) => {
       return (
         <TabPane
-          tab={<FormattedMessage id={`auth.step.${step.title}`} />}
+          tab={<CapitalizedMessage id={`auth.step.${step.title}`} />}
           key={idx}
         >
           {step.content()}
@@ -180,7 +195,7 @@ class SignUp extends React.PureComponent<
       <Form onSubmit={this.handleSubmit}>
         <div className={styles.header}>
           <h2>
-            <FormattedMessage id="auth.signup" />
+            <CapitalizedMessage id="auth.signup" />
           </h2>
           <p>
             <FormattedMessage id="auth.signup.subtitle" />
@@ -197,7 +212,7 @@ class SignUp extends React.PureComponent<
                   className={styles.action}
                   onClick={this.handlePreviousClick}
                 >
-                  <FormattedMessage id="action.previous" />
+                  <CapitalizedMessage id="action.previous" />
                 </Button>
               </Col>
             )}
@@ -208,7 +223,7 @@ class SignUp extends React.PureComponent<
                   className={styles.action}
                   htmlType="submit"
                 >
-                  <FormattedMessage id="action.done" />
+                  <CapitalizedMessage id="action.done" />
                 </Button>
               ) : (
                 <Button
@@ -216,7 +231,7 @@ class SignUp extends React.PureComponent<
                   className={styles.action}
                   onClick={this.handleNextClick}
                 >
-                  <FormattedMessage id="action.next" />
+                  <CapitalizedMessage id="action.next" />
                 </Button>
               )}
             </Col>
