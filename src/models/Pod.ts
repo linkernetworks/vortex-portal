@@ -37,7 +37,7 @@ export interface PodNetworkRequest {
   key?: string;
   name: string;
   ifName: string;
-  vlan: number;
+  vlanTag: number;
   ipAddress: string;
   netmask: string;
   routesGw: Array<PodRouteGwRequest>;

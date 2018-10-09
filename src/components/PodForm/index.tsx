@@ -182,7 +182,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
               ifName: values[`network-${network.key}-ifName`],
               ipAddress: values[`network-${network.key}-ipAddress`],
               netmask: values[`network-${network.key}-netmask`],
-              vlan: values[`network-${network.key}-vlan`],
+              vlanTag: values[`network-${network.key}-vlanTag`],
               routesGw,
               routesIntf
             });
@@ -833,7 +833,7 @@ class PodForm extends React.PureComponent<PodFormProps, any> {
                         {...formItemLayout}
                         label={<FormattedMessage id="network.VLANTags" />}
                       >
-                        {getFieldDecorator(`network-${network.key}-vlan`, {
+                        {getFieldDecorator(`network-${network.key}-vlanTag`, {
                           rules: [
                             {
                               required: false
