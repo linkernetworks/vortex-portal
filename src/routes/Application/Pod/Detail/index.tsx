@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { push } from 'react-router-redux';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -69,6 +70,7 @@ interface OwnProps {
   removePodByName: (namespace: string, id: string) => any;
   error: Error | null;
   clearClusterError: () => any;
+  push: (route: string) => any;
 }
 
 interface PodDetailState {
@@ -130,7 +132,7 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
     this.props.removePodByName(namespace, id);
     const { formatMessage } = this.props.intl;
 
-    window.history.back();
+    this.props.push('/application/pod');
 
     if (!this.props.error) {
       notification.success({
@@ -327,7 +329,6 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
   }
 
   protected renderContainer = () => {
-    // TODO: i18n
     const columns: Array<ColumnProps<ContainerModel.Container>> = [
       {
         title: <CapitalizedMessage id="name" />,
@@ -539,6 +540,7 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchPod: (pod: string) => dispatch(clusterOperations.fetchPod(pod)),
   removePodByName: (namespace: string, id: string) =>
     dispatch(clusterOperations.removePodByName(namespace, id)),
+  push: (route: string) => dispatch(push(route)),
   clearClusterError: () => dispatch(clusterActions.clearClusterError())
 });
 

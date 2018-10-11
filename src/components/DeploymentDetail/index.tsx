@@ -1,14 +1,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import {
-  Button,
-  Icon,
-  Table,
-  Tag,
-  notification,
-  Popconfirm,
-  Switch
-} from 'antd';
+import { Button, Icon, Table, Tag, Popconfirm, Switch } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
 import { get } from 'lodash';
@@ -41,14 +33,6 @@ class DeploymentDetail extends React.PureComponent<
 > {
   public state: DeploymentDetailState = {
     autoscale: !!get(this.props.deployment, 'isEnableAutoscale')
-  };
-
-  protected handleRemoveDeployment = (id: string) => {
-    this.props.removeDeployment(id);
-    return notification.success({
-      message: 'Success',
-      description: 'Delete the deployment successfully.'
-    });
   };
 
   protected handleSubmit = (
@@ -154,7 +138,7 @@ class DeploymentDetail extends React.PureComponent<
         <Popconfirm
           key="action.delete"
           title={<CapitalizedMessage id="action.confirmToDelete" />}
-          onConfirm={this.handleRemoveDeployment.bind(this, id)}
+          onConfirm={this.props.removeDeployment.bind(this, id)}
         >
           <Button>
             <Icon type="delete" /> <CapitalizedMessage id="deployment.delete" />
@@ -165,7 +149,7 @@ class DeploymentDetail extends React.PureComponent<
       return (
         <Button type="dashed" disabled={true}>
           <Icon type="delete" />
-          <CapitalizedMessage id="deployment.undeletable" />
+          <FormattedMessage id="deployment.undeletable" />
         </Button>
       );
     }

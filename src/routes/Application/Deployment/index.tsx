@@ -23,7 +23,11 @@ import * as UserModel from '@/models/User';
 import * as PodModel from '@/models/Pod';
 import * as DeploymentModel from '@/models/Deployment';
 import { RootState, RTDispatch, RootAction } from '@/store/ducks';
-import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
+import {
+  clusterOperations,
+  clusterSelectors,
+  clusterActions
+} from '@/store/ducks/cluster';
 import { userOperations } from '@/store/ducks/user';
 import ItemActions from '@/components/ItemActions';
 import DeploymentDetail from '@/components/DeploymentDetail';
@@ -60,6 +64,8 @@ interface OwnProps {
   fetchUsers: () => any;
   push: (path: string) => any;
   autoscale: (data: DeploymentModel.Autoscale, enable: boolean) => any;
+  error: Error | null;
+  clearClusterError: () => any;
 }
 
 interface DeploymentInfo {
@@ -151,18 +157,31 @@ class Deployment extends React.PureComponent<DeploymentProps, DeploymentState> {
   };
 
   protected handleRemoveDeployment = (id: string) => {
+    this.props.clearClusterError();
     this.props.removeDeployment(id);
-    clearInterval(this.intervalPodId);
+    this.props.push('/application/deployment');
 
     const { formatMessage } = this.props.intl;
-    notification.success({
-      message: formatMessage({
-        id: 'action.success'
-      }),
-      description: formatMessage({
-        id: 'deployment.hint.delete.success'
-      })
-    });
+
+    if (!this.props.error) {
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'deployment.hint.delete.success'
+        })
+      });
+    } else {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description: formatMessage({
+          id: 'deployment.hint.delete.failure'
+        })
+      });
+    }
   };
 
   protected getDeploymentInfo = (allDeployments: Array<string>) => {
@@ -310,7 +329,8 @@ const mapStateToProps = (state: RootState) => {
     allDeployments: clusterSelectors.getAllDeploymentsInAvailableNamespace(
       state.cluster
     ),
-    users: state.user.users
+    users: state.user.users,
+    error: state.cluster.error
   };
 };
 
@@ -326,7 +346,8 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction> & RTDispatch) => ({
   fetchUsers: () => dispatch(userOperations.fetchUsers()),
   push: (path: string) => dispatch(push(path)),
   autoscale: (data: DeploymentModel.Autoscale, enable: boolean) =>
-    dispatch(clusterOperations.autoscale(data, enable))
+    dispatch(clusterOperations.autoscale(data, enable)),
+  clearClusterError: () => dispatch(clusterActions.clearClusterError())
 });
 
 export default connect(
