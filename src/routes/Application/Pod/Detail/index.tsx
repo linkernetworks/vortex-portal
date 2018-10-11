@@ -39,7 +39,11 @@ import * as podAPI from '@/services/pod';
 import * as containerAPI from '@/services/container';
 import * as PodModel from '@/models/Pod';
 import * as ContainerModel from '@/models/Container';
-import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
+import {
+  clusterOperations,
+  clusterSelectors,
+  clusterActions
+} from '@/store/ducks/cluster';
 import StatusIcon from '@/components/StatusIcon';
 import ItemActions from '@/components/ItemActions';
 import ContainerDetail from '@/components/ContainerDetail';
@@ -63,6 +67,8 @@ interface OwnProps {
   containers: Array<ContainerModel.Container>;
   fetchPod: (pod: string) => any;
   removePodByName: (namespace: string, id: string) => any;
+  error: Error | null;
+  clearClusterError: () => any;
 }
 
 interface PodDetailState {
@@ -120,11 +126,31 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
   }
 
   protected handleRemovePod = (namespace: string, id: string) => {
+    this.props.clearClusterError();
     this.props.removePodByName(namespace, id);
-    return notification.success({
-      message: 'Success',
-      description: 'Delete the pod successfully.'
-    });
+    const { formatMessage } = this.props.intl;
+
+    window.history.back();
+
+    if (!this.props.error) {
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'pod.hint.delete.success'
+        })
+      });
+    } else {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description: formatMessage({
+          id: 'pod.hint.delete.failure'
+        })
+      });
+    }
   };
 
   protected handleSwitchPodTimeUnit = (e: any) => {
@@ -504,14 +530,16 @@ const mapStateToProps = (state: RootState, ownProps: PodDetailProps) => {
   return {
     pod: state.cluster.pods[currentPod],
     podNics: state.cluster.podsNics[currentPod],
-    pods: clusterSelectors.getPodsInAvailableNamespace(state.cluster)
+    pods: clusterSelectors.getPodsInAvailableNamespace(state.cluster),
+    error: state.cluster.error
   };
 };
 
 const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchPod: (pod: string) => dispatch(clusterOperations.fetchPod(pod)),
   removePodByName: (namespace: string, id: string) =>
-    dispatch(clusterOperations.removePodByName(namespace, id))
+    dispatch(clusterOperations.removePodByName(namespace, id)),
+  clearClusterError: () => dispatch(clusterActions.clearClusterError())
 });
 
 export default connect(
