@@ -10,7 +10,7 @@ import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { RootState, RTDispatch } from '@/store/ducks';
-import { clusterOperations } from '@/store/ducks/cluster';
+import { clusterOperations, clusterActions } from '@/store/ducks/cluster';
 import { volumeOperations } from '@/store/ducks/volume';
 import { Volume as VolumeModel } from '@/models/Storage';
 
@@ -45,6 +45,8 @@ interface OwnProps {
   addDeployment: (data: DeploymentModel.Deployment) => any;
   fetchNodes: () => any;
   push: (route: string) => any;
+  error: Error | null;
+  clearClusterError: () => any;
 }
 
 const tabList = [
@@ -81,24 +83,56 @@ class CreateDeployment extends React.Component<
   }
 
   protected handleUploadChange = (info: any) => {
+    const { formatMessage } = this.props.intl;
+
     if (info.file.status === 'done') {
       this.props.push('/application/deployment');
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'deployment.hint.create.success'
+        })
+      });
+    } else if (info.file.status === 'error') {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description: formatMessage({
+          id: 'deployment.hint.create.failure'
+        })
+      });
     }
   };
 
   protected handleSubmit = (deployment: DeploymentModel.Deployment) => {
+    this.props.clearClusterError();
     this.props.addDeployment(deployment);
     this.props.push('/application/deployment');
 
     const { formatMessage } = this.props.intl;
-    notification.success({
-      message: formatMessage({
-        id: 'action.success'
-      }),
-      description: formatMessage({
-        id: 'deployment.hint.create.success'
-      })
-    });
+
+    if (!this.props.error) {
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'deployment.hint.create.success'
+        })
+      });
+    } else {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description: formatMessage({
+          id: 'deployment.hint.create.failure'
+        })
+      });
+    }
   };
 
   public renderTabContent = () => {
@@ -193,7 +227,8 @@ const mapStateToProps = (state: RootState) => {
     namespaces: state.cluster.namespaces,
     networks: state.network.networks,
     allNodes: state.cluster.allNodes,
-    volumes: state.volume.volumes
+    volumes: state.volume.volumes,
+    error: state.cluster.error
   };
 };
 
@@ -206,7 +241,8 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
   addDeployment: (data: DeploymentModel.Deployment) => {
     dispatch(clusterOperations.addDeployment(data));
   },
-  push: (route: string) => dispatch(push(route))
+  push: (route: string) => dispatch(push(route)),
+  clearClusterError: () => dispatch(clusterActions.clearClusterError())
 });
 
 export default connect(

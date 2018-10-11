@@ -7,7 +7,6 @@ import * as Service from '@/models/Service';
 import * as Container from '@/models/Container';
 import * as Namespace from '@/models/Namespace';
 import * as Deployment from '@/models/Deployment';
-
 export interface ClusterStateType {
   nodes: Node.Nodes;
   nodesNics: Node.NodesNics;
@@ -24,6 +23,7 @@ export interface ClusterStateType {
   allContainers: Array<string>;
   allDeployments: Array<string>;
   isLoading: boolean;
+  error: any;
 }
 
 export type ClusterActionType = ActionType<typeof Cluster>;
@@ -43,7 +43,8 @@ const initialState: ClusterStateType = {
   allPods: [],
   allContainers: [],
   allDeployments: [],
-  isLoading: false
+  isLoading: false,
+  error: null
 };
 
 export function clusterReducer(
@@ -70,7 +71,7 @@ export function clusterReducer(
     case getType(Cluster.removeService.request):
     case getType(Cluster.removeNamespace.request):
     case getType(Cluster.autoscale.request):
-      return { ...state, isLoading: true };
+      return { ...state, isLoading: true, error: null };
     case getType(Cluster.fetchNodes.success):
       const nodes = action.payload;
       const allNodes = Object.keys(action.payload);
@@ -304,6 +305,30 @@ export function clusterReducer(
       return {
         ...state,
         isLoading: false
+      };
+    case getType(Cluster.fetchNodes.failure):
+    case getType(Cluster.fetchPods.failure):
+    case getType(Cluster.fetchPod.failure):
+    case getType(Cluster.fetchPodsFromMongo.failure):
+    case getType(Cluster.removePod.failure):
+    case getType(Cluster.removePodByName.failure):
+    case getType(Cluster.fetchContainer.failure):
+    case getType(Cluster.fetchServices.failure):
+    case getType(Cluster.fetchNamespaces.failure):
+    case getType(Cluster.addPod.failure):
+    case getType(Cluster.addService.failure):
+    case getType(Cluster.addNamespace.failure):
+    case getType(Cluster.removeService.failure):
+    case getType(Cluster.removeNamespace.failure):
+    case getType(Cluster.autoscale.failure):
+      return {
+        ...state,
+        error: action.payload
+      };
+    case getType(Cluster.clearClusterError):
+      return {
+        ...state,
+        error: null
       };
     default:
       return state;

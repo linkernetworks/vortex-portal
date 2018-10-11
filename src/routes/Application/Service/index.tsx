@@ -12,7 +12,7 @@ import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 import { find } from 'lodash';
 
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
-import { clusterOperations } from '@/store/ducks/cluster';
+import { clusterOperations, clusterActions } from '@/store/ducks/cluster';
 import { userOperations } from '@/store/ducks/user';
 import ServiceForm from '@/components/ServiceForm';
 import ItemActions from '@/components/ItemActions';
@@ -36,6 +36,8 @@ interface OwnProps {
   removeService: (id: string) => any;
   users: Array<UserModel.User>;
   fetchUsers: () => any;
+  error: Error | null;
+  clearClusterError: () => any;
 }
 
 class Service extends React.Component<ServiceProps, ServiceState> {
@@ -139,32 +141,58 @@ class Service extends React.Component<ServiceProps, ServiceState> {
   };
 
   protected handleSubmit = (service: ServiceModel.Service) => {
+    this.props.clearClusterError();
     this.props.addService(service);
     this.setState({ visibleModal: false });
 
     const { formatMessage } = this.props.intl;
-    notification.success({
-      message: formatMessage({
-        id: 'action.success'
-      }),
-      description: formatMessage({
-        id: 'service.hint.create.success'
-      })
-    });
+
+    if (!this.props.error) {
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'service.hint.create.success'
+        })
+      });
+    } else {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description: formatMessage({
+          id: 'service.hint.create.failure'
+        })
+      });
+    }
   };
 
   protected handleRemoveService = (id: string) => {
+    this.props.clearClusterError();
     this.props.removeService(id);
 
     const { formatMessage } = this.props.intl;
-    notification.success({
-      message: formatMessage({
-        id: 'action.success'
-      }),
-      description: formatMessage({
-        id: 'service.hint.delete.success'
-      })
-    });
+
+    if (!this.props.error) {
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'service.hint.delete.success'
+        })
+      });
+    } else {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description: formatMessage({
+          id: 'service.hint.delete.failure'
+        })
+      });
+    }
   };
 
   protected getServiceInfo = (services: Array<ServiceModel.Service>) => {
@@ -218,7 +246,8 @@ class Service extends React.Component<ServiceProps, ServiceState> {
 const mapStateToProps = (state: RootState) => {
   return {
     services: state.cluster.services,
-    users: state.user.users
+    users: state.user.users,
+    error: state.cluster.error
   };
 };
 
@@ -228,7 +257,8 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
     dispatch(clusterOperations.addService(data));
   },
   removeService: (id: string) => dispatch(clusterOperations.removeService(id)),
-  fetchUsers: () => dispatch(userOperations.fetchUsers())
+  fetchUsers: () => dispatch(userOperations.fetchUsers()),
+  clearClusterError: () => dispatch(clusterActions.clearClusterError())
 });
 
 export default connect(

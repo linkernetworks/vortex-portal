@@ -14,7 +14,8 @@ import { userOperations } from '@/store/ducks/user';
 import {
   networkModels,
   networkSelectors,
-  networkOperations
+  networkOperations,
+  networkActions
 } from '@/store/ducks/network';
 import * as UserModel from '@/models/User';
 import { Nodes } from '@/models/Node';
@@ -56,6 +57,8 @@ interface OwnProps {
   removeNetwork: (id: string) => any;
   users: Array<UserModel.User>;
   fetchUsers: () => any;
+  error: Error | null;
+  clearNetworkError: () => any;
 }
 
 class Network extends React.Component<NetworkProps, NetworkState> {
@@ -149,20 +152,33 @@ class Network extends React.Component<NetworkProps, NetworkState> {
     data: networkModels.NetworkFields,
     successCB: () => void
   ) => {
+    this.props.clearNetworkError();
     this.props.addNetwork(data).then(() => {
       this.setState({ isCreating: false });
       successCB();
     });
 
     const { formatMessage } = this.props.intl;
-    notification.success({
-      message: formatMessage({
-        id: 'action.success'
-      }),
-      description: formatMessage({
-        id: 'network.hint.create.success'
-      })
-    });
+
+    if (!this.props.error) {
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'network.hint.create.success'
+        })
+      });
+    } else {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description: formatMessage({
+          id: 'network.hint.create.failure'
+        })
+      });
+    }
   };
 
   protected handleOpenExec = (bridgeName: string) => (
@@ -194,17 +210,30 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   };
 
   protected handleRemoveNetwork = (id: string) => {
+    this.props.clearNetworkError();
     this.props.removeNetwork(id);
 
     const { formatMessage } = this.props.intl;
-    notification.success({
-      message: formatMessage({
-        id: 'action.success'
-      }),
-      description: formatMessage({
-        id: 'network.hint.delete.success'
-      })
-    });
+
+    if (!this.props.error) {
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'network.hint.delete.success'
+        })
+      });
+    } else {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description: formatMessage({
+          id: 'network.hint.delete.failure'
+        })
+      });
+    }
   };
 
   protected handleCloseExec = () => {
@@ -304,7 +333,8 @@ const mapStateToProps = (state: RootState) => {
     networks: state.network.networks,
     isLoading: state.network.isLoading,
     networkError: state.network.error,
-    users: state.user.users
+    users: state.user.users,
+    error: state.cluster.error
   };
 };
 
@@ -314,7 +344,8 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
   addNetwork: (data: networkModels.NetworkFields) =>
     dispatch(networkOperations.addNetwork(data)),
   removeNetwork: (id: string) => dispatch(networkOperations.removeNetwork(id)),
-  fetchUsers: () => dispatch(userOperations.fetchUsers())
+  fetchUsers: () => dispatch(userOperations.fetchUsers()),
+  clearNetworkError: () => dispatch(networkActions.clearNetworkError())
 });
 
 export default connect(
