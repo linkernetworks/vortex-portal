@@ -148,11 +148,15 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         let nodeAffinity = [];
         if (this.props.network) {
           networkType = 'custom';
-          nodeAffinity.push(values.nodeAffinity);
+          if (!!values.nodeAffinity) {
+            nodeAffinity.push(values.nodeAffinity);
+          }
         } else {
           networkType = values.networkType;
           replicas = values.replicas;
-          nodeAffinity = values.nodeAffinity;
+          if (!!values.nodeAffinity) {
+            nodeAffinity = values.nodeAffinity;
+          }
         }
         if (networkType === 'custom') {
           this.state.networks.map((network: PodModel.PodNetworkRequest) => {
