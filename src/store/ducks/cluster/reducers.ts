@@ -7,6 +7,8 @@ import * as Service from '@/models/Service';
 import * as Container from '@/models/Container';
 import * as Namespace from '@/models/Namespace';
 import * as Deployment from '@/models/Deployment';
+import * as Configmap from '@/models/Configmap';
+
 export interface ClusterStateType {
   nodes: Node.Nodes;
   nodesNics: Node.NodesNics;
@@ -18,6 +20,7 @@ export interface ClusterStateType {
   deploymentsFromMongo: Array<Deployment.Deployment>;
   services: Array<Service.Service>;
   namespaces: Array<Namespace.Namespace>;
+  configmaps: Array<Configmap.Configmap>;
   allNodes: Array<string>;
   allPods: Array<string>;
   allContainers: Array<string>;
@@ -39,6 +42,7 @@ const initialState: ClusterStateType = {
   deploymentsFromMongo: [],
   services: [],
   namespaces: [],
+  configmaps: [],
   allNodes: [],
   allPods: [],
   allContainers: [],
@@ -65,6 +69,7 @@ export function clusterReducer(
     case getType(Cluster.fetchContainer.request):
     case getType(Cluster.fetchServices.request):
     case getType(Cluster.fetchNamespaces.request):
+    case getType(Cluster.fetchConfigmaps.request):
     case getType(Cluster.addPod.request):
     case getType(Cluster.addService.request):
     case getType(Cluster.addNamespace.request):
@@ -306,10 +311,17 @@ export function clusterReducer(
         ...state,
         isLoading: false
       };
+    case getType(Cluster.fetchConfigmaps.success):
+      return {
+        ...state,
+        configmaps: action.payload,
+        isLoading: false
+      };
     case getType(Cluster.fetchNodes.failure):
     case getType(Cluster.fetchPods.failure):
     case getType(Cluster.fetchPod.failure):
     case getType(Cluster.fetchPodsFromMongo.failure):
+    case getType(Cluster.fetchConfigmaps.failure):
     case getType(Cluster.removePod.failure):
     case getType(Cluster.removePodByName.failure):
     case getType(Cluster.fetchContainer.failure):
@@ -318,8 +330,10 @@ export function clusterReducer(
     case getType(Cluster.addPod.failure):
     case getType(Cluster.addService.failure):
     case getType(Cluster.addNamespace.failure):
+    case getType(Cluster.addConfigmap.failure):
     case getType(Cluster.removeService.failure):
     case getType(Cluster.removeNamespace.failure):
+    case getType(Cluster.removeConfigmap.failure):
     case getType(Cluster.autoscale.failure):
       return {
         ...state,
@@ -329,7 +343,7 @@ export function clusterReducer(
       return {
         ...state,
         error: null
-      };
+      }
     default:
       return state;
   }

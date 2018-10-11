@@ -5,6 +5,7 @@ export default {
   'side.network': 'Network',
   'side.application': 'Application',
   'side.namespace': 'Namespace',
+  'side.configmap': 'Configmap',
   'side.deployment': 'Deployment',
   'side.service': 'Service',
   'side.pod': 'Pod',

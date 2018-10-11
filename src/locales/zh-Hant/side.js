@@ -6,6 +6,7 @@ export default {
   'side.network': '網路',
   'side.application': '應用程式',
   'side.namespace': '命名空間',
+  'side.configmap': 'configmap',
   'side.deployment': 'Deployment',
   'side.ovs': 'Open vSwitch',
   'side.dpdk': '資料平台開放套件',

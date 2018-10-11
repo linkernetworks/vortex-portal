@@ -5,6 +5,7 @@ import * as Container from '@/models/Container';
 import * as Service from '@/models/Service';
 import * as Namespace from '@/models/Namespace';
 import * as Deployment from '@/models/Deployment';
+import * as Configmap from '@/models/Configmap';
 
 export const fetchNodes = createAsyncAction(
   'FETCH_NODES_REQUEST',
@@ -131,6 +132,12 @@ export const autoscale = createAsyncAction(
   'AUTOSCALE_SUCCESS',
   'AUTOSCALE_FAILURE'
 )<void, Deployment.Deployment, Error>();
+
+export const fetchConfigmaps = createAsyncAction(
+  'FETCH_CONFIGMAPS_REQUEST',
+  'FETCH_CONFIGMAPS_SUCCESS',
+  'FETCH_CONFIGMAPS_FAILURE'
+)<void, Array<Configmap.Configmap>, Error>();
 
 export const clearClusterError = createStandardAction('CLEAR_CLUSTER_ERROR')<
   void

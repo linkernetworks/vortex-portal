@@ -10,6 +10,7 @@ import * as containerAPI from '@/services/container';
 import * as serviceAPI from '@/services/service';
 import * as namespaceAPI from '@/services/namespace';
 import * as deploymentAPI from '@/services/deployment';
+import * as configmapAPI from '@/services/configmap';
 
 export const fetchNodes = (): RTAction<Promise<ClusterActionType>> => {
   return async dispatch => {
@@ -312,6 +313,18 @@ export const autoscale = (
       return dispatch(clusterActions.autoscale.success(res.data));
     } catch (e) {
       return dispatch(clusterActions.autoscale.failure(e));
+    }
+  };
+};
+
+export const fetchConfigmaps = (): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.fetchConfigmaps.request());
+    try {
+      const res = await configmapAPI.getConfigmaps();
+      return dispatch(clusterActions.fetchConfigmaps.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.fetchConfigmaps.failure(e));
     }
   };
 };
