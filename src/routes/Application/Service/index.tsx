@@ -245,7 +245,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     return (
       <div>
         <Card
-          title={<FormattedMessage id="service" />}
+          title={<CapitalizedMessage id="service" />}
           extra={
             <Button onClick={this.showCreate}>
               <Icon type="plus" /> <FormattedMessage id="service.add" />
