@@ -73,8 +73,10 @@ export function clusterReducer(
     case getType(Cluster.addPod.request):
     case getType(Cluster.addService.request):
     case getType(Cluster.addNamespace.request):
+    case getType(Cluster.addConfigmap.request):
     case getType(Cluster.removeService.request):
     case getType(Cluster.removeNamespace.request):
+    case getType(Cluster.removeConfigmap.request):
     case getType(Cluster.autoscale.request):
       return { ...state, isLoading: true, error: null };
     case getType(Cluster.fetchNodes.success):
@@ -272,11 +274,25 @@ export function clusterReducer(
         isLoading: false,
         namespaces: [...state.namespaces, action.payload]
       };
+    case getType(Cluster.addConfigmap.success):
+      return {
+        ...state,
+        isLoading: false,
+        configmaps: [...state.configmaps, action.payload]
+      };
     case getType(Cluster.removeNamespace.success):
       return {
         ...state,
         isLoading: false,
         namespaces: state.namespaces.filter(
+          record => record.id !== action.payload.id
+        )
+      };
+    case getType(Cluster.removeConfigmap.success):
+      return {
+        ...state,
+        isLoading: false,
+        configmaps: state.configmaps.filter(
           record => record.id !== action.payload.id
         )
       };
@@ -343,7 +359,7 @@ export function clusterReducer(
       return {
         ...state,
         error: null
-      }
+      };
     default:
       return state;
   }

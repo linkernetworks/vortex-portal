@@ -139,6 +139,18 @@ export const fetchConfigmaps = createAsyncAction(
   'FETCH_CONFIGMAPS_FAILURE'
 )<void, Array<Configmap.Configmap>, Error>();
 
+export const addConfigmap = createAsyncAction(
+  'ADD_CONFIGMAP_REQUEST',
+  'ADD_CONFIGMAP_SUCCESS',
+  'ADD_CONFIGMAP_FAILURE'
+)<void, Configmap.Configmap, Error>();
+
+export const removeConfigmap = createAsyncAction(
+  'REMOVE_CONFIGMAP_REQUEST',
+  'REMOVE_CONFIGMAP_SUCCESS',
+  'REMOVE_CONFIGMAP_FAILURE'
+)<void, { id: string }, Error>();
+
 export const clearClusterError = createStandardAction('CLEAR_CLUSTER_ERROR')<
   void
 >();

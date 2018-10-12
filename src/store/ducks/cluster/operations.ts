@@ -4,6 +4,7 @@ import * as PodModel from '@/models/Pod';
 import * as ServiceModel from '@/models/Service';
 import * as NamespaceModel from '@/models/Namespace';
 import * as DeploymentModel from '@/models/Deployment';
+import * as ConfigmapModel from '@/models/Configmap';
 import * as nodeAPI from '@/services/node';
 import * as podAPI from '@/services/pod';
 import * as containerAPI from '@/services/container';
@@ -325,6 +326,38 @@ export const fetchConfigmaps = (): RTAction<Promise<ClusterActionType>> => {
       return dispatch(clusterActions.fetchConfigmaps.success(res.data));
     } catch (e) {
       return dispatch(clusterActions.fetchConfigmaps.failure(e));
+    }
+  };
+};
+
+export const addConfigmap = (
+  data: ConfigmapModel.Configmap
+): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.addConfigmap.request);
+    try {
+      const res = await configmapAPI.createConfigmap(data);
+      return dispatch(clusterActions.addConfigmap.success(res.data));
+    } catch (e) {
+      return dispatch(clusterActions.addConfigmap.failure(e));
+    }
+  };
+};
+
+export const removeConfigmap = (
+  id: string
+): RTAction<Promise<ClusterActionType>> => {
+  return async dispatch => {
+    dispatch(clusterActions.removeConfigmap.request());
+    try {
+      const res = await configmapAPI.deleteConfigmap(id);
+      if (!res.data.error) {
+        return dispatch(clusterActions.removeConfigmap.success({ id }));
+      } else {
+        throw new Error(res.data.message);
+      }
+    } catch (e) {
+      return dispatch(clusterActions.removeConfigmap.failure(e));
     }
   };
 };

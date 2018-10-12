@@ -16,6 +16,7 @@ import Deployment from '@/routes/Application/Deployment';
 import CreateDeployment from '@/routes/Application/Deployment/Create';
 import Namespace from '@/routes/Application/Namespace';
 import Configmap from '@/routes/Application/Configmap';
+import CreateConfigmap from '@/routes/Application/Configmap/Create';
 import Pod from '@/routes/Application/Pod';
 import PodDetail from '@/routes/Application/Pod/Detail';
 import Service from '@/routes//Application/Service';
@@ -104,6 +105,11 @@ const appRoutes = (
       layout={MainLayout}
       component={userIsAuthenticated(Namespace)}
       path="/application/namespace"
+    />
+    <RouteWithLayout
+      layout={MainLayout}
+      component={userIsAuthenticated(CreateConfigmap)}
+      path="/application/configmap/create"
     />
     <RouteWithLayout
       layout={MainLayout}
