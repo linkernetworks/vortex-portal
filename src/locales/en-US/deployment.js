@@ -8,7 +8,7 @@ export default {
   'deployment.desiredPod': 'desired pod',
   'deployment.currentPod': 'current pod',
   'deployment.availablePod': 'available pod',
-  'deployment.add': 'Create Deployment',
+  'deployment.add': 'Add Deployment',
   'deployment.addWithNetwork': 'Create Deployment with network',
   'deployment.replicas': 'number of pods',
   'deployment.volumes': 'volumes',
