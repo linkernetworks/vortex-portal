@@ -150,6 +150,11 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
       key: 'owner'
     },
     {
+      title: toTitleCase(this.props.intl.formatMessage({ id: 'namespace' })),
+      dataIndex: 'namespace',
+      key: 'namespace'
+    },
+    {
       title: toTitleCase(
         this.props.intl.formatMessage({ id: 'volume.storageName' })
       ),
@@ -412,6 +417,7 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
       return {
         id: volumes.id,
         name: volumes.name,
+        namespace: volumes.namespace,
         storageName: volumes.storageName,
         owner: displayName,
         accessMode: volumes.accessMode,

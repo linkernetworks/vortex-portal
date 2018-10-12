@@ -157,6 +157,10 @@ export default Form.create({
         ...props.name,
         value: props.name.value
       }),
+      namespace: Form.createFormField({
+        ...props.namespace,
+        value: props.namespace.value
+      }),
       storageName: Form.createFormField({
         ...props.storageName,
         value: props.storageName.value
