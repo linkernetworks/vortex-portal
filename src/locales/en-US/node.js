@@ -5,7 +5,7 @@ export default {
   'node.detail.kubernetesVersion': 'Kubernetes version',
   'node.detail.labels': 'labels',
 
-  'node.resource.cpuRequests': 'CPU vequests (Core)',
+  'node.resource.cpuRequests': 'CPU requests (Core)',
   'node.resource.cpuLimits': 'CPU limits (Core)',
   'node.resource.memoryRequests': 'memory requests',
   'node.resource.memoryLimits': 'memory limits',
