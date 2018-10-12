@@ -10,6 +10,7 @@ export default {
   'deployment.availablePod': '可用 Pod 數',
   'deployment.add': '建立 Deployment',
   'deployment.addWithNetwork': '建立綁定網路的 Deployment',
+  'deployment.addByYAML': '上傳 YAML 檔以建立 Deployment',
   'deployment.replicas': 'pod 數量',
   'deployment.volumes': 'Volumes',
   'deployment.delete': '刪除 Deployment',

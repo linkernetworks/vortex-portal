@@ -7,7 +7,7 @@ export default {
   'pod.addLabel': '新標籤',
   'pod.restartCount': '重啟次數',
   'pod.containers': '容器',
-  'pod.add': '新增 Pod',
+  'pod.add': '創建 Pod',
   'pod.delete': '刪除 Pod',
   'pod.undeletable': '無法刪除此 Pod',
   'pod.restartPolicy': '重啟次數',

@@ -2,7 +2,8 @@ export default {
   'service.type': '類型',
   'service.selectors': '選擇器',
   'service.ports': '通訊埠號',
-  'service.add': '新增服務',
+  'service.add': '創建服務',
+  'service.addByYAML': '上傳 YAML 檔以建立服務',
 
   'service.ports.port': '通訊埠號',
   'service.ports.targetPort': '目標通訊埠號',
