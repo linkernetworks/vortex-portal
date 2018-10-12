@@ -109,9 +109,13 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
         message: formatMessage({
           id: 'action.failure'
         }),
-        description: formatMessage({
-          id: 'namespace.hint.create.failure'
-        })
+        description:
+          formatMessage({
+            id: 'namespace.hint.create.failure'
+          }) +
+          ' (' +
+          this.props.error.message +
+          ')'
       });
     }
   };
@@ -136,9 +140,13 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
         message: formatMessage({
           id: 'action.failure'
         }),
-        description: formatMessage({
-          id: 'namespace.hint.delete.failure'
-        })
+        description:
+          formatMessage({
+            id: 'namespace.hint.delete.failure'
+          }) +
+          ' (' +
+          this.props.error.message +
+          ')'
       });
     }
   };

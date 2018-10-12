@@ -41,7 +41,7 @@ export const removeVolume = (
         throw new Error(res.data.message);
       }
     } catch (e) {
-      return dispatch(volumeActions.removeVolume.failure(e));
+      return dispatch(volumeActions.removeVolume.failure(e.response.data));
     }
   };
 };

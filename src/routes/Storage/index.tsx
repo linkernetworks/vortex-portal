@@ -234,28 +234,61 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
   protected handleItemDelete = (id: string) => {
     const { tabKey } = this.state;
     const { formatMessage } = this.props.intl;
+    this.props.clearVolumeError();
+
     switch (tabKey) {
       case 'storage':
         this.props.removeStorage(id);
-        notification.success({
-          message: formatMessage({
-            id: 'action.success'
-          }),
-          description: formatMessage({
-            id: 'storage.hint.delete.success'
-          })
-        });
+        if (!this.props.storages.error) {
+          notification.success({
+            message: formatMessage({
+              id: 'action.success'
+            }),
+            description: formatMessage({
+              id: 'storage.hint.delete.success'
+            })
+          });
+        } else {
+          notification.error({
+            message: formatMessage({
+              id: 'action.failure'
+            }),
+            description:
+              formatMessage({
+                id: 'storage.hint.delete.failure'
+              }) +
+              ' (' +
+              this.props.storages.error.message +
+              ')'
+          });
+        }
         break;
       case 'volume':
         this.props.removeVolume(id);
-        notification.success({
-          message: formatMessage({
-            id: 'action.success'
-          }),
-          description: formatMessage({
-            id: 'volume.hint.delete.success'
-          })
-        });
+
+        if (!this.props.volumes.error) {
+          notification.success({
+            message: formatMessage({
+              id: 'action.success'
+            }),
+            description: formatMessage({
+              id: 'volume.hint.delete.success'
+            })
+          });
+        } else {
+          notification.error({
+            message: formatMessage({
+              id: 'action.failure'
+            }),
+            description:
+              formatMessage({
+                id: 'volume.hint.delete.failure'
+              }) +
+              ' (' +
+              this.props.volumes.error.message +
+              ')'
+          });
+        }
         break;
     }
   };
@@ -335,9 +368,13 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
                 message: formatMessage({
                   id: 'action.failure'
                 }),
-                description: formatMessage({
-                  id: 'storage.hint.create.failure'
-                })
+                description:
+                  formatMessage({
+                    id: 'storage.hint.create.failure'
+                  }) +
+                  ' (' +
+                  this.props.storages.error.message +
+                  ')'
               });
             }
           });
@@ -366,9 +403,13 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
                 message: formatMessage({
                   id: 'action.failure'
                 }),
-                description: formatMessage({
-                  id: 'volume.hint.create.failure'
-                })
+                description:
+                  formatMessage({
+                    id: 'volume.hint.create.failure'
+                  }) +
+                  ' (' +
+                  this.props.volumes.error.message +
+                  ')'
               });
             }
           });
