@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as DeploymentModel from '@/models/Deployment';
 import * as ContainerModel from '@/models/Container';
 import * as NamespaceModel from '@/models/Namespace';
+import * as ConfigmapModel from '@/models/Configmap';
 import { networkModels, networkOperations } from '@/store/ducks/network';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -37,11 +38,13 @@ interface OwnProps {
   networks: Array<networkModels.Network>;
   namespaces: Array<NamespaceModel.Namespace>;
   volumes: Array<VolumeModel>;
+  configmaps: Array<ConfigmapModel.Configmap>;
   allNodes: Array<string>;
   fetchDeployments: () => any;
   fetchNetworks: () => any;
   fetchNamespaces: () => any;
   fetchVolumes: () => any;
+  fetchConfigmaps: () => any;
   addDeployment: (data: DeploymentModel.Deployment) => any;
   fetchNodes: () => any;
   push: (route: string) => any;
@@ -79,6 +82,7 @@ class CreateDeployment extends React.Component<
     this.props.fetchNetworks();
     this.props.fetchNamespaces();
     this.props.fetchVolumes();
+    this.props.fetchConfigmaps();
     this.props.fetchNodes();
   }
 
@@ -151,6 +155,7 @@ class CreateDeployment extends React.Component<
             networks={this.props.networks}
             namespaces={this.props.namespaces}
             volumes={this.props.volumes}
+            configmaps={this.props.configmaps}
             allNodes={this.props.allNodes}
             onSubmit={this.handleSubmit}
           />
@@ -167,6 +172,7 @@ class CreateDeployment extends React.Component<
             networks={this.props.networks}
             namespaces={this.props.namespaces}
             volumes={this.props.volumes}
+            configmaps={this.props.configmaps}
             allNodes={this.props.allNodes}
             onSubmit={this.handleSubmit}
           />
@@ -228,6 +234,7 @@ const mapStateToProps = (state: RootState) => {
     networks: state.network.networks,
     allNodes: state.cluster.allNodes,
     volumes: state.volume.volumes,
+    configmaps: state.cluster.configmaps,
     error: state.cluster.error
   };
 };
@@ -237,6 +244,7 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
   fetchNetworks: () => dispatch(networkOperations.fetchNetworks()),
   fetchNamespaces: () => dispatch(clusterOperations.fetchNamespaces()),
   fetchVolumes: () => dispatch(volumeOperations.fetchVolumes()),
+  fetchConfigmaps: () => dispatch(clusterOperations.fetchConfigmaps()),
   fetchNodes: () => dispatch(clusterOperations.fetchNodes()),
   addDeployment: (data: DeploymentModel.Deployment) => {
     dispatch(clusterOperations.addDeployment(data));

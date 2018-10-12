@@ -127,7 +127,12 @@ class ConfigmapForm extends React.PureComponent<ConfigmapFormProps, any> {
                     required: true
                   }
                 ]
-              })(<Input style={{ width: 200 }} />)}
+              })(
+                <Input
+                  style={{ width: 200 }}
+                  placeholder="Give a configmap name"
+                />
+              )}
             </FormItem>
             <FormItem
               {...formItemLayout}

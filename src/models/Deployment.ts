@@ -48,6 +48,11 @@ export interface DeploymentVolume {
   mountPath: string;
 }
 
+export interface DeploymentConfigmap {
+  name: string;
+  mountPath: string;
+}
+
 export interface DeploymentContainer {
   key?: string;
   name: string;
