@@ -1,7 +1,9 @@
+@import '../../styles/variables';
+
 .modal {
   :global {
     .ant-modal-body {
-      padding: 5px;
+      padding: $padding-xs
     }
   }
 }
