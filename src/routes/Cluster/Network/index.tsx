@@ -174,9 +174,13 @@ class Network extends React.Component<NetworkProps, NetworkState> {
         message: formatMessage({
           id: 'action.failure'
         }),
-        description: formatMessage({
-          id: 'network.hint.create.failure'
-        })
+        description:
+          formatMessage({
+            id: 'network.hint.create.failure'
+          }) +
+          ' (' +
+          this.props.error.message +
+          ')'
       });
     }
   };
@@ -229,9 +233,13 @@ class Network extends React.Component<NetworkProps, NetworkState> {
         message: formatMessage({
           id: 'action.failure'
         }),
-        description: formatMessage({
-          id: 'network.hint.delete.failure'
-        })
+        description:
+          formatMessage({
+            id: 'network.hint.delete.failure'
+          }) +
+          ' (' +
+          this.props.error.message +
+          ')'
       });
     }
   };

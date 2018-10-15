@@ -161,9 +161,13 @@ class Service extends React.Component<ServiceProps, ServiceState> {
         message: formatMessage({
           id: 'action.failure'
         }),
-        description: formatMessage({
-          id: 'service.hint.create.failure'
-        })
+        description:
+          formatMessage({
+            id: 'service.hint.create.failure'
+          }) +
+          ' (' +
+          this.props.error.message +
+          ')'
       });
     }
   };
@@ -188,9 +192,13 @@ class Service extends React.Component<ServiceProps, ServiceState> {
         message: formatMessage({
           id: 'action.failure'
         }),
-        description: formatMessage({
-          id: 'service.hint.delete.failure'
-        })
+        description:
+          formatMessage({
+            id: 'service.hint.delete.failure'
+          }) +
+          ' (' +
+          this.props.error.message +
+          ')'
       });
     }
   };

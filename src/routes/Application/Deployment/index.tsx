@@ -177,9 +177,13 @@ class Deployment extends React.PureComponent<DeploymentProps, DeploymentState> {
         message: formatMessage({
           id: 'action.failure'
         }),
-        description: formatMessage({
-          id: 'deployment.hint.delete.failure'
-        })
+        description:
+          formatMessage({
+            id: 'deployment.hint.delete.failure'
+          }) +
+          ' (' +
+          this.props.error.message +
+          ')'
       });
     }
   };

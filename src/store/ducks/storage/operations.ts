@@ -41,7 +41,7 @@ export const removeStorage = (
         throw new Error(res.data.message);
       }
     } catch (e) {
-      return dispatch(storageActions.removeStorage.failure(e));
+      return dispatch(storageActions.removeStorage.failure(e.response.data));
     }
   };
 };

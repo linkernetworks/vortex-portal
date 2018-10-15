@@ -148,9 +148,13 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
         message: formatMessage({
           id: 'action.failure'
         }),
-        description: formatMessage({
-          id: 'pod.hint.delete.failure'
-        })
+        description:
+          formatMessage({
+            id: 'pod.hint.delete.failure'
+          }) +
+          ' (' +
+          this.props.error.message +
+          ')'
       });
     }
   };
