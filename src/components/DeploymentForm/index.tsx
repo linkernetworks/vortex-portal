@@ -626,25 +626,33 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
   };
 
   public renderDeploymentForm() {
-    const { getFieldDecorator } = this.props.form;
-    const filterVolumeOptions = this.props.volumes.filter(volume => {
-      const index = findIndex(
-        this.state.volumes,
-        (v: DeploymentModel.DeploymentVolume) => {
-          return v.name === volume.name;
-        }
-      );
-      return index === -1;
-    });
-    const filterConfigmapOptions = this.props.configmaps.filter(configmap => {
-      const index = findIndex(
-        this.state.configmaps,
-        (c: DeploymentModel.DeploymentConfigmap) => {
-          return c.name === configmap.name;
-        }
-      );
-      return index === -1;
-    });
+    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const filterVolumeOptions = this.props.volumes
+      .filter(volume => {
+        const index = findIndex(
+          this.state.volumes,
+          (v: DeploymentModel.DeploymentVolume) => {
+            return v.name === volume.name;
+          }
+        );
+        return index === -1;
+      })
+      .filter(volume => {
+        return volume.namespace === getFieldValue('namespace');
+      });
+    const filterConfigmapOptions = this.props.configmaps
+      .filter(configmap => {
+        const index = findIndex(
+          this.state.configmaps,
+          (c: DeploymentModel.DeploymentConfigmap) => {
+            return c.name === configmap.name;
+          }
+        );
+        return index === -1;
+      })
+      .filter(configmap => {
+        return configmap.namespace === getFieldValue('namespace');
+      });
     return (
       <Form>
         <FormItem {...formItemLayout} label={<CapitalizedMessage id="name" />}>
