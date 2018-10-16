@@ -15,6 +15,8 @@ import ApplicationOverview from '@/routes/Application/Overview';
 import Deployment from '@/routes/Application/Deployment';
 import CreateDeployment from '@/routes/Application/Deployment/Create';
 import Namespace from '@/routes/Application/Namespace';
+import Configmap from '@/routes/Application/Configmap';
+import CreateConfigmap from '@/routes/Application/Configmap/Create';
 import Pod from '@/routes/Application/Pod';
 import PodDetail from '@/routes/Application/Pod/Detail';
 import Service from '@/routes//Application/Service';
@@ -71,8 +73,8 @@ const appRoutes = (
       component={withAuthed}
       path="/signup"
     />
-    <Redirect exact={true} from="/" to="/cluster/overview" />
-    <Redirect exact={true} from="/cluster" to="/cluster/overview" />
+    <Redirect exact={true} from="/" to="/cluster/node" />
+    <Redirect exact={true} from="/cluster" to="/cluster/node" />
     <RouteWithLayout
       layout={MainLayout}
       component={userIsAuthenticated(UserProfile)}
@@ -93,7 +95,7 @@ const appRoutes = (
       component={userIsAuthenticated(Network)}
       path="/cluster/network"
     />
-    <Redirect exact={true} from="/application" to="/application/overview" />
+    <Redirect exact={true} from="/application" to="/application/deployment" />
     <RouteWithLayout
       layout={MainLayout}
       component={userIsAuthenticated(ApplicationOverview)}
@@ -103,6 +105,16 @@ const appRoutes = (
       layout={MainLayout}
       component={userIsAuthenticated(Namespace)}
       path="/application/namespace"
+    />
+    <RouteWithLayout
+      layout={MainLayout}
+      component={userIsAuthenticated(CreateConfigmap)}
+      path="/application/configmap/create"
+    />
+    <RouteWithLayout
+      layout={MainLayout}
+      component={userIsAuthenticated(Configmap)}
+      path="/application/configmap"
     />
     <RouteWithLayout
       layout={MainLayout}

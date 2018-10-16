@@ -13,6 +13,7 @@ export default {
   'deployment.addByYAML': '上傳 YAML 檔以建立 Deployment',
   'deployment.replicas': 'pod 數量',
   'deployment.volumes': 'Volumes',
+  'deployment.configmaps': 'Configmaps',
   'deployment.delete': '刪除 Deployment',
   'deployment.undeletable': '不能刪除這個 Deployment',
 

@@ -7,6 +7,7 @@ export default {
   'container': 'container',
   'network': 'network',
   'namespace': 'namespace',
+  'configmap': 'configmap',
   'deployment': 'deployment',
   'ovs': 'ovs',
   'dpdk': 'dpdk',

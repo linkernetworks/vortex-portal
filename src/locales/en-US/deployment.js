@@ -12,6 +12,7 @@ export default {
   'deployment.addWithNetwork': 'Create Deployment with network',
   'deployment.replicas': 'number of pods',
   'deployment.volumes': 'volumes',
+  'deployment.configmaps': 'configmaps',
   'deployment.nodeAffinity': 'node affinity',
   'deployment.addByYAML': 'Create Deployment by YAML File',
   'deployment.replicas': 'Number of pods',

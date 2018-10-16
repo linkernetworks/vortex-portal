@@ -4,6 +4,7 @@ import * as PodModel from '@/models/Pod';
 import * as ContainerModel from '@/models/Container';
 import * as NetworkModel from '@/models/Network';
 import * as NamespaceModel from '@/models/Namespace';
+import * as ConfigmapModel from '@/models/Configmap';
 import { findIndex } from 'lodash';
 import { Volume as VolumeModel } from '@/models/Storage';
 import { FormattedMessage } from 'react-intl';
@@ -45,6 +46,7 @@ interface DeploymentFormProps extends FormComponentProps {
   networks: Array<NetworkModel.Network>;
   namespaces: Array<NamespaceModel.Namespace>;
   volumes: Array<VolumeModel>;
+  configmaps: Array<ConfigmapModel.Configmap>;
   allNodes: Array<string>;
   onSubmit: (data: any) => void;
 }
@@ -55,6 +57,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
   private envVarsKey: React.RefObject<Input>;
   private envVarsValue: React.RefObject<Input>;
   private mountPath: React.RefObject<Input>;
+  private configmapMountPath: React.RefObject<Input>;
 
   constructor(props: DeploymentFormProps) {
     super(props);
@@ -63,6 +66,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
     this.envVarsKey = React.createRef();
     this.envVarsValue = React.createRef();
     this.mountPath = React.createRef();
+    this.configmapMountPath = React.createRef();
     const key = Math.random()
       .toString(36)
       .substring(7);
@@ -70,6 +74,8 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
       currentStep: 0,
       volumes: [],
       volumeName: '',
+      configmaps: [],
+      configmapName: '',
       labels: new Map(),
       envVars: new Map(),
       containerKey: key,
@@ -118,6 +124,10 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
         let volumes = [];
         if (values.volumes) {
           volumes = [...values.volumes];
+        }
+        let configMaps = [];
+        if (values.configmaps) {
+          configMaps = [...values.configmaps];
         }
         const labels = {};
         if (values.labels) {
@@ -202,7 +212,7 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
           capability: values.capability,
           nodeAffinity,
           volumes,
-          configMaps: [],
+          configMaps,
           replicas
         };
 
@@ -301,6 +311,10 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
     this.setState({ volumeName });
   };
 
+  protected handleConfigmapNameChange = (configmapName: string) => {
+    this.setState({ configmapName });
+  };
+
   protected handleCommandChange = (index: number, value: any) => {
     const { containers } = this.state;
     const newContainers = [...containers];
@@ -339,6 +353,40 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
     const { setFieldsValue } = this.props.form;
     setFieldsValue({
       volumes: newVolumes
+    });
+  };
+
+  protected addConfigmap = () => {
+    if (
+      this.configmapMountPath.current != null &&
+      this.state.configmapName !== '' &&
+      this.configmapMountPath.current.input.value !== ''
+    ) {
+      const { configmaps } = this.state;
+      const newConfigmaps = [...configmaps];
+      newConfigmaps.push({
+        name: this.state.configmapName,
+        mountPath: this.configmapMountPath.current.input.value
+      });
+      this.configmapMountPath.current.input.value = '';
+      this.setState({ configmaps: newConfigmaps, configmapName: '' });
+
+      const { setFieldsValue } = this.props.form;
+      setFieldsValue({
+        configmaps: newConfigmaps
+      });
+    }
+  };
+
+  protected deleteConfigmap = (index: number) => {
+    const { configmaps } = this.state;
+    const newConfigmaps = [...configmaps];
+    newConfigmaps.splice(index, 1);
+    this.setState({ configmaps: newConfigmaps });
+
+    const { setFieldsValue } = this.props.form;
+    setFieldsValue({
+      configmaps: newConfigmaps
     });
   };
 
@@ -588,6 +636,15 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
       );
       return index === -1;
     });
+    const filterConfigmapOptions = this.props.configmaps.filter(configmap => {
+      const index = findIndex(
+        this.state.configmaps,
+        (c: DeploymentModel.DeploymentConfigmap) => {
+          return c.name === configmap.name;
+        }
+      );
+      return index === -1;
+    });
     return (
       <Form>
         <FormItem {...formItemLayout} label={<CapitalizedMessage id="name" />}>
@@ -731,6 +788,77 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                 shape="circle"
                 icon="enter"
                 onClick={this.addVolume}
+              />
+            </div>
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label={<CapitalizedMessage id="deployment.configmaps" />}
+        >
+          {getFieldDecorator('configmaps', {
+            rules: [
+              {
+                required: false
+              }
+            ]
+          })(
+            <div>
+              {this.state.configmaps.map((configmap: any, index: number) => {
+                return (
+                  <Row key={configmap.name}>
+                    <Col span={10}>
+                      <Input
+                        disabled={true}
+                        value={configmap.name}
+                        placeholder="Configmap Name"
+                      />
+                    </Col>
+                    <Col span={10}>
+                      <Input
+                        disabled={true}
+                        value={configmap.mountPath}
+                        placeholder="Mount Path"
+                      />
+                    </Col>
+                    <Button
+                      style={{ marginLeft: 12 }}
+                      shape="circle"
+                      icon="close"
+                      onClick={() => this.deleteConfigmap(index)}
+                    />
+                  </Row>
+                );
+              })}
+              <Select
+                value={
+                  this.state.configmapName === ''
+                    ? undefined
+                    : this.state.configmapName
+                }
+                style={{ width: 200 }}
+                placeholder="Select a configmap"
+                onChange={this.handleConfigmapNameChange}
+              >
+                {filterConfigmapOptions.map(configmap => {
+                  return (
+                    <Option key={configmap.name} value={configmap.name}>
+                      {configmap.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+              <Input
+                ref={this.configmapMountPath}
+                style={{ width: 200 }}
+                placeholder="Give a mount path"
+                onBlur={this.addConfigmap}
+              />
+              <Button
+                style={{ marginLeft: 12 }}
+                shape="circle"
+                icon="enter"
+                onClick={this.addConfigmap}
               />
             </div>
           )}

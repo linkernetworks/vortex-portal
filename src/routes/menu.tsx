@@ -16,10 +16,6 @@ export const menuData: Array<MenuItem> = [
     icon: 'hdd',
     children: [
       {
-        name: 'overview',
-        path: 'overview'
-      },
-      {
         name: 'node',
         path: 'node'
       },
@@ -35,12 +31,12 @@ export const menuData: Array<MenuItem> = [
     icon: 'api',
     children: [
       {
-        name: 'overview',
-        path: 'overview'
-      },
-      {
         name: 'namespace',
         path: 'namespace'
+      },
+      {
+        name: 'configmap',
+        path: 'configmap'
       },
       {
         name: 'deployment',
