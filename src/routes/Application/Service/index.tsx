@@ -38,6 +38,7 @@ interface OwnProps {
   fetchUsers: () => any;
   error: Error | null;
   clearClusterError: () => any;
+  push: (route: string) => any;
 }
 
 class Service extends React.Component<ServiceProps, ServiceState> {
@@ -140,6 +141,32 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     this.setState({ visibleModal: false });
   };
 
+  protected handleUploadChange = (info: any) => {
+    const { formatMessage } = this.props.intl;
+    this.setState({
+      visibleModal: false
+    });
+    if (info.file.status === 'done') {
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'service.hint.create.success'
+        })
+      });
+    } else if (info.file.status === 'error') {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description: formatMessage({
+          id: 'service.hint.create.failure'
+        })
+      });
+    }
+  };
+
   protected handleSubmit = (service: ServiceModel.Service) => {
     this.props.clearClusterError();
     this.props.addService(service);
@@ -226,7 +253,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
     return (
       <div>
         <Card
-          title={<FormattedMessage id="service" />}
+          title={<CapitalizedMessage id="service" />}
           extra={
             <Button onClick={this.showCreate}>
               <Icon type="plus" /> <FormattedMessage id="service.add" />
@@ -244,6 +271,7 @@ class Service extends React.Component<ServiceProps, ServiceState> {
             visible={this.state.visibleModal}
             onCancel={this.hideCreate}
             onSubmit={this.handleSubmit}
+            onSubmitYAML={this.handleUploadChange}
           />
         </Card>
       </div>

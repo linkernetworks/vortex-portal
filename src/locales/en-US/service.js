@@ -3,6 +3,7 @@ export default {
   'service.selectors': 'selectors',
   'service.ports': 'ports',
   'service.add': 'Add Service',
+  'service.addByYAML': 'Create service by YAML file',
 
   'service.ports.name': 'name',
   'service.ports.port': 'port',

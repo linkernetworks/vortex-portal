@@ -13,10 +13,14 @@ import {
   Row,
   Col,
   Tabs,
-  Select
+  Select,
+  Card,
+  Upload,
+  Icon
 } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import withCapitalize from '@/containers/withCapitalize';
+import { loadToken } from '@/utils/auth';
 
 const CapitalizedMessage = withCapitalize(FormattedMessage);
 const FormItem = Form.Item;
@@ -24,6 +28,9 @@ const TabPane = Tabs.TabPane;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const Option = Select.Option;
+const Dragger = Upload.Dragger;
+
+import * as styles from './styles.module.scss';
 
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -36,6 +43,7 @@ interface ServiceFormProps extends FormComponentProps {
   visible: boolean;
   onCancel: () => void;
   onSubmit: (data: any) => void;
+  onSubmitYAML: (info: any) => void;
 }
 
 class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
@@ -52,6 +60,7 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
     this.state = {
       selectors: new Map(),
       portKey: key,
+      tabKey: 'addService',
       ports: [
         {
           key,
@@ -182,6 +191,10 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
     this.setState({ ports: newPorts, portKey: key });
   };
 
+  protected handleSubmitYAML = (info: any) => {
+    this.props.onSubmitYAML(info);
+  };
+
   protected handleSubmit = () => {
     this.props.form.validateFields((err: any, values: any) => {
       if (!err) {
@@ -247,216 +260,277 @@ class ServiceForm extends React.PureComponent<ServiceFormProps, any> {
     }
   };
 
-  public render() {
+  public renderTabContent = () => {
+    const { tabKey } = this.state;
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    return (
-      <Modal
-        visible={this.props.visible}
-        title={<CapitalizedMessage id="service.add" />}
-        onOk={this.handleSubmit}
-        onCancel={this.handleClose}
-      >
-        <Form>
-          <FormItem
-            {...formItemLayout}
-            label={<CapitalizedMessage id="name" />}
-          >
-            {getFieldDecorator('name', {
-              rules: [
-                {
-                  required: true,
-                  validator: this.checkServiceName
-                }
-              ]
-            })(<Input placeholder="Give a unique service name" />)}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label={<CapitalizedMessage id="namespace" />}
-          >
-            {getFieldDecorator('namespace', {
-              rules: [
-                {
-                  required: true
-                }
-              ]
-            })(
-              <Select style={{ width: 200 }} placeholder="Select a namespace">
-                <Option value="default">default</Option>
-                {this.props.namespaces.map(namespace => {
-                  return (
-                    <Option key={namespace.name} value={namespace.name}>
-                      {namespace.name}
-                    </Option>
-                  );
-                })}
-              </Select>
-            )}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label={<CapitalizedMessage id="service.type" />}
-          >
-            {getFieldDecorator('type', {
-              rules: [
-                {
-                  required: true,
-                  message: 'Please select your type'
-                }
-              ],
-              initialValue: 'ClusterIP'
-            })(
-              <RadioGroup buttonStyle="solid">
-                <RadioButton value="ClusterIP">Cluster IP</RadioButton>
-                <RadioButton value="NodePort">Node Port</RadioButton>
-              </RadioGroup>
-            )}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label={<CapitalizedMessage id="service.selectors" />}
-          >
-            {getFieldDecorator('selectors', {
-              rules: [
-                {
-                  required: true,
-                  validator: this.checkSelectors
-                }
-              ]
-            })(
-              <div>
-                {Array.from(this.state.selectors.keys()).map((key: string) => {
-                  return (
-                    <Row key={key}>
-                      <Col span={10}>
-                        <Input disabled={true} value={key} placeholder="Key" />
-                      </Col>
-                      <Col span={10}>
-                        <Input
-                          disabled={true}
-                          value={this.state.selectors.get(key)}
-                          placeholder="Value"
-                        />
-                      </Col>
-                      <Button
-                        style={{ marginLeft: 12 }}
-                        shape="circle"
-                        icon="close"
-                        onClick={() => this.deleteSelector(key)}
+    switch (tabKey) {
+      case 'addService':
+        return (
+          <Form>
+            <FormItem
+              {...formItemLayout}
+              label={<CapitalizedMessage id="name" />}
+            >
+              {getFieldDecorator('name', {
+                rules: [
+                  {
+                    required: true,
+                    validator: this.checkServiceName
+                  }
+                ]
+              })(<Input placeholder="Give a unique service name" />)}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label={<CapitalizedMessage id="namespace" />}
+            >
+              {getFieldDecorator('namespace', {
+                rules: [
+                  {
+                    required: true
+                  }
+                ]
+              })(
+                <Select style={{ width: 200 }} placeholder="Select a namespace">
+                  <Option value="default">default</Option>
+                  {this.props.namespaces.map(namespace => {
+                    return (
+                      <Option key={namespace.name} value={namespace.name}>
+                        {namespace.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label={<CapitalizedMessage id="service.type" />}
+            >
+              {getFieldDecorator('type', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please select your type'
+                  }
+                ],
+                initialValue: 'ClusterIP'
+              })(
+                <RadioGroup buttonStyle="solid">
+                  <RadioButton value="ClusterIP">Cluster IP</RadioButton>
+                  <RadioButton value="NodePort">Node Port</RadioButton>
+                </RadioGroup>
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label={<CapitalizedMessage id="service.selectors" />}
+            >
+              {getFieldDecorator('selectors', {
+                rules: [
+                  {
+                    required: true,
+                    validator: this.checkSelectors
+                  }
+                ]
+              })(
+                <div>
+                  {Array.from(this.state.selectors.keys()).map(
+                    (key: string) => {
+                      return (
+                        <Row key={key}>
+                          <Col span={10}>
+                            <Input
+                              disabled={true}
+                              value={key}
+                              placeholder="Key"
+                            />
+                          </Col>
+                          <Col span={10}>
+                            <Input
+                              disabled={true}
+                              value={this.state.selectors.get(key)}
+                              placeholder="Value"
+                            />
+                          </Col>
+                          <Button
+                            style={{ marginLeft: 12 }}
+                            shape="circle"
+                            icon="close"
+                            onClick={() => this.deleteSelector(key)}
+                          />
+                        </Row>
+                      );
+                    }
+                  )}
+                  <Row>
+                    <Col span={10}>
+                      <Input
+                        ref={this.selectorKey}
+                        placeholder="Key"
+                        onBlur={this.addSelector}
                       />
-                    </Row>
-                  );
-                })}
-                <Row>
-                  <Col span={10}>
-                    <Input
-                      ref={this.selectorKey}
-                      placeholder="Key"
-                      onBlur={this.addSelector}
+                    </Col>
+                    <Col span={10}>
+                      <Input
+                        ref={this.selectorValue}
+                        placeholder="Value"
+                        onBlur={this.addSelector}
+                      />
+                    </Col>
+                    <Button
+                      style={{ marginLeft: 12 }}
+                      shape="circle"
+                      icon="enter"
+                      onClick={this.addSelector}
                     />
-                  </Col>
-                  <Col span={10}>
-                    <Input
-                      ref={this.selectorValue}
-                      placeholder="Value"
-                      onBlur={this.addSelector}
-                    />
-                  </Col>
-                  <Button
-                    style={{ marginLeft: 12 }}
-                    shape="circle"
-                    icon="enter"
-                    onClick={this.addSelector}
-                  />
-                </Row>
-              </div>
-            )}
-          </FormItem>
-          <Tabs
-            hideAdd={true}
-            type={this.state.ports.length > 1 ? 'editable-card' : undefined}
-            tabPosition="top"
-            activeKey={this.state.portKey}
-            onChange={this.onChangePort}
-            onEdit={this.onEditPort}
-            tabBarExtraContent={
-              <Button shape="circle" icon="plus" onClick={this.addPort} />
-            }
-          >
-            {this.state.ports.map(
-              (port: ServiceModel.ServicePort, index: number) => {
-                return (
-                  <TabPane tab={'Port' + (index + 1)} key={port.key}>
-                    <FormItem
-                      {...formItemLayout}
-                      label={<CapitalizedMessage id="name" />}
-                    >
-                      {getFieldDecorator(`port-${port.key}-name`, {
-                        rules: [
-                          {
-                            required: true,
-                            validator: this.checkPortName
-                          }
-                        ]
-                      })(<Input placeholder="Give a unique port name" />)}
-                    </FormItem>
-                    <FormItem
-                      {...formItemLayout}
-                      label={<CapitalizedMessage id="service.ports.port" />}
-                    >
-                      {getFieldDecorator(`port-${port.key}-port`, {
-                        rules: [
-                          {
-                            required: true,
-                            message: 'Please input your port'
-                          }
-                        ]
-                      })(<InputNumber min={0} placeholder="Port" />)}
-                    </FormItem>
-                    <FormItem
-                      {...formItemLayout}
-                      label={
-                        <CapitalizedMessage id="service.ports.targetPort" />
-                      }
-                    >
-                      {getFieldDecorator(`port-${port.key}-targetPort`, {
-                        rules: [
-                          {
-                            required: true,
-                            message: 'Please input your target port'
-                          }
-                        ]
-                      })(<InputNumber min={0} placeholder="Target Port" />)}
-                    </FormItem>
-                    {getFieldValue('type') === 'NodePort' && (
+                  </Row>
+                </div>
+              )}
+            </FormItem>
+            <Tabs
+              hideAdd={true}
+              type={this.state.ports.length > 1 ? 'editable-card' : undefined}
+              tabPosition="top"
+              activeKey={this.state.portKey}
+              onChange={this.onChangePort}
+              onEdit={this.onEditPort}
+              tabBarExtraContent={
+                <Button shape="circle" icon="plus" onClick={this.addPort} />
+              }
+            >
+              {this.state.ports.map(
+                (port: ServiceModel.ServicePort, index: number) => {
+                  return (
+                    <TabPane tab={'Port' + (index + 1)} key={port.key}>
                       <FormItem
                         {...formItemLayout}
-                        label={
-                          <CapitalizedMessage id="service.ports.nodePort" />
-                        }
+                        label={<CapitalizedMessage id="name" />}
                       >
-                        {getFieldDecorator(`port-${port.key}-nodePort`, {
+                        {getFieldDecorator(`port-${port.key}-name`, {
                           rules: [
                             {
                               required: true,
-                              message: 'Please input your node port'
+                              validator: this.checkPortName
                             }
                           ]
-                        })(
-                          <InputNumber
-                            min={30000}
-                            max={33000}
-                            placeholder="Node Port"
-                          />
-                        )}
+                        })(<Input placeholder="Give a unique port name" />)}
                       </FormItem>
-                    )}
-                  </TabPane>
-                );
-              }
-            )}
-          </Tabs>
-        </Form>
+                      <FormItem
+                        {...formItemLayout}
+                        label={<CapitalizedMessage id="service.ports.port" />}
+                      >
+                        {getFieldDecorator(`port-${port.key}-port`, {
+                          rules: [
+                            {
+                              required: true,
+                              message: 'Please input your port'
+                            }
+                          ]
+                        })(<InputNumber min={0} placeholder="Port" />)}
+                      </FormItem>
+                      <FormItem
+                        {...formItemLayout}
+                        label={
+                          <CapitalizedMessage id="service.ports.targetPort" />
+                        }
+                      >
+                        {getFieldDecorator(`port-${port.key}-targetPort`, {
+                          rules: [
+                            {
+                              required: true,
+                              message: 'Please input your target port'
+                            }
+                          ]
+                        })(<InputNumber min={0} placeholder="Target Port" />)}
+                      </FormItem>
+                      {getFieldValue('type') === 'NodePort' && (
+                        <FormItem
+                          {...formItemLayout}
+                          label={
+                            <CapitalizedMessage id="service.ports.nodePort" />
+                          }
+                        >
+                          {getFieldDecorator(`port-${port.key}-nodePort`, {
+                            rules: [
+                              {
+                                required: true,
+                                message: 'Please input your node port'
+                              }
+                            ]
+                          })(
+                            <InputNumber
+                              min={30000}
+                              max={33000}
+                              placeholder="Node Port"
+                            />
+                          )}
+                        </FormItem>
+                      )}
+                    </TabPane>
+                  );
+                }
+              )}
+            </Tabs>
+          </Form>
+        );
+      case 'addServiceByYAML':
+        return (
+          <Dragger
+            name="file"
+            headers={{
+              Authorization: `Bearer ${loadToken()}`
+            }}
+            multiple={false}
+            showUploadList={false}
+            action="/v1/services/upload/yaml"
+            onChange={this.handleSubmitYAML}
+          >
+            <p className="ant-upload-drag-icon">
+              <Icon type="inbox" />
+            </p>
+            <p className="ant-upload-text">
+              Click or drag file to this area to upload
+            </p>
+            <p className="ant-upload-hint">
+              Support for a single or bulk upload.
+            </p>
+          </Dragger>
+        );
+      default:
+        return null;
+    }
+  };
+
+  public render() {
+    const tabList = [
+      {
+        key: 'addService',
+        tab: <FormattedMessage id="service.add" />
+      },
+      {
+        key: 'addServiceByYAML',
+        tab: <FormattedMessage id="service.addByYAML" />
+      }
+    ];
+
+    return (
+      <Modal
+        visible={this.props.visible}
+        onOk={this.handleSubmit}
+        onCancel={this.handleClose}
+        closable={false}
+        className={styles.modal}
+      >
+        <Card
+          tabList={tabList}
+          bordered={false}
+          onTabChange={key => {
+            this.setState({ tabKey: key });
+          }}
+        >
+          {this.renderTabContent()}
+        </Card>
       </Modal>
     );
   }
