@@ -8,7 +8,7 @@ import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { RootState, RTDispatch } from '@/store/ducks';
-import { clusterOperations } from '@/store/ducks/cluster';
+import { clusterOperations, clusterActions } from '@/store/ducks/cluster';
 
 import * as styles from './styles.module.scss';
 
@@ -30,6 +30,8 @@ interface OwnProps {
   fetchNamespaces: () => any;
   addConfigmap: (data: ConfigmapModel.Configmap) => any;
   push: (route: string) => any;
+  error: Error | null;
+  clearClusterError: () => any;
 }
 
 const tabList = [
@@ -59,24 +61,64 @@ class CreateConfigmap extends React.Component<
   }
 
   protected handleUploadChange = (info: any) => {
+    const { formatMessage } = this.props.intl;
+
     if (info.file.status === 'done') {
       this.props.push('/application/configmap');
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'configmap.hint.create.success'
+        })
+      });
+    } else if (info.file.status === 'error') {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description:
+          formatMessage({
+            id: 'configmap.hint.create.failure'
+          }) +
+          ' (' +
+          this.props.error +
+          ')'
+      });
     }
   };
 
   protected handleSubmit = (configmap: ConfigmapModel.Configmap) => {
+    this.props.clearClusterError();
     this.props.addConfigmap(configmap);
     this.props.push('/application/configmap');
 
     const { formatMessage } = this.props.intl;
-    notification.success({
-      message: formatMessage({
-        id: 'action.success'
-      }),
-      description: formatMessage({
-        id: 'configmap.hint.create.success'
-      })
-    });
+
+    if (!this.props.error) {
+      notification.success({
+        message: formatMessage({
+          id: 'action.success'
+        }),
+        description: formatMessage({
+          id: 'configmap.hint.create.success'
+        })
+      });
+    } else {
+      notification.error({
+        message: formatMessage({
+          id: 'action.failure'
+        }),
+        description:
+          formatMessage({
+            id: 'configmap.hint.create.failure'
+          }) +
+          ' (' +
+          this.props.error.message +
+          ')'
+      });
+    }
   };
 
   public renderTabContent = () => {
@@ -140,7 +182,8 @@ class CreateConfigmap extends React.Component<
 
 const mapStateToProps = (state: RootState) => {
   return {
-    namespaces: state.cluster.namespaces
+    namespaces: state.cluster.namespaces,
+    error: state.cluster.error
   };
 };
 
@@ -149,7 +192,8 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
   addConfigmap: (data: ConfigmapModel.Configmap) => {
     dispatch(clusterOperations.addConfigmap(data));
   },
-  push: (route: string) => dispatch(push(route))
+  push: (route: string) => dispatch(push(route)),
+  clearClusterError: () => dispatch(clusterActions.clearClusterError())
 });
 
 export default connect(
