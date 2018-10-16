@@ -1,18 +1,19 @@
 import * as React from 'react';
+import { push } from 'react-router-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import * as ConfigmapModel from '@/models/Configmap';
 import * as UserModel from '@/models/User';
 import { connect } from 'react-redux';
-import { Button, Icon, Card, Table, notification } from 'antd';
+import { Button, Icon, Card, Table, notification, Drawer } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { Dispatch } from 'redux';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
-import { userOperations } from '@/store/ducks/user';
-import { clusterOperations, clusterActions } from '@/store/ducks/cluster';
-import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { find } from 'lodash';
 import * as moment from 'moment';
+import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
+import { RootState, RootAction, RTDispatch } from '@/store/ducks';
+import ConfigmapDetail from '@/components/ConfigmapDetail';
 import * as styles from './styles.module.scss';
 
 import ItemActions from '@/components/ItemActions';
@@ -27,12 +28,14 @@ type ConfigmapProps = OwnProps &
   RouteComponentProps<{ name: string }>;
 interface OwnProps {
   configmaps: Array<ConfigmapModel.Configmap>;
+  allConfigmaps: ConfigmapModel.Configmaps;
   fetchConfigmaps: () => any;
   removeConfigmap: (id: string) => any;
   users: Array<UserModel.User>;
   fetchUsers: () => any;
   error: Error | null;
   clearClusterError: () => any;
+  push: (path: string) => any;
 }
 
 interface ConfigmapInfo {
@@ -41,6 +44,7 @@ interface ConfigmapInfo {
   namespace: string;
   owner: string;
   createdAt: string;
+  push: (path: string) => any;
 }
 
 class Configmap extends React.Component<ConfigmapProps, object> {
@@ -64,13 +68,16 @@ class Configmap extends React.Component<ConfigmapProps, object> {
     },
     {
       title: <CapitalizedMessage id="action" />,
-      key: 'action',
       render: (_, record) => (
         <ItemActions
           items={[
             {
-              type: 'delete',
-              onConfirm: this.handleRemoveConfigmap.bind(this, record.id)
+              type: 'link',
+              link: {
+                to: {
+                  pathname: `/application/configmap/${record.name}`
+                }
+              }
             }
           ]}
         />
@@ -132,6 +139,12 @@ class Configmap extends React.Component<ConfigmapProps, object> {
   };
 
   public render() {
+    const { configmaps, match, allConfigmaps } = this.props;
+    const currentConfigmap = match.params.name;
+    const visibleConfigmapDrawer = !!currentConfigmap;
+    console.log(allConfigmaps);
+    console.log(allConfigmaps.hasOwnProperty('currentConfigmap'));
+
     return (
       <div>
         <Card
@@ -149,6 +162,20 @@ class Configmap extends React.Component<ConfigmapProps, object> {
             columns={this.columns}
             dataSource={this.getConfigmapsInfo(this.props.configmaps)}
           />
+          <Drawer
+            title={<CapitalizedMessage id="configmap" />}
+            width={720}
+            closable={false}
+            onClose={this.props.push.bind(this, '/application/configmap')}
+            visible={visibleConfigmapDrawer}
+          >
+            {allConfigmaps.hasOwnProperty(currentConfigmap) && (
+              <ConfigmapDetail
+                configmap={allConfigmaps[currentConfigmap]}
+                removeConfigmap={this.handleRemoveConfigmap}
+              />
+            )}
+          </Drawer>
         </Card>
       </div>
     );
@@ -159,7 +186,8 @@ const mapStateToProps = (state: RootState) => {
   return {
     configmaps: state.cluster.configmaps,
     users: state.user.users,
-    error: state.cluster.error
+    error: state.cluster.error,
+    allConfigmaps: clusterSelectors.getConfigmaps(state.cluster)
   };
 };
 
@@ -167,8 +195,7 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
   fetchConfigmaps: () => dispatch(clusterOperations.fetchConfigmaps()),
   removeConfigmap: (id: string) =>
     dispatch(clusterOperations.removeConfigmap(id)),
-  fetchUsers: () => dispatch(userOperations.fetchUsers()),
-  clearClusterError: () => dispatch(clusterActions.clearClusterError())
+  push: (path: string) => dispatch(push(path))
 });
 
 export default connect(

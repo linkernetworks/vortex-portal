@@ -2,6 +2,8 @@ export default {
   'configmap.name': 'name',
   'configmap.data': 'data',
   'configmap.add': 'Add Configmap',
+  'configmap.delete': 'Delete Configmap',
+  'configmap.undeletable': 'Can not delete this ConfigMap',
   'configmap.addByYAML': 'Create Configmap by YAML File',
 
   'configmap.hint.create.success': 'Success to create configmap.',

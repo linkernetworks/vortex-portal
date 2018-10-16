@@ -6,3 +6,7 @@ export interface Configmap {
   data: { [name: string]: string };
   createAt?: string;
 }
+
+export interface Configmaps {
+  [name: string]: Configmap;
+}

@@ -62,3 +62,12 @@ export const getPodsInAvailableNamespace = (duck: ClusterStateType) => {
   );
   return filteredPods;
 };
+
+export const getConfigmaps = (duck: ClusterStateType) => {
+  const { configmaps } = duck;
+  const mapConfigmaps = configmaps.reduce(function(map, obj) {
+    map[obj.name] = obj;
+    return map;
+  }, {});
+  return mapConfigmaps;
+};

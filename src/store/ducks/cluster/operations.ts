@@ -20,7 +20,7 @@ export const fetchNodes = (): RTAction<Promise<ClusterActionType>> => {
       const res = await nodeAPI.getNodes();
       return dispatch(clusterActions.fetchNodes.success(res.data));
     } catch (e) {
-      return dispatch(clusterActions.fetchNodes.failure(e.response.data));
+      return dispatch(clusterActions.fetchNodes.failure(e));
     }
   };
 };
@@ -38,7 +38,7 @@ export const fetchNodeNICs = (
         })
       );
     } catch (e) {
-      return dispatch(clusterActions.fetchNodeNICs.failure(e.response.data));
+      return dispatch(clusterActions.fetchNodeNICs.failure(e));
     }
   };
 };
@@ -60,7 +60,7 @@ export const fetchPods = (): RTAction<Promise<ClusterActionType>> => {
       const res = await podAPI.getPods();
       return dispatch(clusterActions.fetchPods.success(res.data));
     } catch (e) {
-      return dispatch(clusterActions.fetchPods.failure(e.response.data));
+      return dispatch(clusterActions.fetchPods.failure(e));
     }
   };
 };
@@ -72,7 +72,7 @@ export const fetchPod = (pod: string): RTAction<Promise<ClusterActionType>> => {
       const res = await podAPI.getPod(pod);
       return dispatch(clusterActions.fetchPod.success(res.data));
     } catch (e) {
-      return dispatch(clusterActions.fetchPod.failure(e.response.data));
+      return dispatch(clusterActions.fetchPod.failure(e));
     }
   };
 };
@@ -84,9 +84,7 @@ export const fetchPodsFromMongo = (): RTAction<Promise<ClusterActionType>> => {
       const res = await podAPI.getPodsFromMongo();
       return dispatch(clusterActions.fetchPodsFromMongo.success(res.data));
     } catch (e) {
-      return dispatch(
-        clusterActions.fetchPodsFromMongo.failure(e.response.data)
-      );
+      return dispatch(clusterActions.fetchPodsFromMongo.failure(e));
     }
   };
 };
@@ -101,7 +99,7 @@ export const fetchContainer = (
       const res = await containerAPI.getContainer(pod, container);
       return dispatch(clusterActions.fetchContainer.success(res.data));
     } catch (e) {
-      return dispatch(clusterActions.fetchContainer.failure(e.response.data));
+      return dispatch(clusterActions.fetchContainer.failure(e));
     }
   };
 };
@@ -164,7 +162,7 @@ export const fetchServices = (): RTAction<Promise<ClusterActionType>> => {
       const res = await serviceAPI.getServices();
       return dispatch(clusterActions.fetchServices.success(res.data));
     } catch (e) {
-      return dispatch(clusterActions.fetchServices.failure(e.response.data));
+      return dispatch(clusterActions.fetchServices.failure(e));
     }
   };
 };
@@ -208,7 +206,7 @@ export const fetchNamespaces = (): RTAction<Promise<ClusterActionType>> => {
       const res = await namespaceAPI.getNamespaces();
       return dispatch(clusterActions.fetchNamespaces.success(res.data));
     } catch (e) {
-      return dispatch(clusterActions.fetchNamespaces.failure(e.response.data));
+      return dispatch(clusterActions.fetchNamespaces.failure(e));
     }
   };
 };
@@ -252,7 +250,7 @@ export const fetchDeployments = (): RTAction<Promise<ClusterActionType>> => {
       const res = await deploymentAPI.getControllers();
       return dispatch(clusterActions.fetchDeployments.success(res.data));
     } catch (e) {
-      return dispatch(clusterActions.fetchDeployments.failure(e.response.data));
+      return dispatch(clusterActions.fetchDeployments.failure(e));
     }
   };
 };
@@ -300,9 +298,7 @@ export const fetchDeploymentsFromMongo = (): RTAction<
         clusterActions.fetchDeploymentsFromMongo.success(res.data)
       );
     } catch (e) {
-      return dispatch(
-        clusterActions.fetchDeploymentsFromMongo.failure(e.response.data)
-      );
+      return dispatch(clusterActions.fetchDeploymentsFromMongo.failure(e));
     }
   };
 };
