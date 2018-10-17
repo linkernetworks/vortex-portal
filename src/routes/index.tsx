@@ -114,7 +114,7 @@ const appRoutes = (
     <RouteWithLayout
       layout={MainLayout}
       component={userIsAuthenticated(Configmap)}
-      path="/application/configmap"
+      path="/application/configmap/:name?"
     />
     <RouteWithLayout
       layout={MainLayout}
