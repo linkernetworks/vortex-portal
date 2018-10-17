@@ -5,6 +5,7 @@ export interface Configmap {
   namespace: string;
   data: { [name: string]: string };
   createAt?: string;
+  createdBy?: { displayName: string };
 }
 
 export interface Configmaps {

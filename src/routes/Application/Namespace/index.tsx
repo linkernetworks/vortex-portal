@@ -6,12 +6,9 @@ import * as moment from 'moment';
 import { Dispatch } from 'redux';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
-import { find } from 'lodash';
 
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations, clusterActions } from '@/store/ducks/cluster';
-import { userOperations } from '@/store/ducks/user';
-import * as UserModel from '@/models/User';
 import * as NamespaceModel from '@/models/Namespace';
 
 import NamespaceForm from '@/components/NamespaceForm';
@@ -31,8 +28,6 @@ interface OwnProps {
   fetchNamespaces: () => any;
   addNamespace: (data: NamespaceModel.Namespace) => any;
   removeNamespace: (id: string) => any;
-  users: Array<UserModel.User>;
-  fetchUsers: () => any;
   error: Error | null;
   clearClusterError: () => any;
 }
@@ -77,7 +72,6 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
 
   public componentDidMount() {
     this.props.fetchNamespaces();
-    this.props.fetchUsers();
   }
 
   protected showCreate = () => {
@@ -156,10 +150,10 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
     namespaces: Array<NamespaceModel.Namespace>
   ) => {
     return namespaces.map(namespace => {
-      const owner = find(this.props.users, user => {
-        return user.id === namespace.ownerID;
-      });
-      const displayName = owner === undefined ? 'none' : owner.displayName;
+      const displayName =
+        namespace.createdBy === undefined
+          ? 'none'
+          : namespace.createdBy!.displayName;
       return {
         id: namespace.id,
         name: namespace.name,
@@ -202,7 +196,6 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
 const mapStateToProps = (state: RootState) => {
   return {
     namespaces: state.cluster.namespaces,
-    users: state.user.users,
     error: state.cluster.error
   };
 };
@@ -215,7 +208,6 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
   removeNamespace: (id: string) => {
     dispatch(clusterOperations.removeNamespace(id));
   },
-  fetchUsers: () => dispatch(userOperations.fetchUsers()),
   clearClusterError: () => dispatch(clusterActions.clearClusterError())
 });
 

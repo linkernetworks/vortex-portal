@@ -15,11 +15,10 @@ import {
 } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { includes, find } from 'lodash';
+import { includes } from 'lodash';
 import { Dispatch } from 'redux';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
-import * as UserModel from '@/models/User';
 import * as PodModel from '@/models/Pod';
 import * as DeploymentModel from '@/models/Deployment';
 import { RootState, RTDispatch, RootAction } from '@/store/ducks';
@@ -28,7 +27,6 @@ import {
   clusterSelectors,
   clusterActions
 } from '@/store/ducks/cluster';
-import { userOperations } from '@/store/ducks/user';
 import ItemActions from '@/components/ItemActions';
 import DeploymentDetail from '@/components/DeploymentDetail';
 
@@ -60,8 +58,6 @@ interface OwnProps {
   fetchDeployments: () => any;
   fetchDeploymentsFromMongo: () => any;
   removeDeployment: (id: string) => any;
-  users: Array<UserModel.User>;
-  fetchUsers: () => any;
   push: (path: string) => any;
   autoscale: (data: DeploymentModel.Autoscale, enable: boolean) => any;
   error: Error | null;
@@ -141,7 +137,6 @@ class Deployment extends React.PureComponent<DeploymentProps, DeploymentState> {
     this.props.fetchPods();
     this.props.fetchDeployments();
     this.props.fetchDeploymentsFromMongo();
-    this.props.fetchUsers();
   }
 
   public componentWillUnmount() {
@@ -191,10 +186,10 @@ class Deployment extends React.PureComponent<DeploymentProps, DeploymentState> {
   protected getDeploymentInfo = (allDeployments: Array<string>) => {
     const { deployments } = this.props;
     return allDeployments.map(deployment => {
-      const owner = find(this.props.users, user => {
-        return user.id === deployments[deployment].ownerID;
-      });
-      const displayName = owner === undefined ? 'none' : owner.displayName;
+      const displayName =
+        deployments[deployment].createdBy === undefined
+          ? 'none'
+          : deployments[deployment].createdBy!.displayName;
       return {
         id: deployments[deployment].id,
         name: deployments[deployment].controllerName,
@@ -318,6 +313,8 @@ const mapStateToProps = (state: RootState) => {
     if (state.cluster.deployments[deployment.name] !== undefined) {
       state.cluster.deployments[deployment.name].id = deployment.id;
       state.cluster.deployments[deployment.name].ownerID = deployment.ownerID;
+      state.cluster.deployments[deployment.name].createdBy =
+        deployment.createdBy;
       state.cluster.deployments[deployment.name].isEnableAutoscale =
         deployment.isEnableAutoscale;
       state.cluster.deployments[deployment.name].autoscalerInfo =
@@ -347,7 +344,6 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction> & RTDispatch) => ({
     dispatch(clusterOperations.fetchDeploymentsFromMongo()),
   removeDeployment: (id: string) =>
     dispatch(clusterOperations.removeDeployment(id)),
-  fetchUsers: () => dispatch(userOperations.fetchUsers()),
   push: (path: string) => dispatch(push(path)),
   autoscale: (data: DeploymentModel.Autoscale, enable: boolean) =>
     dispatch(clusterOperations.autoscale(data, enable)),

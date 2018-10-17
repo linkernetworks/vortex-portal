@@ -3,21 +3,18 @@ import { connect } from 'react-redux';
 import { Button, Tag, Icon, Tree, Card, Table, notification } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { find } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
 import { RootState, RTDispatch } from '@/store/ducks';
 import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
-import { userOperations } from '@/store/ducks/user';
 import {
   networkModels,
   networkSelectors,
   networkOperations,
   networkActions
 } from '@/store/ducks/network';
-import * as UserModel from '@/models/User';
 import { Nodes } from '@/models/Node';
 import { getNetworkShellInfo } from '@/services/network';
 import NetworkFrom from '@/components/NetworkForm';
@@ -55,8 +52,6 @@ interface OwnProps {
   fetchNetworks: () => any;
   addNetwork: (data: networkModels.NetworkFields) => any;
   removeNetwork: (id: string) => any;
-  users: Array<UserModel.User>;
-  fetchUsers: () => any;
   error: Error | null;
   clearNetworkError: () => any;
 }
@@ -145,7 +140,6 @@ class Network extends React.Component<NetworkProps, NetworkState> {
   public componentDidMount() {
     this.props.fetchNodes();
     this.props.fetchNetworks();
-    this.props.fetchUsers();
   }
 
   protected handleSubmit = (
@@ -266,10 +260,10 @@ class Network extends React.Component<NetworkProps, NetworkState> {
 
   protected getNetworkInfo = (networks: Array<networkModels.Network>) => {
     return networks.map(network => {
-      const owner = find(this.props.users, user => {
-        return user.id === network.ownerID;
-      });
-      const displayName = owner === undefined ? 'none' : owner.displayName;
+      const displayName =
+        network.createdBy === undefined
+          ? 'none'
+          : network.createdBy!.displayName;
       return {
         id: network.id,
         name: network.name,
@@ -352,7 +346,6 @@ const mapDispatchToProps = (dispatch: RTDispatch) => ({
   addNetwork: (data: networkModels.NetworkFields) =>
     dispatch(networkOperations.addNetwork(data)),
   removeNetwork: (id: string) => dispatch(networkOperations.removeNetwork(id)),
-  fetchUsers: () => dispatch(userOperations.fetchUsers()),
   clearNetworkError: () => dispatch(networkActions.clearNetworkError())
 });
 

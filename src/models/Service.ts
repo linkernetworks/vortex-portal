@@ -7,6 +7,7 @@ export interface Service {
   selector: any;
   ports: Array<ServicePort>;
   createdAt?: string;
+  createdBy?: { displayName: string };
 }
 
 export interface ServicePort {

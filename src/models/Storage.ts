@@ -3,6 +3,7 @@ export interface Storage {
   id: string;
   owner: string;
   ownerID: string;
+  createdBy?: { displayName: string };
   type: string;
   name: string;
   createdAt: Date;
@@ -20,6 +21,7 @@ export interface Volume {
   id: string;
   owner: string;
   ownerID: string;
+  createdBy?: { displayName: string };
   storageName: string;
   name: string;
   namespace: string;

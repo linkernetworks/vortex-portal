@@ -4,7 +4,7 @@ import { Card, Button, Icon, Table, notification } from 'antd';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { ColumnProps } from 'antd/lib/table';
 import * as moment from 'moment';
-import { mapValues, find } from 'lodash';
+import { mapValues } from 'lodash';
 import { Dispatch } from 'redux';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
 
@@ -15,7 +15,6 @@ import ItemActions from '@/components/ItemActions';
 import { RootState, RTDispatch, RootAction } from '@/store/ducks';
 import { storageOperations, storageActions } from '@/store/ducks/storage';
 import { volumeOperations, volumeActions } from '@/store/ducks/volume';
-import { userOperations } from '@/store/ducks/user';
 import {
   Storage as StorageModel,
   StorageFields,
@@ -25,7 +24,6 @@ import {
 } from '@/models/Storage';
 import * as NamespaceModel from '@/models/Namespace';
 import * as namespaceAPI from '@/services/namespace';
-import * as UserModel from '@/models/User';
 import { FormField } from '@/utils/types';
 import { toTitleCase } from '@/utils/string';
 import withCapitalize from '@/containers/withCapitalize';
@@ -53,8 +51,6 @@ interface OwnProps {
   removeVolume: (id: string) => any;
   clearStorageError: () => any;
   clearVolumeError: () => any;
-  users: Array<UserModel.User>;
-  fetchUsers: () => any;
 }
 
 interface StorageState {
@@ -229,7 +225,6 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
   public componentWillMount() {
     this.props.fetchStorages();
     this.props.fetchVolumes();
-    this.props.fetchUsers();
   }
 
   protected getFlatFormFieldValue = (target: string) => {
@@ -433,10 +428,10 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
 
   protected getStorageInfo = (storages: Array<StorageModel>) => {
     return storages.map(storage => {
-      const owner = find(this.props.users, user => {
-        return user.id === storage.ownerID;
-      });
-      const displayName = owner === undefined ? 'none' : owner.displayName;
+      const displayName =
+        storage.createdBy === undefined
+          ? 'none'
+          : storage.createdBy!.displayName;
       return {
         id: storage.id,
         name: storage.name,
@@ -449,20 +444,18 @@ class Storage extends React.PureComponent<StorageProps, StorageState> {
     });
   };
 
-  protected getVoulmeInfo = (voulmes: Array<VolumeModel>) => {
-    return voulmes.map(volumes => {
-      const owner = find(this.props.users, user => {
-        return user.id === volumes.ownerID;
-      });
-      const displayName = owner === undefined ? 'none' : owner.displayName;
+  protected getVoulmeInfo = (volumes: Array<VolumeModel>) => {
+    return volumes.map(volume => {
+      const displayName =
+        volume.createdBy === undefined ? 'none' : volume.createdBy!.displayName;
       return {
-        id: volumes.id,
-        name: volumes.name,
-        namespace: volumes.namespace,
-        storageName: volumes.storageName,
+        id: volume.id,
+        name: volume.name,
+        namespace: volume.namespace,
+        storageName: volume.storageName,
         owner: displayName,
-        accessMode: volumes.accessMode,
-        capacity: volumes.capacity
+        accessMode: volume.accessMode,
+        capacity: volume.capacity
       };
     });
   };
@@ -569,8 +562,7 @@ const mapStateToProps = (state: RootState) => {
       data: state.volume.volumes,
       isLoading: state.volume.isLoading,
       error: state.volume.error
-    },
-    users: state.user.users
+    }
   };
 };
 
@@ -583,8 +575,7 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
   removeStorage: (id: string) => dispatch(storageOperations.removeStorage(id)),
   removeVolume: (id: string) => dispatch(volumeOperations.removeVolume(id)),
   clearStorageError: () => dispatch(storageActions.clearStorageError()),
-  clearVolumeError: () => dispatch(volumeActions.clearVolumeError()),
-  fetchUsers: () => dispatch(userOperations.fetchUsers())
+  clearVolumeError: () => dispatch(volumeActions.clearVolumeError())
 });
 
 export default connect(
