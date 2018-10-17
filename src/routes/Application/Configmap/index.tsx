@@ -142,8 +142,6 @@ class Configmap extends React.Component<ConfigmapProps, object> {
     const { configmaps, match, allConfigmaps } = this.props;
     const currentConfigmap = match.params.name;
     const visibleConfigmapDrawer = !!currentConfigmap;
-    console.log(allConfigmaps);
-    console.log(allConfigmaps.hasOwnProperty('currentConfigmap'));
 
     return (
       <div>
