@@ -1,6 +1,7 @@
 export interface Deployment {
   id?: string;
   ownerID?: string;
+  createdBy?: { displayName: string };
   name: string;
   namespace: string;
   labels: any;
@@ -85,6 +86,7 @@ export interface Autoscale {
 export interface Controller {
   id?: string;
   ownerID?: string;
+  createdBy?: { displayName: string };
   controllerName: string;
   type: string;
   namespace: string;

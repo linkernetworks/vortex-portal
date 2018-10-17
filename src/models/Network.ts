@@ -3,6 +3,7 @@ export interface Network {
   id: string;
   owner: string;
   ownerID: string;
+  createdBy?: { displayName: string };
   name: string;
   bridgeName: string;
   type: dataPathType;
@@ -14,7 +15,7 @@ export interface Network {
 
 export type NetworkFields = Omit<
   Network,
-  'id' | 'ownerID' | 'owner' | 'bridgeName' | 'createdAt'
+  'id' | 'ownerID' | 'owner' | 'bridgeName' | 'createdAt' | 'createdBy'
 >;
 
 interface NetworkNode {

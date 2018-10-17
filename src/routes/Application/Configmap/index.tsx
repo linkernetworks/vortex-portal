@@ -2,18 +2,19 @@ import * as React from 'react';
 import { push } from 'react-router-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import * as ConfigmapModel from '@/models/Configmap';
-import * as UserModel from '@/models/User';
 import { connect } from 'react-redux';
 import { Button, Icon, Card, Table, notification, Drawer } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { Dispatch } from 'redux';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
-import { find } from 'lodash';
 import * as moment from 'moment';
-import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
+import {
+  clusterOperations,
+  clusterSelectors,
+  clusterActions
+} from '@/store/ducks/cluster';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
-import { userOperations } from '@/store/ducks/user';
 import ConfigmapDetail from '@/components/ConfigmapDetail';
 import * as styles from './styles.module.scss';
 
@@ -32,8 +33,6 @@ interface OwnProps {
   allConfigmaps: ConfigmapModel.Configmaps;
   fetchConfigmaps: () => any;
   removeConfigmap: (id: string) => any;
-  users: Array<UserModel.User>;
-  fetchUsers: () => any;
   error: Error | null;
   clearClusterError: () => any;
   push: (path: string) => any;
@@ -118,17 +117,16 @@ class Configmap extends React.Component<ConfigmapProps, object> {
 
   public componentDidMount() {
     this.props.fetchConfigmaps();
-    this.props.fetchUsers();
   }
 
   protected getConfigmapsInfo = (
     configmaps: Array<ConfigmapModel.Configmap>
   ) => {
     return configmaps.map(configmap => {
-      const owner = find(this.props.users, user => {
-        return user.id === configmap.ownerID;
-      });
-      const displayName = owner === undefined ? 'none' : owner.displayName;
+      const displayName =
+        configmap.createdBy === undefined
+          ? 'none'
+          : configmap.createdBy!.displayName;
       return {
         id: configmap.id,
         name: configmap.name,
@@ -194,7 +192,7 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
   fetchConfigmaps: () => dispatch(clusterOperations.fetchConfigmaps()),
   removeConfigmap: (id: string) =>
     dispatch(clusterOperations.removeConfigmap(id)),
-  fetchUsers: () => dispatch(userOperations.fetchUsers()),
+  clearClusterError: () => dispatch(clusterActions.clearClusterError()),
   push: (path: string) => dispatch(push(path))
 });
 

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as UserModel from '@/models/User';
 import * as ServiceModel from '@/models/Service';
 import * as NamespaceModel from '@/models/Namespace';
 import { connect } from 'react-redux';
@@ -9,11 +8,9 @@ import * as moment from 'moment';
 import { Dispatch } from 'redux';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { InjectedAuthRouterProps } from 'redux-auth-wrapper/history4/redirect';
-import { find } from 'lodash';
 
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
 import { clusterOperations, clusterActions } from '@/store/ducks/cluster';
-import { userOperations } from '@/store/ducks/user';
 import ServiceForm from '@/components/ServiceForm';
 import ItemActions from '@/components/ItemActions';
 
@@ -34,8 +31,6 @@ interface OwnProps {
   fetchServices: () => any;
   addService: (data: ServiceModel.Service) => any;
   removeService: (id: string) => any;
-  users: Array<UserModel.User>;
-  fetchUsers: () => any;
   error: Error | null;
   clearClusterError: () => any;
   push: (route: string) => any;
@@ -127,7 +122,6 @@ class Service extends React.Component<ServiceProps, ServiceState> {
 
   public componentDidMount() {
     this.props.fetchServices();
-    this.props.fetchUsers();
   }
 
   protected showCreate = () => {
@@ -232,10 +226,10 @@ class Service extends React.Component<ServiceProps, ServiceState> {
 
   protected getServiceInfo = (services: Array<ServiceModel.Service>) => {
     return services.map(service => {
-      const owner = find(this.props.users, user => {
-        return user.id === service.ownerID;
-      });
-      const displayName = owner === undefined ? 'none' : owner.displayName;
+      const displayName =
+        service.createdBy === undefined
+          ? 'none'
+          : service.createdBy!.displayName;
       return {
         id: service.id,
         name: service.name,
@@ -282,7 +276,6 @@ class Service extends React.Component<ServiceProps, ServiceState> {
 const mapStateToProps = (state: RootState) => {
   return {
     services: state.cluster.services,
-    users: state.user.users,
     error: state.cluster.error
   };
 };
@@ -293,7 +286,6 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
     dispatch(clusterOperations.addService(data));
   },
   removeService: (id: string) => dispatch(clusterOperations.removeService(id)),
-  fetchUsers: () => dispatch(userOperations.fetchUsers()),
   clearClusterError: () => dispatch(clusterActions.clearClusterError())
 });
 

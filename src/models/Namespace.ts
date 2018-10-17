@@ -3,4 +3,5 @@ export interface Namespace {
   ownerID?: string;
   name: string;
   createdAt?: string;
+  createdBy?: { displayName: string };
 }
