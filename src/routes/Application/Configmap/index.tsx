@@ -13,6 +13,7 @@ import { find } from 'lodash';
 import * as moment from 'moment';
 import { clusterOperations, clusterSelectors } from '@/store/ducks/cluster';
 import { RootState, RootAction, RTDispatch } from '@/store/ducks';
+import { userOperations } from '@/store/ducks/user';
 import ConfigmapDetail from '@/components/ConfigmapDetail';
 import * as styles from './styles.module.scss';
 
@@ -158,7 +159,7 @@ class Configmap extends React.Component<ConfigmapProps, object> {
           <Table
             className="main-table"
             columns={this.columns}
-            dataSource={this.getConfigmapsInfo(this.props.configmaps)}
+            dataSource={this.getConfigmapsInfo(configmaps)}
           />
           <Drawer
             title={<CapitalizedMessage id="configmap" />}
@@ -193,6 +194,7 @@ const mapDispatchToProps = (dispatch: RTDispatch & Dispatch<RootAction>) => ({
   fetchConfigmaps: () => dispatch(clusterOperations.fetchConfigmaps()),
   removeConfigmap: (id: string) =>
     dispatch(clusterOperations.removeConfigmap(id)),
+  fetchUsers: () => dispatch(userOperations.fetchUsers()),
   push: (path: string) => dispatch(push(path))
 });
 
