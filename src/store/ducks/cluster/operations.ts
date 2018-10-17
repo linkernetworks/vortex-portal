@@ -329,7 +329,7 @@ export const fetchConfigmaps = (): RTAction<Promise<ClusterActionType>> => {
       const res = await configmapAPI.getConfigmaps();
       return dispatch(clusterActions.fetchConfigmaps.success(res.data));
     } catch (e) {
-      return dispatch(clusterActions.fetchConfigmaps.failure(e));
+      return dispatch(clusterActions.fetchConfigmaps.failure(e.response.data));
     }
   };
 };
@@ -343,7 +343,7 @@ export const addConfigmap = (
       const res = await configmapAPI.createConfigmap(data);
       return dispatch(clusterActions.addConfigmap.success(res.data));
     } catch (e) {
-      return dispatch(clusterActions.addConfigmap.failure(e));
+      return dispatch(clusterActions.addConfigmap.failure(e.response.data));
     }
   };
 };
@@ -361,7 +361,7 @@ export const removeConfigmap = (
         throw new Error(res.data.message);
       }
     } catch (e) {
-      return dispatch(clusterActions.removeConfigmap.failure(e));
+      return dispatch(clusterActions.removeConfigmap.failure(e.response.data));
     }
   };
 };

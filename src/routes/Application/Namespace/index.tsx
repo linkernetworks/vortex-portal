@@ -50,7 +50,7 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
     },
     {
       title: <CapitalizedMessage id="createdAt" />,
-      render: (_, record) => moment(record.createdAt).calendar()
+      dataIndex: 'createdAt'
     },
     {
       title: <CapitalizedMessage id="action" />,
@@ -164,7 +164,7 @@ class Namespace extends React.PureComponent<NamespaceProps, NamespaceState> {
         id: namespace.id,
         name: namespace.name,
         owner: displayName,
-        age: moment(namespace.createdAt).calendar()
+        createdAt: moment(namespace.createdAt).calendar()
       };
     });
   };
