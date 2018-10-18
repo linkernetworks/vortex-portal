@@ -474,6 +474,12 @@ class PodDrawer extends React.PureComponent<PodDrawerProps, PodDrawerState> {
     data2: Array<{ timestamp: number; value: string }>,
     toMB: boolean
   ) {
+    if (data1 === null) {
+      data1 = [];
+    }
+    if (data2 === null) {
+      data2 = [];
+    }
     const chartData: Array<{ x: string; y1: number; y2: number }> = [];
     if (data1.length === data2.length) {
       data1.map((d, i) => {
