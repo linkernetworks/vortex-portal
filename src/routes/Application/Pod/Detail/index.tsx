@@ -275,6 +275,12 @@ class PodDetail extends React.PureComponent<PodDetailProps, PodDetailState> {
     toMB: boolean,
     label: string
   ) {
+    if (data1 === null) {
+      data1 = [];
+    }
+    if (data2 === null) {
+      data2 = [];
+    }
     const chartData: Array<{ x: string; y1: number; y2: number }> = [];
     if (data1.length === data2.length) {
       data1.map((d, i) => {
