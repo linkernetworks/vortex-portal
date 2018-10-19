@@ -143,10 +143,7 @@ class AutoscaleForm extends React.PureComponent<AutoscaleFormProps, object> {
           })(<InputNumber disabled={!enable} min={0} />)}
         </FormItem>
         <FormItem>
-          <Button
-            style={{ float: 'right', zIndex: -1 }}
-            onClick={this.handleSubmit}
-          >
+          <Button style={{ float: 'right' }} onClick={this.handleSubmit}>
             <Icon type="save" />
             <FormattedMessage id="deployment.autoscale.save" />
           </Button>

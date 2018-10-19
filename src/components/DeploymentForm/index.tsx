@@ -19,11 +19,15 @@ import {
   Checkbox,
   Tabs,
   Collapse,
-  Steps
+  Steps,
+  Tooltip,
+  Icon
 } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import EditableTagGroup from '@/components/EditableTagGroup';
 import withCapitalize from '@/containers/withCapitalize';
+
+import * as styles from './styles.module.scss';
 
 const CapitalizedMessage = withCapitalize(FormattedMessage);
 const FormItem = Form.Item;
@@ -1279,54 +1283,6 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                   </FormItem>
                   <FormItem
                     {...formItemLayout}
-                    label={
-                      <CapitalizedMessage id="container.detail.requestCPU" />
-                    }
-                  >
-                    {getFieldDecorator(
-                      `container-${container.key}-requestCPU`,
-                      {
-                        initialValue: 0,
-                        rules: [
-                          {
-                            required: false
-                          }
-                        ]
-                      }
-                    )(
-                      <InputNumber
-                        min={0}
-                        step={50}
-                        formatter={value => `${value} m`}
-                      />
-                    )}
-                  </FormItem>
-                  <FormItem
-                    {...formItemLayout}
-                    label={
-                      <CapitalizedMessage id="container.detail.requestMemory" />
-                    }
-                  >
-                    {getFieldDecorator(
-                      `container-${container.key}-requestMemory`,
-                      {
-                        initialValue: 0,
-                        rules: [
-                          {
-                            required: false
-                          }
-                        ]
-                      }
-                    )(
-                      <InputNumber
-                        min={0}
-                        step={64}
-                        formatter={value => `${value} Mi`}
-                      />
-                    )}
-                  </FormItem>
-                  <FormItem
-                    {...formItemLayout}
                     label={<CapitalizedMessage id="container.detail.command" />}
                   >
                     {getFieldDecorator(`container-${container.key}-command`, {
@@ -1345,6 +1301,70 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                           <CapitalizedMessage id="container.detail.newCommand" />
                         }
                       />
+                    )}
+                  </FormItem>
+                  <FormItem
+                    {...formItemLayout}
+                    label={
+                      <CapitalizedMessage id="container.detail.requestCPU" />
+                    }
+                  >
+                    {getFieldDecorator(
+                      `container-${container.key}-requestCPU`,
+                      {
+                        rules: [
+                          {
+                            required: false
+                          }
+                        ]
+                      }
+                    )(
+                      <div>
+                        <InputNumber
+                          defaultValue={0}
+                          min={0}
+                          step={50}
+                          formatter={value => `${value} m`}
+                        />
+                        <Tooltip
+                          placement="right"
+                          title="If resource requests be set, the autoscaler can be enable."
+                        >
+                          <Icon className={styles.info} type="info-circle" />
+                        </Tooltip>
+                      </div>
+                    )}
+                  </FormItem>
+                  <FormItem
+                    {...formItemLayout}
+                    label={
+                      <CapitalizedMessage id="container.detail.requestMemory" />
+                    }
+                  >
+                    {getFieldDecorator(
+                      `container-${container.key}-requestMemory`,
+                      {
+                        rules: [
+                          {
+                            required: false
+                          }
+                        ]
+                      }
+                    )(
+                      <div>
+                        <InputNumber
+                          defaultValue={0}
+                          min={0}
+                          step={64}
+                          formatter={value => `${value} Mi`}
+                        />
+                        <Tooltip
+                          placement="right"
+                          title="If resource requests be set, the autoscaler can be enable."
+                        >
+                          <Icon className={styles.info} type="info-circle" />
+                        </Tooltip>
+                      </div>
                     )}
                   </FormItem>
                 </TabPane>
