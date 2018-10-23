@@ -1316,24 +1316,22 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                           {
                             required: false
                           }
-                        ]
+                        ],
+                        initialValue: 0
                       }
                     )(
-                      <div>
-                        <InputNumber
-                          defaultValue={0}
-                          min={0}
-                          step={50}
-                          formatter={value => `${value} m`}
-                        />
-                        <Tooltip
-                          placement="right"
-                          title="If resource requests be set, the autoscaler can be enable."
-                        >
-                          <Icon className={styles.info} type="info-circle" />
-                        </Tooltip>
-                      </div>
+                      <InputNumber
+                        min={0}
+                        step={50}
+                        formatter={value => `${value} m`}
+                      />
                     )}
+                    <Tooltip
+                      placement="right"
+                      title="If resource requests be set, the autoscaler can be enable."
+                    >
+                      <Icon className={styles.info} type="info-circle" />
+                    </Tooltip>
                   </FormItem>
                   <FormItem
                     {...formItemLayout}
@@ -1348,24 +1346,23 @@ class DeploymentForm extends React.PureComponent<DeploymentFormProps, any> {
                           {
                             required: false
                           }
-                        ]
+                        ],
+                        initialValue: 0
                       }
                     )(
-                      <div>
-                        <InputNumber
-                          defaultValue={0}
-                          min={0}
-                          step={64}
-                          formatter={value => `${value} Mi`}
-                        />
-                        <Tooltip
-                          placement="right"
-                          title="If resource requests be set, the autoscaler can be enable."
-                        >
-                          <Icon className={styles.info} type="info-circle" />
-                        </Tooltip>
-                      </div>
+                      <InputNumber
+                        defaultValue={0}
+                        min={0}
+                        step={64}
+                        formatter={value => `${value} Mi`}
+                      />
                     )}
+                    <Tooltip
+                      placement="right"
+                      title="If resource requests be set, the autoscaler can be enable."
+                    >
+                      <Icon className={styles.info} type="info-circle" />
+                    </Tooltip>
                   </FormItem>
                 </TabPane>
               );
