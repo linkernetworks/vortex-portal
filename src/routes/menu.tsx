@@ -35,10 +35,6 @@ export const menuData: Array<MenuItem> = [
         path: 'namespace'
       },
       {
-        name: 'configmap',
-        path: 'configmap'
-      },
-      {
         name: 'deployment',
         path: 'deployment'
       },
