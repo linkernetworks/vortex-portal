@@ -174,7 +174,7 @@ class SignUp extends React.PureComponent<
   };
 
   public renderTabPane = () => {
-    return this.steps.map((step, idx) => {
+    return this.steps.map((step, idx: any) => {
       return (
         <TabPane
           tab={<CapitalizedMessage id={`auth.step.${step.title}`} />}
